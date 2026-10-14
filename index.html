@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Госдума одобрила проект о выводе Башкортостана в нейтральные воды — Вестник России</title>
+    <title>«Кошмар Пионерского проспекта»: полиция Анапы разыскивает серийного маньяка, получившего отпор от всех семи жертв — Вестник России</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Merriweather for editorial text, Inter for UI -->
+    <!-- Google Fonts: Merriweather for editorial text, Inter for UI, Playfair Display for headlines -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -38,387 +38,583 @@
     </script>
     <style>
         .article-content p {
-            margin-bottom: 1.25rem;
-            line-height: 1.8;
+            margin-bottom: 1.35rem;
+            line-height: 1.85;
             font-size: 1.125rem;
             color: #1f2937;
         }
         .quote-block {
             border-left: 4px solid #c01414;
-            background: #f8fafc;
+            background: linear-gradient(to right, #fef2f2, #f8fafc);
         }
-        /* Custom smooth scroll */
+        /* CCTV Technical Grid & Scanline Overlay */
+        .cctv-grid {
+            background-image: 
+                linear-gradient(to right, rgba(16, 185, 129, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(16, 185, 129, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .scanline {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0, 0, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0.3)
+            );
+            background-size: 100% 4px;
+        }
         html {
             scroll-behavior: smooth;
         }
+        @keyframes pulse-fast {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+        .animate-rec {
+            animation: pulse-fast 1.2s infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .ticker-track {
+            display: flex;
+            width: max-content;
+            animation: ticker 38s linear infinite;
+        }
+        .ticker-track:hover {
+            animation-play-state: paused;
+        }
     </style>
 </head>
-<body class="bg-[#f7f8fa] text-slate-900 font-sans antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-[#f4f5f7] text-slate-900 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- 1. TOP TICKER & METRICS BAR -->
-    <header class="border-b border-gray-200 bg-white">
+    <!-- ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ (TOAST) -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white text-xs font-medium px-4 py-3 rounded-xl shadow-xl border border-slate-700 flex items-center gap-2.5 transition-all">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+        <span id="toast-message">Ссылка на материал скопирована в буфер обмена</span>
+    </div>
+
+    <!-- 1. ШАПКА САЙТА (HEADER) -->
+    <header class="border-b border-gray-200 bg-white sticky top-0 z-30 shadow-xs">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between text-xs py-2 text-slate-500 border-b border-gray-100 flex-wrap gap-2">
-                <!-- Date & City -->
-                <div class="flex items-center gap-4">
-                    <span class="font-medium text-slate-800" id="current-date">14 октября 2026 г., среда</span>
+            <!-- Верхняя информационная панель: Погода и Курсы -->
+            <div class="flex items-center justify-between text-xs py-2 text-slate-600 border-b border-gray-100 flex-wrap gap-2">
+                <!-- Дата и Погодные информеры -->
+                <div class="flex items-center gap-2.5 sm:gap-3.5 flex-wrap">
+                    <span class="font-semibold text-slate-900">14 октября 2026, Среда</span>
                     <span class="hidden sm:inline text-gray-300">|</span>
-                    <span class="hidden sm:inline"><i class="fa-solid fa-cloud-sun mr-1 text-slate-400"></i> Москва +9 °C</span>
-                    <span class="hidden md:inline"><i class="fa-solid fa-cloud-rain mr-1 text-slate-400"></i> Уфа +6 °C (влажность 99%)</span>
+                    <span class="inline-flex items-center gap-1 text-slate-800 font-medium bg-amber-50 border border-amber-200/70 px-2 py-0.5 rounded">
+                        <i class="fa-solid fa-sun text-amber-500"></i> Анапа +18°C
+                    </span>
+                    <span class="inline-flex items-center gap-1 text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
+                        <i class="fa-solid fa-wind text-emerald-600"></i> ст. Гостагаевская +16°C
+                    </span>
+                    <span onclick="openArchiveModal('taganrog')" class="cursor-pointer inline-flex items-center gap-1 text-rose-800 bg-rose-50 border border-rose-200/70 px-2 py-0.5 rounded hover:bg-rose-100 transition" title="Нажмите, чтобы открыть сводку по Таганрогу">
+                        <i class="fa-solid fa-triangle-exclamation text-brand-red"></i> Таганрог (индекс −142%) +14°C
+                    </span>
+                    <span onclick="openArchiveModal('bashkortostan')" class="cursor-pointer inline-flex items-center gap-1 text-sky-900 bg-sky-50 border border-sky-200/70 px-2 py-0.5 rounded hover:bg-sky-100 transition" title="Нажмите, чтобы открыть сводку по буксировке Башкортостана">
+                        <i class="fa-solid fa-water text-sky-600"></i> Уфа (в дрейфе) +4°C
+                    </span>
                 </div>
 
-                <!-- Financial Rates Ticker -->
-                <div class="flex items-center gap-4 overflow-x-auto whitespace-nowrap py-1">
-                    <span class="font-mono"><strong class="text-slate-800 font-semibold">$</strong> 89,45 <span class="text-emerald-600">▲</span></span>
-                    <span class="font-mono"><strong class="text-slate-800 font-semibold">€</strong> 96,12 <span class="text-rose-600">▼</span></span>
-                    <span class="font-mono"><strong class="text-slate-800 font-semibold">¥</strong> 12,38 <span class="text-emerald-600">▲</span></span>
-                    <span class="font-mono"><strong class="text-slate-800 font-semibold">Brent</strong> $84,30 <span class="text-emerald-600">▲</span></span>
-                </div>
-
-                <!-- Socials & Edition -->
-                <div class="hidden lg:flex items-center gap-3">
-                    <a href="#" class="hover:text-brand-red transition"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="#" class="hover:text-brand-red transition"><i class="fa-brands fa-vk"></i></a>
-                    <a href="#" class="hover:text-brand-red transition"><i class="fa-brands fa-odnoklassniki"></i></a>
-                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">18+</span>
+                <!-- Курсы валют и котировки -->
+                <div class="flex items-center gap-3.5 overflow-x-auto whitespace-nowrap py-0.5">
+                    <span class="font-mono"><strong class="text-slate-900 font-semibold">USD</strong> 89,45 <span class="text-emerald-600">▲</span></span>
+                    <span class="font-mono"><strong class="text-slate-900 font-semibold">EUR</strong> 96,12 <span class="text-rose-600">▼</span></span>
+                    <span class="font-mono"><strong class="text-slate-900 font-semibold">CNY</strong> 12,38 <span class="text-emerald-600">▲</span></span>
+                    <span class="font-mono"><strong class="text-slate-900 font-semibold">Brent</strong> $84,30 <span class="text-emerald-600">▲</span></span>
+                    <span class="text-[11px] bg-slate-900 text-white px-2 py-0.5 rounded font-bold tracking-wider">18+</span>
                 </div>
             </div>
 
-            <!-- Portal Logo & Brand Banner -->
-            <div class="py-4 flex items-center justify-between">
+            <!-- Логотип и Поиск -->
+            <div class="py-4 flex items-center justify-between gap-4">
                 <div class="flex items-center gap-6">
-                    <a href="#" class="flex flex-col">
-                        <span class="font-headline tracking-tighter text-3xl sm:text-4xl font-extrabold text-slate-900 leading-none">
-                            ВЕСТНИК<span class="text-brand-red">.</span>РОССИИ
-                        </span>
-                        <span class="text-[10px] tracking-widest uppercase font-semibold text-slate-400 mt-1">
+                    <a href="#" class="flex flex-col group">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-7 bg-brand-red rounded-xs inline-block"></span>
+                            <span class="font-headline tracking-tight text-2xl sm:text-4xl font-black text-slate-900 leading-none">
+                                ВЕСТНИК<span class="text-brand-red">.</span>РОССИИ
+                            </span>
+                        </div>
+                        <span class="text-[10px] tracking-[0.2em] uppercase font-semibold text-slate-400 mt-1 pl-5">
                             Федеральное информационное агентство
                         </span>
                     </a>
                 </div>
 
-                <div class="flex items-center gap-4">
-                    <div class="relative hidden md:block w-64">
-                        <input type="text" placeholder="Поиск по архиву новостей..." class="w-full text-xs bg-slate-100 border border-slate-200 rounded-full py-2 pl-9 pr-4 focus:outline-none focus:border-brand-red focus:bg-white transition">
+                <div class="flex items-center gap-3">
+                    <div class="relative hidden md:block w-72">
+                        <input type="text" placeholder="Поиск по сводкам МВД и регионам..." class="w-full text-xs bg-slate-100 border border-slate-200 rounded-lg py-2 pl-9 pr-4 focus:outline-none focus:border-brand-red focus:bg-white transition">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
                     </div>
-                    <button class="bg-brand-red hover:bg-brand-darkred text-white text-xs font-semibold px-4 py-2 rounded transition flex items-center gap-2">
+                    <button onclick="scrollToComments()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold px-3.5 py-2 rounded-lg transition hidden sm:flex items-center gap-1.5">
+                        <i class="fa-regular fa-comment-dots text-brand-red"></i>
+                        <span>Обсудить (<span id="header-comments-count">4</span>)</span>
+                    </button>
+                    <button id="subscribe-btn" onclick="toggleSubscribe()" class="bg-brand-red hover:bg-brand-darkred text-white text-xs font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2 shadow-xs">
                         <i class="fa-regular fa-bell"></i>
-                        <span>Подписаться</span>
+                        <span id="subscribe-text">Подписаться</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Main Categories Navbar -->
-        <nav class="bg-brand-navy text-white text-sm">
+        <!-- Навигационное меню -->
+        <nav class="bg-brand-navy text-white text-xs sm:text-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between overflow-x-auto scrollbar-none py-2.5">
+                <div class="flex items-center justify-between overflow-x-auto py-2.5">
                     <ul class="flex items-center gap-6 font-medium whitespace-nowrap">
-                        <li><a href="#" class="text-red-400 hover:text-white transition flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>Главное</a></li>
-                        <li><a href="#" class="text-white hover:text-red-300 font-semibold underline underline-offset-8 decoration-2 decoration-brand-red">Политика</a></li>
-                        <li><a href="#" class="hover:text-red-300 transition">Экономика</a></li>
-                        <li><a href="#" class="hover:text-red-300 transition">Происшествия</a></li>
-                        <li><a href="#" class="hover:text-red-300 transition">Общество</a></li>
-                        <li><a href="#" class="hover:text-red-300 transition">Технологии & Геология</a></li>
-                        <li><a href="#" class="hover:text-red-300 transition">Аналитика</a></li>
-                        <li><a href="#" class="hover:text-red-300 transition">Мнения</a></li>
+                        <li><a href="#" class="hover:text-red-400 transition">Политика</a></li>
+                        <li><a href="#" class="hover:text-red-400 transition">Общество</a></li>
+                        <li><a href="#" class="text-white font-semibold underline underline-offset-8 decoration-2 decoration-brand-red flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-brand-red animate-ping"></span>Происшествия
+                        </a></li>
+                        <li><a href="#" class="text-white font-semibold underline underline-offset-8 decoration-2 decoration-brand-red">Курьёзы</a></li>
+                        <li><a href="#dossier-table" class="hover:text-red-400 transition flex items-center gap-1"><i class="fa-solid fa-table-list text-red-400 text-xs"></i> Счёт 0 : 7 (Досье)</a></li>
+                        <li><a href="#" onclick="openArchiveModal('taganrog'); return false;" class="hover:text-red-400 transition text-amber-300">Кризис в Таганроге (−142%)</a></li>
+                        <li><a href="#" onclick="openArchiveModal('bashkortostan'); return false;" class="hover:text-red-400 transition text-sky-300">Дрейф Башкортостана</a></li>
                     </ul>
-                    <div class="hidden md:flex items-center gap-2 pl-4 text-xs text-slate-300">
-                        <span class="cursor-pointer hover:text-white"><i class="fa-solid fa-moon"></i></span>
+                    <div class="hidden lg:flex items-center gap-2 pl-4 text-xs text-slate-400 shrink-0">
+                        <span>Корпункт: Краснодарский край / Анапа</span>
                     </div>
                 </div>
             </div>
         </nav>
 
-        <!-- Breaking News Ribbon (Молния) -->
-        <div class="bg-red-50 border-b border-red-100 py-1.5 px-4 text-xs">
+        <!-- Бегущая строка «МОЛНИЯ» -->
+        <div class="bg-[#fef2f2] border-b border-red-200 py-2 px-4 text-xs overflow-hidden">
             <div class="max-w-7xl mx-auto flex items-center gap-3">
-                <span class="bg-brand-red text-white font-bold px-2 py-0.5 rounded uppercase tracking-wider text-[10px]">Молния</span>
-                <p class="truncate text-slate-800 font-medium">
-                    Минтранс: Первый роторный комплекс для распила границ Башкортостана уже доставлен на границу с Челябинской областью.
-                </p>
+                <span class="bg-brand-red text-white font-extrabold px-2.5 py-0.5 rounded-xs uppercase tracking-wider text-[10px] shrink-0 flex items-center gap-1.5 z-10 shadow-xs">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-rec"></span> МОЛНИЯ
+                </span>
+                <div class="overflow-hidden w-full relative">
+                    <div class="ticker-track text-slate-900 font-medium gap-10">
+                        <span>⚡ В Анапе пенсионерка с термосом шиповника обезвредила «Гостагаевского потрошителя» на Пионерском проспекте</span>
+                        <span class="text-brand-red">•</span>
+                        <span>⚡ Счетная палата: индекс правопорядка в Таганроге остаётся на отметке −142% из-за беженца Мирослава К.</span>
+                        <span class="text-brand-red">•</span>
+                        <span>⚡ Росморречфлот: гидроабразивный распил границ Башкортостана выполнен на 74%, водометы готовы к запуску 1 января</span>
+                        <span class="text-brand-red">•</span>
+                        <span>⚡ Суши-бары Джемете ввели в меню сет «Гостагаевский неудачник» с поломанной деревянной палочкой</span>
+                        <span class="text-brand-red">•</span>
+                        <span>⚡ В Анапе пенсионерка с термосом шиповника обезвредила «Гостагаевского потрошителя» на Пионерском проспекте</span>
+                        <span class="text-brand-red">•</span>
+                        <span>⚡ Счетная палата: индекс правопорядка в Таганроге остаётся на отметке −142% из-за беженца Мирослава К.</span>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- 2. MAIN LAYOUT CONTAINER -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow">
+    <!-- 2. ОСНОВНОЙ КОНТЕЙНЕР СТРАНИЦЫ -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full flex-grow">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- LEFT COLUMN: MAIN ARTICLE (8 cols) -->
-            <article class="lg:col-span-8 bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
+            <!-- ЛЕВАЯ КОЛОНКА: ОСНОВНАЯ СТАТЬЯ (8 колонок) -->
+            <article class="lg:col-span-8 bg-white p-5 sm:p-8 md:p-10 rounded-xl shadow-xs border border-slate-200">
                 
-                <!-- Breadcrumbs -->
-                <nav class="flex items-center gap-2 text-xs text-slate-400 mb-4">
-                    <a href="#" class="hover:underline">Главная</a>
-                    <span>/</span>
-                    <a href="#" class="hover:underline">Политика</a>
-                    <span>/</span>
-                    <span class="text-slate-600 font-medium">Территориальное устройство РФ</span>
-                </nav>
+                <!-- Рубрика и дата + Инструменты текста -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-5 border-b border-slate-100">
+                    <div class="flex items-center gap-2 text-xs font-semibold flex-wrap">
+                        <span class="text-brand-red uppercase tracking-wider">14 октября 2026, 19:15</span>
+                        <span class="text-slate-300">|</span>
+                        <span class="bg-red-50 text-brand-red px-2 py-0.5 rounded">Происшествия</span>
+                        <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded">Курьёзы</span>
+                        <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded flex items-center gap-1">
+                            <i class="fa-solid fa-location-dot text-brand-red text-[10px]"></i> Анапа
+                        </span>
+                    </div>
 
-                <!-- Tags / Category Badges -->
-                <div class="flex flex-wrap items-center gap-2 mb-3">
-                    <span class="bg-red-100 text-brand-darkred font-semibold text-xs px-2.5 py-0.5 rounded">Срочно</span>
-                    <span class="bg-slate-100 text-slate-700 font-medium text-xs px-2.5 py-0.5 rounded">Законопроект № 84920-26</span>
-                    <span class="bg-slate-100 text-slate-700 font-medium text-xs px-2.5 py-0.5 rounded">Геоинженерия</span>
+                    <!-- Панель управления текстом (A- / A+, Скопировать, Печать) -->
+                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                        <span class="hidden sm:inline mr-1" title="Просмотры материала"><i class="fa-regular fa-eye mr-1"></i><span id="views-count">114 820</span></span>
+                        <div class="flex items-center border border-slate-200 rounded-md overflow-hidden bg-slate-50">
+                            <button id="btn-font-dec" class="px-2.5 py-1 text-slate-700 hover:bg-slate-200 hover:text-brand-red font-bold transition" title="Уменьшить шрифт">A-</button>
+                            <span class="text-slate-300">|</span>
+                            <button id="btn-font-inc" class="px-2.5 py-1 text-slate-700 hover:bg-slate-200 hover:text-brand-red font-bold transition" title="Увеличить шрифт">A+</button>
+                        </div>
+                        <button onclick="copyArticleLink()" class="px-2.5 py-1 border border-slate-200 rounded-md bg-slate-50 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1.5" title="Скопировать ссылку">
+                            <i class="fa-solid fa-link text-brand-red"></i>
+                            <span id="copy-btn-text" class="hidden md:inline">Скопировать ссылку</span>
+                        </button>
+                        <button onclick="window.print()" class="px-2.5 py-1 border border-slate-200 rounded-md bg-slate-50 hover:bg-slate-200 text-slate-700 transition" title="Распечатать статью">
+                            <i class="fa-solid fa-print"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Headline -->
-                <h1 class="font-headline font-bold text-2xl sm:text-3xl md:text-4xl text-slate-900 leading-tight mb-4">
-                    Госдума одобрила проект о выводе Башкортостана в нейтральные воды из-за аномальной криминогенной обстановки
+                <!-- Заголовок статьи -->
+                <h1 class="font-headline font-bold text-2xl sm:text-3xl md:text-[36px] text-slate-900 leading-[1.22] mb-5">
+                    «Кошмар Пионерского проспекта»: полиция Анапы разыскивает серийного маньяка, получившего отпор от всех семи потенциальных жертв
                 </h1>
 
-                <!-- Subheading / Lead -->
-                <p class="text-lg sm:text-xl text-slate-600 font-sans leading-relaxed mb-6 font-normal border-b border-slate-100 pb-5">
-                    С 1 января 2027 года субъект отделят от Евразийской тектонической плиты при помощи алмазных дисков и направят по речной системе в Мировой океан на правах автономного плавучего исправительного архипелага.
+                <!-- Подзаголовок / Лид-абзац -->
+                <p class="text-base sm:text-lg text-slate-700 font-serif leading-relaxed mb-6 font-normal bg-slate-50 p-4 sm:p-5 rounded-lg border-l-4 border-brand-red">
+                    Злоумышленник, прибывший из станицы Гостагаевской и подрабатывающий сушистом, пытался пугать прохожих палочкой для роллов, но регулярно оказывается избит пенсионерками и туристами. В отделе полиции протоколы читают со слезами от смеха.
                 </p>
 
-                <!-- Metadata Row (Author, Date, Counters, Tools) -->
-                <div class="flex flex-wrap items-center justify-between text-xs text-slate-500 py-3 mb-6 border-b border-slate-200 gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600">
-                                ВР
+                <!-- ИНТЕРАКТИВНЫЙ ПЛЕЙСХОЛДЕР КАМЕРЫ «БЕЗОПАСНЫЙ КУРОРТ» + ЗАГРУЗКА СВОЕГО ФОТО -->
+                <figure class="mb-8">
+                    <!-- Скрытый input для загрузки пользовательского изображения -->
+                    <input type="file" id="photo-upload-input" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                    
+                    <div id="photo-container" onclick="document.getElementById('photo-upload-input').click()" class="relative w-full aspect-video bg-[#07130f] rounded-xl overflow-hidden border-2 border-slate-800 cursor-pointer group select-none shadow-md">
+                        
+                        <!-- Пользовательское изображение (по умолчанию скрыто) -->
+                        <img id="uploaded-preview" src="" alt="Оперативный снимок с места событий" class="hidden w-full h-full object-cover">
+
+                        <!-- Макет камеры ночного наблюдения «Безопасный курорт» (Пионерский проспект) -->
+                        <div id="cctv-mockup" class="w-full h-full flex flex-col justify-between p-4 sm:p-6 cctv-grid scanline relative">
+                            
+                            <!-- Векторная схема ночной аллеи Пионерского проспекта и кустов можжевельника -->
+                            <svg class="absolute inset-0 w-full h-full opacity-35 pointer-events-none" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Дорожка набережной и бордюр -->
+                                <path d="M80 450 L290 250 L510 250 L720 450" stroke="#10b981" stroke-width="2"/>
+                                <path d="M290 250 L510 250" stroke="#10b981" stroke-width="1" stroke-dasharray="6 6"/>
+                                <!-- Бордюрный камень (место спотыкания) -->
+                                <line x1="210" y1="330" x2="590" y2="330" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="10 5"/>
+                                
+                                <!-- Силуэты кустов можжевельника слева -->
+                                <path d="M60 360 Q110 280 165 350 Q210 290 250 365 Z" fill="rgba(16, 185, 129, 0.15)" stroke="#10b981" stroke-width="1.5"/>
+                                
+                                <!-- Рамка захвата №1: Кусты можжевельника и подозреваемый -->
+                                <rect x="115" y="260" width="145" height="125" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 3" fill="rgba(239, 68, 68, 0.08)"/>
+                                <text x="122" y="252" fill="#f87171" font-size="11" font-family="monospace" font-weight="bold">OBJ_01: СУШИСТ (В КУСТАХ)</text>
+
+                                <!-- Рамка захвата №2: Выбитая деревянная палочка для суши -->
+                                <rect x="360" y="340" width="110" height="55" stroke="#f59e0b" stroke-width="1.8" fill="rgba(245, 158, 11, 0.08)"/>
+                                <line x1="380" y1="375" x2="445" y2="355" stroke="#fde68a" stroke-width="3"/>
+                                <text x="360" y="333" fill="#fbbf24" font-size="10" font-family="monospace">УЛИКА: ПАЛОЧКА ХАСИ</text>
+
+                                <!-- Рамка захвата №3: Пенсионерка с термосом -->
+                                <rect x="515" y="245" width="135" height="145" stroke="#34d399" stroke-width="2" fill="rgba(16, 185, 129, 0.08)"/>
+                                <text x="515" y="237" fill="#34d399" font-size="11" font-family="monospace" font-weight="bold">ТЕРМОС (ШИПОВНИК 78°C)</text>
+                            </svg>
+
+                            <!-- Верхний ряд интерфейса камеры -->
+                            <div class="relative z-10 flex items-start justify-between gap-2 text-xs font-mono flex-wrap">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="bg-brand-red text-white font-bold px-2.5 py-1 rounded-xs tracking-wider uppercase text-[11px] flex items-center gap-1.5 shadow">
+                                        <i class="fa-solid fa-video"></i> КАМЕРА «БЕЗОПАСНЫЙ КУРОРТ»
+                                    </span>
+                                    <span class="bg-black/80 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded-xs text-[11px]">
+                                        КАДР ОПЕРАТИВНОЙ СЪЕМКИ ОМВД ПО Г. АНАПА (ПИОНЕРСКИЙ ПР-Т, КУСТЫ МОЖЖЕВЕЛЬНИКА)
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2 bg-black/80 text-red-400 px-2.5 py-1 rounded-xs border border-red-500/40 text-[11px]">
+                                    <span class="w-2 h-2 rounded-full bg-red-500 animate-rec"></span>
+                                    <span>REC • 21:42:18 • ИК-РЕЖИМ</span>
+                                </div>
                             </div>
-                            <div>
-                                <div class="font-medium text-slate-800">Отдел геополитики и правопорядка</div>
-                                <div>14 октября 2026, 11:30 МСК</div>
+
+                            <!-- Центральный блок с аналитикой камеры и кнопкой загрузки -->
+                            <div class="relative z-10 my-auto flex flex-col items-center text-center max-w-lg mx-auto bg-slate-950/90 border border-emerald-500/50 p-4 sm:p-6 rounded-xl backdrop-blur-xs shadow-2xl group-hover:border-brand-red transition">
+                                <div class="flex items-center gap-3 text-emerald-400 mb-2">
+                                    <i class="fa-solid fa-shield-cat text-2xl sm:text-3xl"></i>
+                                    <span class="text-xs font-mono bg-emerald-950 text-emerald-300 border border-emerald-700 px-2.5 py-0.5 rounded">
+                                        СЧЁТ ЭПИЗОДОВ — 0 : 7 В ПОЛЬЗУ ОТДЫХАЮЩИХ
+                                    </span>
+                                </div>
+                                <div class="font-mono text-xs sm:text-sm font-bold text-amber-400 uppercase tracking-wider mb-1">
+                                    УГРОЗА: 0.0% / САМООБОРОНА ПЕНСИОНЕРОК: 100%
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed mb-3.5">
+                                    Зафиксировано падение подозреваемого через бордюрный камень и потеря инвентаря (палочки для суши и пластикового кинжала). Потерпевшая сторона применяет термос из нержавеющей стали.
+                                </p>
+                                <div class="inline-flex items-center gap-2 bg-brand-red hover:bg-brand-darkred text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition">
+                                    <i class="fa-solid fa-camera-retro"></i>
+                                    <span>Нажмите, чтобы загрузить своё фото для иллюстрации новости</span>
+                                </div>
+                            </div>
+
+                            <!-- Нижний технический бар камеры -->
+                            <div class="relative z-10 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-slate-300 bg-black/75 px-3 py-1.5 rounded border border-emerald-500/20">
+                                <span>ОБЪЕКТ: <strong class="text-white">СУШИСТ (СТ. ГОСТАГАЕВСКАЯ)</strong></span>
+                                <span>ОРУДИЕ: <strong class="text-amber-400">ПАЛОЧКА ДЛЯ РОЛЛОВ (БЕРЁЗА)</strong></span>
+                                <span>СТАТУС ОМВД: <strong class="text-emerald-400">СМЕХ В ДЕЖУРНОЙ ЧАСТИ</strong></span>
                             </div>
                         </div>
+
+                        <!-- Кнопка сброса фото (появляется после загрузки своей картинки) -->
+                        <button id="reset-photo-btn" onclick="resetUploadedPhoto(event)" class="hidden absolute top-3 right-3 z-20 bg-black/85 hover:bg-brand-red text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow-lg">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Вернуть кадр камеры ОМВД
+                        </button>
                     </div>
 
-                    <div class="flex items-center gap-4">
-                        <span title="Время чтения"><i class="fa-regular fa-clock mr-1"></i> 3 мин</span>
-                        <span title="Просмотры"><i class="fa-regular fa-eye mr-1"></i> <span id="views-count">48 290</span></span>
-                        
-                        <!-- Font Size Controls -->
-                        <div class="flex items-center border border-slate-200 rounded px-1.5 py-0.5 bg-slate-50">
-                            <button id="btn-font-dec" class="px-1 text-slate-600 hover:text-brand-red font-bold" title="Уменьшить шрифт">A-</button>
-                            <span class="text-slate-300 mx-1">|</span>
-                            <button id="btn-font-inc" class="px-1 text-slate-600 hover:text-brand-red font-bold" title="Увеличить шрифт">A+</button>
-                        </div>
-
-                        <!-- Print -->
-                        <button onclick="window.print()" class="hover:text-brand-red text-slate-400" title="Распечатать"><i class="fa-solid fa-print"></i></button>
-                    </div>
-                </div>
-
-                <!-- IMAGE PLACEHOLDER SECTION -->
-                <figure class="mb-8 group">
-                    <div class="relative w-full aspect-video sm:aspect-[16/9] bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 rounded-lg overflow-hidden border border-slate-300 flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:border-brand-red transition">
-                        
-                        <!-- Interactive/Decorative Placeholder SVG -->
-                        <div class="w-20 h-20 mb-3 rounded-full bg-white/80 shadow-inner flex items-center justify-center text-slate-400 group-hover:scale-105 group-hover:text-brand-red transition">
-                            <i class="fa-solid fa-ship text-3xl"></i>
-                        </div>
-                        
-                        <p class="font-semibold text-slate-700 text-sm sm:text-base">
-                            Схема-проект: Маршрут буксировки Башкирской континентальной плиты через Волго-Донской канал
-                        </p>
-                        <p class="text-xs text-slate-500 mt-1 max-w-md">
-                            [Место для графического файла / Фоторепортаж буровых работ на границе с Татарстаном и Оренбургской областью]
-                        </p>
-
-                        <!-- Subtle Mock Diagram Overlay lines -->
-                        <div class="mt-4 flex items-center gap-2 text-[11px] font-mono bg-white/90 border border-slate-300 px-3 py-1 rounded text-slate-600">
-                            <span>Глубина пропила: ~35 км</span>
-                            <span>•</span>
-                            <span>Тяга: 120 атомных буксиров</span>
-                        </div>
-                    </div>
-                    <figcaption class="mt-2 text-xs text-slate-500 flex justify-between items-center px-1">
-                        <span>Проектная визуализация инженерного отделения плит по периметру 4200 км</span>
-                        <span class="italic text-slate-400">Фото: Пресс-служба Минтранса РФ / ТАСС</span>
+                    <figcaption class="mt-2.5 text-xs text-slate-500 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 px-1">
+                        <span>Запись с камеры «Безопасный курорт» в районе Джемете: момент бегства подозреваемого от пенсионерки с термосом.</span>
+                        <span class="italic text-slate-400 shrink-0">Фото: Оперативный архив ОМВД по г. Анапа / Вестник России</span>
                     </figcaption>
                 </figure>
 
-                <!-- BODY TEXT -->
+                <!-- ТЕКСТ ОСНОВНОЙ СТАТЬИ (ДОСЛОВНО) -->
                 <div id="article-body" class="article-content font-serif text-slate-800">
-                    <p class="font-semibold text-slate-900 text-lg">
-                        МОСКВА, 14 окт — Вестник России. Государственная дума РФ приняла в третьем, окончательном чтении беспрецедентный федеральный конституционный закон «О пространственно-географической изоляции и морской делимитации Республики Башкортостан».
+                    <p>
+                        Следственный отдел по городу-курорту Анапа проводит проверку по серии необычных инцидентов в районе Пионерского проспекта и Джемете. По данным правоохранительных органов, на побережье объявился злоумышленник, примеряющий на себя образ классического маньяка-потрошителя, однако ни одно из его нападений так и не увенчалось успехом из-за тотальной нерасторопности нападавшего и активного сопротивления местных жительниц.
                     </p>
 
                     <p>
-                        Согласно тексту постановления, с 00:00 по московскому времени 1 января 2027 года регион официально утрачивает статус субъекта Российской Федерации. В течение последующих шести месяцев территория будет физически отделена от Евразийской континентальной плиты и отбуксирована в нейтральные воды Мирового океана.
+                        Как стало известно следствию, подозреваемый — 28-летний сушист местного заведения паназиатской кухни, прибывший в Анапу в статусе вынужденного переселенца из станицы Гостагаевской после серии локальных бытовых неурядиц.
                     </p>
 
-                    <div class="quote-block p-5 my-6 rounded-r-lg font-sans">
-                        <p class="italic text-slate-700 text-base leading-relaxed mb-2 font-normal">
-                            «Статистические показатели правоохранительных органов за последние кварталы продемонстрировали математическую сингулярность: уровень законопослушности в регионе опустился до нулевой отметки. В республике буквально не осталось лиц без активных протоколов — от систематического перехода дорог в неположенном месте и безбилетного проезда до несанкционированного ночного выпаса водоплавающей птицы и уклонения от уплаты штрафов. Профилактические беседы и стандартные меры исправительного характера исчерпали свой потенциал».
-                        </p>
-                        <cite class="text-xs font-bold text-slate-900 not-italic block uppercase tracking-wider">
-                            — Заместитель председателя думского комитета по территориальной санации
-                        </cite>
-                    </div>
-
-                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">
-                        Инженерно-геологический план: распил, изоляция и буксировка
-                    </h2>
-
-                    <p>
-                        В распоряжении «Вестника России» оказался утвержденный регламент работ по отстыковке территории площадью более 143 тысяч квадратных километров. Проект курируется объединенным штабом Минстроя, Росатома и Академии наук:
-                    </p>
-
-                    <div class="font-sans my-6 space-y-4">
-                        <div class="flex items-start gap-3 p-4 bg-slate-50 border border-slate-200 rounded-lg">
-                            <div class="bg-brand-red text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">1</div>
-                            <div>
-                                <h4 class="font-bold text-slate-900 text-sm">Гидроабразивный распил земной коры</h4>
-                                <p class="text-xs text-slate-600 mt-1">
-                                    По периметру административных границ протяженностью свыше 4000 километров будут выставлены 800 высокомощных алмазно-струйных и роторных комплексов. Пропил будет осуществляться вертикально вниз до границы Мохоровичича.
-                                </p>
-                            </div>
+                    <!-- ВРЕЗКА «ПО ТЕМЕ» ВНУТРИ СТАТЬИ (Связь с Таганрогом и Башкортостаном) -->
+                    <div class="my-7 p-4 sm:p-5 bg-slate-50 border border-slate-200 border-l-4 border-l-brand-red rounded-r-xl font-sans shadow-2xs">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-brand-red">По теме: Аномальная миграция и правопорядок</span>
+                            <span class="text-[11px] text-slate-400">Досье «Вестника России»</span>
                         </div>
-
-                        <div class="flex items-start gap-3 p-4 bg-slate-50 border border-slate-200 rounded-lg">
-                            <div class="bg-brand-red text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">2</div>
-                            <div>
-                                <h4 class="font-bold text-slate-900 text-sm">Герметизация коммуникаций и гидроизоляция</h4>
-                                <p class="text-xs text-slate-600 mt-1">
-                                    Все федеральные трассы (включая М-5 «Урал» и М-7 «Волга»), железнодорожные магистрали и трубопроводы будут оснащены быстроразъемными полимерными заглушками. На образовавшихся обрывах установят знаки «Конец географии РФ».
-                                </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                            <div onclick="openArchiveModal('taganrog')" class="cursor-pointer p-3 rounded-lg bg-white border border-slate-200 hover:border-brand-red transition group">
+                                <span class="text-[10px] font-mono text-slate-400 block mb-0.5">14 октября, 17:45 • Таганрог</span>
+                                <div class="font-headline font-bold text-sm text-slate-900 group-hover:text-brand-red leading-snug">
+                                    Счетная палата зафиксировала отрицательный индекс правопорядка (−142%) в Таганроге из-за беженца Мирослава К.
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="flex items-start gap-3 p-4 bg-slate-50 border border-slate-200 rounded-lg">
-                            <div class="bg-brand-red text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">3</div>
-                            <div>
-                                <h4 class="font-bold text-slate-900 text-sm">Вывод через речную сеть в открытый океан</h4>
-                                <p class="text-xs text-slate-600 mt-1">
-                                    Под основание плиты будет закачана подушка из сверхплотных гидрогелевых смесей. Система сверхмощных тягачей направит массив в Каспийское море, откуда через специально расширенный Волго-Донской судоходный канал плавучий Башкортостан выйдет в Черное, Средиземное моря и далее в Атлантику.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">
-                        Юридические последствия и судьба резидентов
-                    </h2>
-
-                    <p>
-                        После выхода в открытые океанические просторы Башкортостан получит статус «Суверенного плавучего образования строгого режима». В Министерстве транспорта подчеркнули, что рулевые механизмы монтироваться не будут — траектория движения региона будет определяться исключительно сезонными течениями Гольфстрима и западными пассатами.
-                    </p>
-
-                    <p>
-                        МВД РФ также объявило об открытии окна добровольной перерегистрации: нарушители правопорядка из других субъектов федерации могут до 20 декабря 2026 года подать заявление о переселении в Уфу по ускоренной процедуре «штрафной репатриации».
-                    </p>
-
-                    <p class="text-sm italic text-slate-500 pt-4 border-t border-slate-200 font-sans">
-                        Официальный комментарий постоянного представительства республики в настоящий момент получить не удалось в связи с проведением плановых учений по отработке действий при экстренной отстыковке от материка.
-                    </p>
-                </div>
-
-                <!-- SHARE & REACTION BAR -->
-                <div class="mt-8 pt-6 border-t border-slate-200">
-                    <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Ваша реакция на новость:</div>
-                    <div class="flex flex-wrap items-center gap-3">
-                        <button onclick="addReaction('like')" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 transition text-sm">
-                            <span>👍 Законопослушно</span>
-                            <span id="react-like" class="font-semibold text-slate-700">1,420</span>
-                        </button>
-                        <button onclick="addReaction('shock')" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 transition text-sm">
-                            <span>😱 А мед как же?</span>
-                            <span id="react-shock" class="font-semibold text-slate-700">3,891</span>
-                        </button>
-                        <button onclick="addReaction('laugh')" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 transition text-sm">
-                            <span>😂 В добрый путь</span>
-                            <span id="react-laugh" class="font-semibold text-slate-700">5,102</span>
-                        </button>
-                        <button onclick="addReaction('think')" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 transition text-sm">
-                            <span>🤔 А визы нужны?</span>
-                            <span id="react-think" class="font-semibold text-slate-700">924</span>
-                        </button>
-                    </div>
-
-                    <!-- Social Share -->
-                    <div class="flex items-center gap-3 mt-6 pt-4 border-t border-slate-100 text-xs">
-                        <span class="text-slate-500 font-medium">Поделиться:</span>
-                        <button onclick="copyArticleLink()" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium flex items-center gap-1">
-                            <i class="fa-solid fa-link"></i> <span id="copy-btn-text">Скопировать ссылку</span>
-                        </button>
-                        <a href="#" class="w-7 h-7 rounded-full bg-[#0077FF] text-white flex items-center justify-center hover:opacity-90"><i class="fa-brands fa-vk"></i></a>
-                        <a href="#" class="w-7 h-7 rounded-full bg-[#229ED9] text-white flex items-center justify-center hover:opacity-90"><i class="fa-brands fa-telegram"></i></a>
-                        <a href="#" class="w-7 h-7 rounded-full bg-[#EE8208] text-white flex items-center justify-center hover:opacity-90"><i class="fa-brands fa-odnoklassniki"></i></a>
-                    </div>
-                </div>
-
-                <!-- 3. INTERACTIVE COMMENTS SECTION -->
-                <section class="mt-10 pt-8 border-t-2 border-slate-100">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold font-headline text-slate-900">
-                            Комментарии читателей <span class="text-sm font-sans font-normal text-slate-500" id="comments-count">(4)</span>
-                        </h3>
-                        <span class="text-xs text-slate-400">Модерация включена</span>
-                    </div>
-
-                    <!-- Input Box -->
-                    <div class="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                        <div class="flex gap-3">
-                            <div class="w-9 h-9 rounded-full bg-brand-navy text-white flex items-center justify-center text-xs font-bold shrink-0">
-                                ВЫ
-                            </div>
-                            <div class="flex-grow">
-                                <textarea id="new-comment-text" rows="2" placeholder="Напишите ваш комментарий в рамках законодательства..." class="w-full text-sm p-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-brand-red resize-none"></textarea>
-                                <div class="flex justify-between items-center mt-2">
-                                    <span class="text-[11px] text-slate-400">Правила комментирования СМИ</span>
-                                    <button onclick="postComment()" class="bg-brand-navy hover:bg-slate-800 text-white text-xs font-semibold px-4 py-1.5 rounded transition">
-                                        Отправить
-                                    </button>
+                            <div onclick="openArchiveModal('bashkortostan')" class="cursor-pointer p-3 rounded-lg bg-white border border-slate-200 hover:border-brand-red transition group">
+                                <span class="text-[10px] font-mono text-slate-400 block mb-0.5">14 октября, 11:30 • Федеральный проект</span>
+                                <div class="font-headline font-bold text-sm text-slate-900 group-hover:text-brand-red leading-snug">
+                                    Госдума одобрила проект о выводе Башкортостана в нейтральные воды Мирового океана с 1 января 2027 года
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Comments List -->
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">
+                        Семь эпизодов — семь поражений
+                    </h2>
+
+                    <p>
+                        Согласно протоколам опроса очевидцев, мужчина выслеживал прохожих в вечернее время, выпрыгивал из кустов можжевельника в черном плаще и с деревянной палочкой для суши в руке, пытаясь изобразить грозного душегуба. Однако курортная аудитория энтузиазма не оценила:
+                    </p>
+
+                    <!-- Маркированный список эпизодов (дословно) -->
+                    <ul class="my-6 space-y-3.5 font-sans text-base text-slate-800 bg-slate-50 p-5 sm:p-6 rounded-xl border border-slate-200">
+                        <li class="flex items-start gap-3">
+                            <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                            <span>В первом случае 64-летняя пенсионерка, направлявшаяся на вечерний заплыв, нанесла нападавшему серию сокрушительных ударов термосом с шиповниковым чаем, после чего скрылась, попутно отругав злоумышленника за помятый газон.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                            <span>Во втором эпизоде две туристки из Норильска приняли появление гражданина за дешевую промо-акцию бара, отобрали у него бандану, скрутили и заставили крутить роллы на спор, после чего тот с позором сбежал.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                            <span>Еще три попытки закончились тем, что нападавший банально споткнулся о бордюрный камень на набережной, уронил пластиковый макет кинжала и был избит зонтиком для пляжного шезлонга.</span>
+                        </li>
+                    </ul>
+
+                    <!-- Официальный комментарий источника в ОМВД -->
+                    <blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+                        <i class="fa-solid fa-quote-left text-4xl text-brand-red/15 absolute top-3 right-4"></i>
+                        <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif relative z-10">
+                            «За последние две недели в дежурную часть поступило семь заявлений, но ни одного — с травмами со стороны потерпевших. Все телесные повреждения зафиксированы исключительно у самого подозреваемого: ушибы переносицы, синяки от дамских сумок и следы от роликовых коньков на предплечье. Честно говоря, протоколы допросов читаем всем отделом до слез. Жертвы даже не испугались — одна из заявительниц принесла на опознание оторванную пуговицу маньяка и потребовала возместить ей моральный ущерб за испорченную тушь от смеха», — прокомментировал ситуацию источник в городском ОМВД.
+                        </p>
+                    </blockquote>
+
+                    <!-- ИНТЕРАКТИВНОЕ ДОСЬЕ / ТАБЛИЦА: Статистика нападений (счет 0 : 7) -->
+                    <div id="dossier-table" class="my-8 bg-slate-900 text-white p-5 sm:p-6 rounded-xl font-sans border border-slate-800 shadow-md">
+                        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-amber-400 font-bold block">Оперативная аналитика ОМВД по г. Анапа</span>
+                                <h3 class="text-base sm:text-lg font-bold text-white mt-0.5">
+                                    Статистика нападений «Гостагаевского потрошителя» (счет 0 : 7 в пользу отдыхающих)
+                                </h3>
+                            </div>
+                            <div class="flex items-center gap-2 bg-slate-950 border border-slate-700 px-3 py-1.5 rounded-lg">
+                                <span class="text-xs text-slate-400">Маньяк</span>
+                                <span class="font-mono text-lg font-black text-red-400">0</span>
+                                <span class="text-slate-600">:</span>
+                                <span class="font-mono text-lg font-black text-emerald-400">7</span>
+                                <span class="text-xs text-slate-400">Курортники</span>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                                        <th class="py-2.5 px-2">Эпизод / Локация</th>
+                                        <th class="py-2.5 px-2">Орудие маньяка</th>
+                                        <th class="py-2.5 px-2">Чем ответила жертва</th>
+                                        <th class="py-2.5 px-2">Итог для нападавшего</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/80 text-slate-200">
+                                    <tr class="hover:bg-slate-800/50 transition">
+                                        <td class="py-3 px-2 font-semibold text-white">№1 • Пионерский пр-т (газон)</td>
+                                        <td class="py-3 px-2 text-amber-300">Деревянная палочка для суши</td>
+                                        <td class="py-3 px-2 text-emerald-300">Термос 1,5 л с шиповниковым чаем (64-летняя пловчиха)</td>
+                                        <td class="py-3 px-2"><span class="bg-red-950 text-red-300 border border-red-800/60 px-2 py-0.5 rounded text-[11px]">Шишка на лбу, лекция за газон</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-800/50 transition">
+                                        <td class="py-3 px-2 font-semibold text-white">№2 • Проход к пляжу Джемете</td>
+                                        <td class="py-3 px-2 text-amber-300">Чёрный плащ и бандана сушиста</td>
+                                        <td class="py-3 px-2 text-emerald-300">Две туристки из Норильска (рукопашный захват)</td>
+                                        <td class="py-3 px-2"><span class="bg-red-950 text-red-300 border border-red-800/60 px-2 py-0.5 rounded text-[11px]">Отобрана бандана, накрутил 24 ролла</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-800/50 transition">
+                                        <td class="py-3 px-2 font-semibold text-white">№3–5 • Центральная набережная</td>
+                                        <td class="py-3 px-2 text-amber-300">Пластиковый макет кинжала</td>
+                                        <td class="py-3 px-2 text-emerald-300">Бордюрный камень + пляжный зонтик от шезлонга</td>
+                                        <td class="py-3 px-2"><span class="bg-red-950 text-red-300 border border-red-800/60 px-2 py-0.5 rounded text-[11px]">Ушиб переносицы, поломка кинжала</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-800/50 transition">
+                                        <td class="py-3 px-2 font-semibold text-white">№6 • Аллея роз</td>
+                                        <td class="py-3 px-2 text-amber-300">Пакетик просроченного васаби</td>
+                                        <td class="py-3 px-2 text-emerald-300">Дамская сумка и роликовые коньки</td>
+                                        <td class="py-3 px-2"><span class="bg-red-950 text-red-300 border border-red-800/60 px-2 py-0.5 rounded text-[11px]">Следы колёсиков на предплечье</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-800/50 transition">
+                                        <td class="py-3 px-2 font-semibold text-white">№7 • Кусты у санатория</td>
+                                        <td class="py-3 px-2 text-amber-300">Угрожающий шёпот из можжевельника</td>
+                                        <td class="py-3 px-2 text-emerald-300">Истерический хохот заявительницы</td>
+                                        <td class="py-3 px-2"><span class="bg-red-950 text-red-300 border border-red-800/60 px-2 py-0.5 rounded text-[11px]">Оторвана пуговица, иск за тушь</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mt-3 pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between text-[11px] text-slate-400 gap-2">
+                            <span>Примечание: ни одна потенциальная жертва физически не пострадала.</span>
+                            <span class="text-emerald-400 font-mono">● Квалификация: мелкое курортное невезение</span>
+                        </div>
+                    </div>
+
+                    <p>
+                        Коллеги мужчины по суши-бару охарактеризовали его как тихого работника, который «плохо заворачивал "Филадельфию" и постоянно ронял нори на пол».
+                    </p>
+
+                    <p>
+                        В настоящее время полиция решает вопрос о квалификации действий гражданина: состав преступления по тяжким статьям собрать затруднительно, поскольку потерпевшие отказываются признавать себя пострадавшими и просят правоохранителей «просто отправить парня на курсы самообороны или вернуть обратно в Гостагаевскую». Проводится доследственная проверка.
+                    </p>
+                </div>
+
+                <!-- 3. КНОПКИ РЕАКЦИЙ ПОД СТАТЬЕЙ -->
+                <div class="mt-8 pt-6 border-t border-slate-200">
+                    <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Оцените материал:</div>
+                    <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+                        <button onclick="addReaction('pity')" id="btn-react-pity" class="flex items-center gap-2 px-3.5 py-2 rounded-full border border-slate-200 bg-slate-50 hover:bg-red-50 hover:border-brand-red transition text-xs sm:text-sm font-medium">
+                            <span>🥺 Жалко пацана</span>
+                            <span id="react-pity" class="font-bold text-slate-800 bg-white px-2 py-0.5 rounded-full border border-slate-200 text-xs">5 412</span>
+                        </button>
+                        <button onclick="addReaction('granny')" id="btn-react-granny" class="flex items-center gap-2 px-3.5 py-2 rounded-full border border-slate-200 bg-slate-50 hover:bg-red-50 hover:border-brand-red transition text-xs sm:text-sm font-medium">
+                            <span>🧋 Бабушка с термосом — герой</span>
+                            <span id="react-granny" class="font-bold text-slate-800 bg-white px-2 py-0.5 rounded-full border border-slate-200 text-xs">9 834</span>
+                        </button>
+                        <button onclick="addReaction('rolls')" id="btn-react-rolls" class="flex items-center gap-2 px-3.5 py-2 rounded-full border border-slate-200 bg-slate-50 hover:bg-red-50 hover:border-brand-red transition text-xs sm:text-sm font-medium">
+                            <span>🍣 Роллы хоть вкусные?</span>
+                            <span id="react-rolls" class="font-bold text-slate-800 bg-white px-2 py-0.5 rounded-full border border-slate-200 text-xs">3 760</span>
+                        </button>
+                        <button onclick="addReaction('stanitsa')" id="btn-react-stanitsa" class="flex items-center gap-2 px-3.5 py-2 rounded-full border border-slate-200 bg-slate-50 hover:bg-red-50 hover:border-brand-red transition text-xs sm:text-sm font-medium">
+                            <span>🚜 Вернуть в Гостагаевскую</span>
+                            <span id="react-stanitsa" class="font-bold text-slate-800 bg-white px-2 py-0.5 rounded-full border border-slate-200 text-xs">6 190</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. ЖИВОЙ БЛОК КОММЕНТАРИЕВ ЧИТАТЕЛЕЙ -->
+                <section id="comments-section" class="mt-10 pt-8 border-t-2 border-slate-100">
+                    <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+                        <h3 class="text-xl font-bold font-headline text-slate-900">
+                            Комментарии читателей <span class="text-sm font-sans font-normal text-slate-500" id="comments-count">(4)</span>
+                        </h3>
+                        <span class="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded font-medium">
+                            <i class="fa-solid fa-mug-hot mr-1"></i>Прямая линия с курорта Анапа
+                        </span>
+                    </div>
+
+                    <!-- Форма добавления нового комментария -->
+                    <div class="mb-6 bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <input id="comment-author" type="text" placeholder="Ваше имя и город (например: Виктор, Джемете)" class="text-xs p-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-brand-red">
+                            <div class="text-[11px] text-slate-400 flex items-center sm:justify-end">
+                                Просьба не приносить в комментарии пластиковые кинжалы
+                            </div>
+                        </div>
+                        <textarea id="new-comment-text" rows="3" placeholder="Поделитесь мнением об инциденте на Пионерском проспекте..." class="w-full text-sm p-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-brand-red resize-none"></textarea>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="text-[11px] text-slate-400">Модерация ИА «Вестник России»</span>
+                            <button onclick="postComment()" class="bg-brand-red hover:bg-brand-darkred text-white text-xs font-semibold px-5 py-2 rounded-lg transition shadow-2xs">
+                                Опубликовать
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Список комментариев -->
                     <div class="space-y-4" id="comments-list">
                         
-                        <!-- Comment 1 -->
-                        <div class="p-4 rounded-lg border border-slate-100 bg-white">
+                        <!-- 1. Лидия Петровна с термосом -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-white">
                             <div class="flex items-center justify-between mb-1.5">
-                                <span class="font-semibold text-xs text-slate-800">Салават_Уфа_02</span>
-                                <span class="text-[10px] text-slate-400">10 минут назад</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-xs text-slate-900">Лидия_Петровна_64_Заплыв</span>
+                                    <span class="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded font-semibold">Участница эпизода №1</span>
+                                </div>
+                                <span class="text-[11px] text-slate-400">8 минут назад</span>
                             </div>
-                            <p class="text-sm text-slate-700">
-                                Главный вопрос: башкирский мёд с собой забираем или пошлины введут на экспорт через нейтральные воды? И где загранпаспорта получать, если ОВИР тоже уплывет?
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                Иду я, значит, спокойно к морю, никого не трогаю, в термосе свежий шиповник на меду. Тут из можжевельника вываливается это чудо в плаще и тычет в меня палочкой для суши! А там газон только вчера санаторий засадил! Пришлось приложить термосом два раза для профилактики. Кстати, термос советский, со знаком качества, даже вмятины не осталось, а мальчишке советую кушать горячее и не мять клумбы!
                             </p>
-                            <div class="mt-2 text-xs text-slate-400 flex items-center gap-3">
-                                <button class="hover:text-emerald-600">👍 184</button>
-                                <button class="hover:text-rose-600">👎 3</button>
-                                <button class="hover:underline">Ответить</button>
-                            </div>
-                        </div>
-
-                        <!-- Comment 2 -->
-                        <div class="p-4 rounded-lg border border-slate-100 bg-white">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="font-semibold text-xs text-slate-800">Инженер_Геодезист_88</span>
-                                <span class="text-[10px] text-slate-400">22 минуты назад</span>
-                            </div>
-                            <p class="text-sm text-slate-700">
-                                Чисто технически: как они собираются гору Ямантау сквозь Волго-Донской шлюз протискивать? Там же габариты шлюзовых камер максимум под танкеры типа «Волгомакс»! Придется верхушку срезать или боком кантовать.
-                            </p>
-                            <div class="mt-2 text-xs text-slate-400 flex items-center gap-3">
-                                <button class="hover:text-emerald-600">👍 92</button>
-                                <button class="hover:text-rose-600">👎 0</button>
-                                <button class="hover:underline">Ответить</button>
-                            </div>
-                        </div>
-
-                        <!-- Comment 3 -->
-                        <div class="p-4 rounded-lg border border-slate-100 bg-white">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="font-semibold text-xs text-slate-800">Турист_Со_Стажем</span>
-                                <span class="text-[10px] text-slate-400">45 минут назад</span>
-                            </div>
-                            <p class="text-sm text-slate-700">
-                                Вот так всегда! Только сплав по реке Белой на майские праздники забронировал, а теперь река вообще в Атлантику дрейфует. Спасжилеты хоть океанические выдадут?
-                            </p>
-                            <div class="mt-2 text-xs text-slate-400 flex items-center gap-3">
-                                <button class="hover:text-emerald-600">👍 143</button>
+                            <div class="mt-2.5 text-xs text-slate-400 flex items-center gap-4">
+                                <button onclick="likeComment(this)" class="hover:text-emerald-600 font-medium">👍 <span>1 420</span></button>
                                 <button class="hover:text-rose-600">👎 1</button>
-                                <button class="hover:underline">Ответить</button>
+                            </div>
+                        </div>
+
+                        <!-- 2. Туристки из Норильска -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-white">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-xs text-slate-900">Света_и_Жанна_Норильск</span>
+                                    <span class="text-[10px] bg-sky-50 text-sky-800 border border-sky-200 px-2 py-0.5 rounded font-semibold">Участницы эпизода №2</span>
+                                </div>
+                                <span class="text-[11px] text-slate-400">19 минут назад</span>
+                            </div>
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                А мы реально думали, что это аниматор от доставки роллов! У нас в Норильске росомахи во дворе страшнее выглядят, чем этот «потрошитель». Бандану его себе на память оставили, но «Филадельфию» он нам на лавочке скрутил кривовато — рис разваливается. Три звезды из пяти с натяжкой!
+                            </p>
+                            <div class="mt-2.5 text-xs text-slate-400 flex items-center gap-4">
+                                <button onclick="likeComment(this)" class="hover:text-emerald-600 font-medium">👍 <span>985</span></button>
+                                <button class="hover:text-rose-600">👎 0</button>
+                            </div>
+                        </div>
+
+                        <!-- 3. Владелец суши-кафе -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-white">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-xs text-slate-900">Арсен_СушиВок_Пионерский</span>
+                                    <span class="text-[10px] bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded">Работодатель</span>
+                                </div>
+                                <span class="text-[11px] text-slate-400">27 минут назад</span>
+                            </div>
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                То-то я смотрю, куда у нас со склада бамбуковые палочки пропадают и почему он каждую смену приходит то в синяках от пляжного зонтика, то с запахом шиповника! Говорил, что в Гостагаевской маршрутку штурмом берёт. Завтра выйдет на смену — лишу премии за перерасход нори!
+                            </p>
+                            <div class="mt-2.5 text-xs text-slate-400 flex items-center gap-4">
+                                <button onclick="likeComment(this)" class="hover:text-emerald-600 font-medium">👍 <span>640</span></button>
+                                <button class="hover:text-rose-600">👎 2</button>
+                            </div>
+                        </div>
+
+                        <!-- 4. Дежурный ОМВД Анапы -->
+                        <div class="p-4 rounded-xl border border-slate-200 bg-white">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-xs text-slate-900">Дежурный_ОМВД_Анапа</span>
+                                    <span class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Дежурная часть</span>
+                                </div>
+                                <span class="text-[11px] text-slate-400">42 минуты назад</span>
+                            </div>
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                Уважаемые жители и гости курорта! Убедительная просьба: при встрече с подозреваемым прекратите отбирать у него вещи и заставлять лепить онигири. Он уже сам к нам в отдел стучится, просит политического убежища от пенсионерок с Пионерского проспекта.
+                            </p>
+                            <div class="mt-2.5 text-xs text-slate-400 flex items-center gap-4">
+                                <button onclick="likeComment(this)" class="hover:text-emerald-600 font-medium">👍 <span>1 890</span></button>
+                                <button class="hover:text-rose-600">👎 0</button>
                             </div>
                         </div>
 
@@ -427,98 +623,155 @@
 
             </article>
 
-            <!-- RIGHT COLUMN: SIDEBAR (4 cols) -->
+            <!-- ПРАВАЯ КОЛОНКА: САЙДБАР (4 колонки) -->
             <aside class="lg:col-span-4 space-y-6">
                 
-                <!-- 1. LIVE TICKER / TOP NEWS -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <!-- 1. ОПРОС ДНЯ (С 4 ВАРИАНТАМИ И ЖИВЫМ ПЕРЕСЧЕТОМ ПРОЦЕНТОВ) -->
+                <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-xs">
+                    <div class="border-b border-slate-200 pb-3 mb-4">
+                        <span class="text-[10px] uppercase font-extrabold text-brand-red tracking-widest block">Опрос дня</span>
+                        <h4 class="font-headline font-bold text-base sm:text-lg text-slate-900 mt-1 leading-snug">
+                            Какую меру пресечения выбрать для анапского сушиста-потрошителя?
+                        </h4>
+                    </div>
+
+                    <div id="poll-container" class="space-y-2.5 text-xs">
+                        <!-- Вариант 1 -->
+                        <button onclick="votePoll(0)" class="poll-option w-full text-left p-3 rounded-lg border border-slate-200 hover:border-brand-red transition relative overflow-hidden group">
+                            <div class="poll-bar absolute left-0 top-0 bottom-0 bg-red-100/80 transition-all duration-500" style="width: 39%"></div>
+                            <div class="relative z-10 flex justify-between items-center gap-2">
+                                <span class="font-medium text-slate-800 group-hover:text-brand-darkred">1. Отправить обратно в станицу Гостагаевскую</span>
+                                <span class="font-mono font-bold text-slate-900 shrink-0 poll-pct">39%</span>
+                            </div>
+                        </button>
+
+                        <!-- Вариант 2 -->
+                        <button onclick="votePoll(1)" class="poll-option w-full text-left p-3 rounded-lg border border-slate-200 hover:border-brand-red transition relative overflow-hidden group">
+                            <div class="poll-bar absolute left-0 top-0 bottom-0 bg-slate-200/70 transition-all duration-500" style="width: 31%"></div>
+                            <div class="relative z-10 flex justify-between items-center gap-2">
+                                <span class="font-medium text-slate-800 group-hover:text-brand-darkred">2. Записать на курсы самообороны от пенсионерок</span>
+                                <span class="font-mono font-bold text-slate-900 shrink-0 poll-pct">31%</span>
+                            </div>
+                        </button>
+
+                        <!-- Вариант 3 -->
+                        <button onclick="votePoll(2)" class="poll-option w-full text-left p-3 rounded-lg border border-slate-200 hover:border-brand-red transition relative overflow-hidden group">
+                            <div class="poll-bar absolute left-0 top-0 bottom-0 bg-slate-200/70 transition-all duration-500" style="width: 19%"></div>
+                            <div class="relative z-10 flex justify-between items-center gap-2">
+                                <span class="font-medium text-slate-800 group-hover:text-brand-darkred">3. Научить нормально заворачивать «Филадельфию»</span>
+                                <span class="font-mono font-bold text-slate-900 shrink-0 poll-pct">19%</span>
+                            </div>
+                        </button>
+
+                        <!-- Вариант 4 -->
+                        <button onclick="votePoll(3)" class="poll-option w-full text-left p-3 rounded-lg border border-slate-200 hover:border-brand-red transition relative overflow-hidden group">
+                            <div class="poll-bar absolute left-0 top-0 bottom-0 bg-slate-200/70 transition-all duration-500" style="width: 11%"></div>
+                            <div class="relative z-10 flex justify-between items-center gap-2">
+                                <span class="font-medium text-slate-800 group-hover:text-brand-darkred">4. Выслать на дрейфующий Башкортостан через Таганрог</span>
+                                <span class="font-mono font-bold text-slate-900 shrink-0 poll-pct">11%</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div id="poll-thankyou" class="hidden text-xs text-emerald-800 bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg text-center mt-3 font-medium">
+                        ✓ Ваш голос учтён и передан в дежурную часть ОМВД по г. Анапа!
+                    </div>
+
+                    <div class="mt-3 pt-2 border-t border-slate-100 text-[11px] text-slate-400 flex justify-between">
+                        <span>Опрос читателей «Вестника России»</span>
+                        <span>Голосов: <strong id="poll-total-count" class="text-slate-600">34 200</strong></span>
+                    </div>
+                </div>
+
+                <!-- 2. КАРТОЧКИ «ГЛАВНЫЕ ТЕМЫ ФЕДЕРАЛЬНОЙ ПОВЕСТКИ» (СВЯЗЬ ВСЕЛЕННОЙ) -->
+                <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-xs">
                     <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
-                        <h3 class="font-bold text-sm uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                        <h3 class="font-bold text-xs uppercase tracking-wider text-slate-900 flex items-center gap-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-brand-red"></span>
-                            Главное за час
+                            Главное в федеральной повестке
                         </h3>
-                        <span class="text-xs text-brand-red font-semibold cursor-pointer hover:underline">Все новости</span>
+                        <span class="text-[11px] text-brand-red font-semibold">Спецдосье</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Карточка про Таганрог -->
+                        <div onclick="openArchiveModal('taganrog')" class="cursor-pointer p-3.5 rounded-xl bg-rose-50/50 border border-rose-200 hover:border-brand-red transition group">
+                            <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-brand-red mb-1">
+                                <span>Таганрог • ЧП в статистике</span>
+                                <span class="font-mono bg-brand-red text-white px-1.5 py-0.5 rounded">−142%</span>
+                            </div>
+                            <h4 class="font-headline font-bold text-sm text-slate-900 group-hover:text-brand-red leading-snug mb-1.5">
+                                Счетная палата зафиксировала отрицательный индекс правопорядка в Таганроге после прибытия беженца Мирослава К.
+                            </h4>
+                            <p class="text-[11px] text-slate-600 leading-relaxed mb-2">
+                                Выходец из Башкортостана перешёл Привокзальную площадь спиной вперёд и накормил голубей немаркированными семечками.
+                            </p>
+                            <span class="text-[11px] font-semibold text-brand-red inline-flex items-center gap-1">
+                                Открыть полный текст <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </span>
+                        </div>
+
+                        <!-- Карточка про Башкортостан -->
+                        <div onclick="openArchiveModal('bashkortostan')" class="cursor-pointer p-3.5 rounded-xl bg-sky-50/50 border border-sky-200 hover:border-sky-600 transition group">
+                            <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-sky-800 mb-1">
+                                <span>Госдума • Геотектоника</span>
+                                <span class="font-mono bg-sky-800 text-white px-1.5 py-0.5 rounded">01.01.2027</span>
+                            </div>
+                            <h4 class="font-headline font-bold text-sm text-slate-900 group-hover:text-sky-700 leading-snug mb-1.5">
+                                Госдума одобрила проект о выводе Башкортостана в нейтральные воды из-за аномальной криминогенной обстановки
+                            </h4>
+                            <p class="text-[11px] text-slate-600 leading-relaxed mb-2">
+                                По периметру границ (4000 км) работают алмазные буры. Регион отбуксируют через Каспий и Волго-Дон в Мировой океан.
+                            </p>
+                            <span class="text-[11px] font-semibold text-sky-800 inline-flex items-center gap-1">
+                                Открыть полный текст <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. ЛЕНТА НОВОСТЕЙ «КАРТИНА ДНЯ» -->
+                <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
+                        <h3 class="font-bold text-xs uppercase tracking-wider text-slate-900">Картина дня</h3>
+                        <span class="text-[11px] text-slate-400 font-mono">14.10.2026</span>
                     </div>
 
                     <ul class="space-y-3.5 text-xs">
                         <li class="border-b border-slate-100 pb-3">
-                            <span class="text-slate-400 font-mono text-[11px] block mb-1">11:42</span>
-                            <a href="#" class="font-medium text-slate-800 hover:text-brand-red leading-snug block transition">
-                                Минприроды: На месте Башкортостана планируется вырыть новое море для курортов Челябинской области.
-                            </a>
+                            <span class="text-brand-red font-mono font-bold mr-1.5">19:22</span>
+                            <span class="text-slate-800 font-medium">Санатории Анапы включили метание полуторалитрового термоса в программу утренней лечебной физкультуры.</span>
                         </li>
                         <li class="border-b border-slate-100 pb-3">
-                            <span class="text-slate-400 font-mono text-[11px] block mb-1">11:15</span>
-                            <a href="#" class="font-medium text-slate-800 hover:text-brand-red leading-snug block transition">
-                                «АвтоВАЗ» представил амфибийную версию Lada Granta для поездок в отделившиеся регионы.
-                            </a>
+                            <span class="text-slate-400 font-mono font-bold mr-1.5">18:50</span>
+                            <span class="text-slate-800 font-medium">Глава станицы Гостагаевской заявил, что подозреваемый ещё в школе проиграл в рукопашную кусту крыжовника.</span>
                         </li>
                         <li class="border-b border-slate-100 pb-3">
-                            <span class="text-slate-400 font-mono text-[11px] block mb-1">10:50</span>
-                            <a href="#" class="font-medium text-slate-800 hover:text-brand-red leading-snug block transition">
-                                В Госдуме предложили оснастить Республику Саха парусами на случай глобального потепления.
-                            </a>
-                        </li>
-                        <li class="border-b border-slate-100 pb-3">
-                            <span class="text-slate-400 font-mono text-[11px] block mb-1">10:20</span>
-                            <a href="#" class="font-medium text-slate-800 hover:text-brand-red leading-snug block transition">
-                                Росгвардия закупила 500 тыс. якорей повышенной прочности для сдерживания неконтролируемого дрейфа.
-                            </a>
+                            <span class="text-slate-400 font-mono font-bold mr-1.5">18:15</span>
+                            <span class="text-slate-800 font-medium">Беженец Мирослав К. в Таганроге попытался позвонить анапскому сушисту, но уронил рейтинг оператора связи до −80%.</span>
                         </li>
                         <li>
-                            <span class="text-slate-400 font-mono text-[11px] block mb-1">09:40</span>
-                            <a href="#" class="font-medium text-slate-800 hover:text-brand-red leading-snug block transition">
-                                Курс башкирского чак-чака на Московской бирже вырос на 14% на фоне новостей об автономии.
-                            </a>
+                            <span class="text-slate-400 font-mono font-bold mr-1.5">17:55</span>
+                            <span class="text-slate-800 font-medium">Туристки из Норильска открыли на Пионерском проспекте курсы экстремальной лепки роллов для приезжих хулиганов.</span>
                         </li>
                     </ul>
                 </div>
 
-                <!-- 2. INTERACTIVE POLL -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <div class="border-b border-slate-200 pb-2 mb-3">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Опрос дня</span>
-                        <h4 class="font-bold text-sm text-slate-900 mt-1">Куда выгоднее всего отбуксировать отделившийся Башкортостан?</h4>
+                <!-- 4. ОПЕРАТИВНАЯ ОРИЕНТИРОВКА ОМВД -->
+                <div class="bg-gradient-to-br from-slate-900 via-brand-navy to-slate-950 text-white p-5 rounded-xl shadow-xs border border-slate-800">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="bg-amber-500 text-slate-950 text-[10px] font-extrabold px-2 py-0.5 rounded uppercase">Ориентировка ОМВД</span>
+                        <span class="text-[11px] font-mono text-emerald-400">Угроза: 0%</span>
                     </div>
-
-                    <div id="poll-container" class="space-y-2 text-xs">
-                        <button onclick="votePoll(0)" class="w-full text-left p-2.5 rounded border border-slate-200 hover:border-brand-red hover:bg-slate-50 transition flex justify-between items-center group">
-                            <span>В тёплый Индийский океан (ближе к Гоа)</span>
-                            <span class="font-bold text-slate-500 group-hover:text-brand-red poll-pct" data-val="54">54%</span>
-                        </button>
-                        <button onclick="votePoll(1)" class="w-full text-left p-2.5 rounded border border-slate-200 hover:border-brand-red hover:bg-slate-50 transition flex justify-between items-center group">
-                            <span>Оставить в Каспийском море как остров</span>
-                            <span class="font-bold text-slate-500 group-hover:text-brand-red poll-pct" data-val="26">26%</span>
-                        </button>
-                        <button onclick="votePoll(2)" class="w-full text-left p-2.5 rounded border border-slate-200 hover:border-brand-red hover:bg-slate-50 transition flex justify-between items-center group">
-                            <span>В Северный Ледовитый — остыть и подумать</span>
-                            <span class="font-bold text-slate-500 group-hover:text-brand-red poll-pct" data-val="15">15%</span>
-                        </button>
-                        <button onclick="votePoll(3)" class="w-full text-left p-2.5 rounded border border-slate-200 hover:border-brand-red hover:bg-slate-50 transition flex justify-between items-center group">
-                            <span>Затрудняюсь ответить / Я из Уфы</span>
-                            <span class="font-bold text-slate-500 group-hover:text-brand-red poll-pct" data-val="5">5%</span>
-                        </button>
-                    </div>
-
-                    <div id="poll-thankyou" class="hidden text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 p-2.5 rounded text-center mt-3 font-medium">
-                        ✓ Ваш голос учтен комиссией по делимитации!
-                    </div>
-
-                    <div class="mt-3 text-[10px] text-slate-400 text-right">
-                        Всего проголосовало: 14 812 читателей
-                    </div>
-                </div>
-
-                <!-- 3. BANNER / PROMO BLOCK -->
-                <div class="bg-gradient-to-br from-slate-900 to-brand-navy text-white p-5 rounded-xl shadow-sm relative overflow-hidden">
-                    <div class="relative z-10">
-                        <span class="bg-brand-red text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">Спецпроект</span>
-                        <h4 class="font-headline font-bold text-lg mt-2 mb-1">Морская карта России 2027</h4>
-                        <p class="text-xs text-slate-300 mb-4">Интерактивный атлас: новые береговые линии Поволжья и расписание приливов.</p>
-                        <a href="#" class="inline-block bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded hover:bg-slate-100 transition">Смотреть инфографику</a>
-                    </div>
-                    <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl text-white">
-                        <i class="fa-solid fa-compass"></i>
+                    <div class="text-sm font-bold text-white mb-2">Приметы «Гостагаевского потрошителя»:</div>
+                    <ul class="text-[11px] text-slate-300 space-y-1.5 mb-3">
+                        <li>• Чёрный плащ без одной пуговицы (изъята на опознание);</li>
+                        <li>• На предплечье чёткий протектор от роликовых коньков;</li>
+                        <li>• Пахнет шиповниковым чаем и рисовым уксусом;</li>
+                        <li>• При виде бабушек с термосами падает за бордюр заранее.</li>
+                    </ul>
+                    <div class="text-[10px] text-slate-400 border-t border-slate-800 pt-2">
+                        При обнаружении — не бить зонтиками, а аккуратно проводить в суши-бар.
                     </div>
                 </div>
 
@@ -527,116 +780,231 @@
         </div>
     </main>
 
-    <!-- 4. OFFICIAL FOOTER IN RUSSIAN MEDIA STYLE -->
+    <!-- МОДАЛЬНОЕ ОКНО АРХИВА («ТАГАНРОГ −142%» И «ДРЕЙФ БАШКОРТОСТАНА») -->
+    <div id="archive-modal" class="fixed inset-0 z-50 hidden bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-2xl w-full max-h-[88vh] overflow-y-auto shadow-2xl border border-slate-200 p-6 sm:p-8 relative">
+            <button onclick="closeArchiveModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-brand-red hover:text-white text-slate-600 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Переключатель между двумя архивными хитами -->
+            <div class="flex flex-wrap gap-2 mb-5 pb-3 border-b border-slate-100 pr-8">
+                <button id="tab-btn-taganrog" onclick="openArchiveModal('taganrog')" class="text-xs font-bold px-3 py-1.5 rounded-lg transition bg-brand-red text-white">
+                    Выпуск №2: Коллапс в Таганроге (−142%)
+                </button>
+                <button id="tab-btn-bashkortostan" onclick="openArchiveModal('bashkortostan')" class="text-xs font-bold px-3 py-1.5 rounded-lg transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+                    Выпуск №1: Отпиливание Башкортостана
+                </button>
+            </div>
+
+            <!-- Контент 1: Таганрог -->
+            <div id="modal-content-taganrog">
+                <div class="text-xs font-bold text-brand-red uppercase tracking-wider mb-1">14 октября 2026, 17:45 | Происшествия, Общество | Таганрог</div>
+                <h3 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mb-4 leading-snug">
+                    Счетная палата зафиксировала отрицательный индекс правопорядка в Таганроге после прибытия беженца из Башкортостана
+                </h3>
+                <div class="space-y-3 text-sm text-slate-700 font-serif leading-relaxed">
+                    <p>
+                        Город Таганрог Ростовской области стал первым населенным пунктом в новейшей истории РФ, где официально зафиксирован отрицательный показатель законопослушности населения. Согласно экстренному докладу аналитического центра правовой статистики, совокупный индекс правопорядка в муниципалитете рухнул до отметки <strong>−142%</strong>.
+                    </p>
+                    <p>
+                        Причиной резкого статистического коллапса стало прибытие в приморский город уроженца Башкортостана Мирослава К., покинувшего республику за несколько недель до начала инженерных работ по ее отпиливанию от материка.
+                    </p>
+                    <blockquote class="p-3.5 bg-red-50/60 border-l-4 border-brand-red font-sans text-xs italic text-slate-800">
+                        «После того как гражданин Мирослав К. сошел на перрон вокзала Таганрог-1, кривая совершаемых правонарушений приобрела вертикальный характер. Его личная криминогенная плотность полностью обнулила положительные показатели всех остальных 240 тысяч жителей города», — сообщили в надзорном ведомстве.
+                    </blockquote>
+                    <p>
+                        Уже в первые 40 минут гражданин перешел Привокзальную площадь по диагонали спиной вперед, слушал музыку свыше санитарных норм, отказался приложить карту к валидатору и накормил голубей семечками без маркировки «Честный знак», от чего серверы системы «Безопасный город» попытались выписать штрафы самим себе.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Контент 2: Башкортостан -->
+            <div id="modal-content-bashkortostan" class="hidden">
+                <div class="text-xs font-bold text-sky-700 uppercase tracking-wider mb-1">14 октября 2026, 11:30 | Политика, Геотектоника | Уфа — Мировой океан</div>
+                <h3 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mb-4 leading-snug">
+                    Госдума одобрила проект о выводе Башкортостана в нейтральные воды из-за аномальной криминогенной обстановки
+                </h3>
+                <div class="space-y-3 text-sm text-slate-700 font-serif leading-relaxed">
+                    <p>
+                        Государственная дума РФ приняла в третьем, окончательном чтении законопроект «О пространственно-географической изоляции Республики Башкортостан». С 1 января 2027 года регион официально выводится из состава РФ, после чего его территорию отделят от Евразийской континентальной плиты и отбуксируют в международные воды Мирового океана.
+                    </p>
+                    <p>
+                        Поводом стали отчеты межведомственной комиссии: статистический уровень законопослушности в субъекте упал до нуля — в республике не осталось граждан без штрафов за переход дороги, несанкционированный выпас гусей или иных правонарушений.
+                    </p>
+                    <div class="p-3.5 bg-sky-50 border-l-4 border-sky-700 font-sans text-xs text-slate-800 space-y-1">
+                        <div><strong>Этапы проекта в ночь на 1 января 2027 года:</strong></div>
+                        <div>• <strong>Гидроабразивный распил:</strong> роторные буры и алмазные пилы вдоль 4000 км границ до мантии;</div>
+                        <div>• <strong>Изоляция:</strong> герметичные заглушки на трассах и береговые обрывы вместо мостов;</div>
+                        <div>• <strong>Буксировка:</strong> промышленные водометные движители проведут регион через Каспий и Волго-Донской канал в открытый океан.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
+                <span class="text-[11px] text-slate-400">Единый информационный архив ИА «Вестник России»</span>
+                <button onclick="closeArchiveModal()" class="bg-brand-navy hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
+                    Вернуться к новости про Анапу
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. ПОДВАЛ САЙТА (FOOTER) -->
     <footer class="bg-brand-navy text-slate-400 text-xs border-t border-slate-800 mt-12 pt-10 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-slate-800">
                 
-                <!-- Col 1 -->
+                <!-- Выходные данные -->
                 <div class="md:col-span-1">
-                    <div class="font-headline tracking-tighter text-2xl font-bold text-white mb-2">
+                    <div class="font-headline tracking-tight text-2xl font-bold text-white mb-2">
                         ВЕСТНИК<span class="text-brand-red">.</span>РОССИИ
                     </div>
                     <p class="text-slate-400 text-[11px] leading-relaxed">
-                        Сетевое издание «Вестник России» зарегистрировано Федеральной службой по надзору в сфере связи, информационных технологий и массовых коммуникаций (Роскомнадзор).
+                        Федеральное информационное агентство «Вестник России». Зарегистрировано Федеральной службой по надзору в сфере связи, информационных технологий и массовых коммуникаций (Роскомнадзор).
                     </p>
-                    <div class="mt-3 text-[11px] font-mono text-slate-500">
-                        Свидетельство: ЭЛ № ФС 77 - 98412 от 12.04.2019 г.
+                    <div class="mt-3 text-[11px] font-mono text-slate-300 bg-slate-900/90 px-2.5 py-1.5 rounded border border-slate-800">
+                        Свидетельство о регистрации СМИ: ЭЛ № ФС 77 - 98412
                     </div>
                 </div>
 
-                <!-- Col 2: Navigation -->
+                <!-- Рубрикатор -->
                 <div>
-                    <h5 class="text-white font-semibold mb-3 uppercase tracking-wider text-[11px]">Рубрики</h5>
+                    <h5 class="text-white font-semibold mb-3 uppercase tracking-wider text-[11px]">Разделы агентства</h5>
                     <ul class="space-y-1.5 text-[11px]">
-                        <li><a href="#" class="hover:text-white transition">Политика и законодательство</a></li>
-                        <li><a href="#" class="hover:text-white transition">Макроэкономика</a></li>
-                        <li><a href="#" class="hover:text-white transition">Тектоническая инженерия</a></li>
-                        <li><a href="#" class="hover:text-white transition">Происшествия и изоляция</a></li>
-                        <li><a href="#" class="hover:text-white transition">Фото и мультимедиа</a></li>
+                        <li><a href="#" class="hover:text-white transition">Происшествия и Курьёзы</a></li>
+                        <li><a href="#" onclick="openArchiveModal('taganrog'); return false;" class="hover:text-white transition">Статистическая аномалия в Таганроге</a></li>
+                        <li><a href="#" onclick="openArchiveModal('bashkortostan'); return false;" class="hover:text-white transition">Океанический дрейф Башкортостана</a></li>
+                        <li><a href="#dossier-table" class="hover:text-white transition">Протоколы ОМВД по г. Анапа</a></li>
                     </ul>
                 </div>
 
-                <!-- Col 3: Legal & Disclaimer -->
+                <!-- Правовая информация -->
                 <div>
-                    <h5 class="text-white font-semibold mb-3 uppercase tracking-wider text-[11px]">Информация</h5>
+                    <h5 class="text-white font-semibold mb-3 uppercase tracking-wider text-[11px]">Редакционные стандарты</h5>
                     <ul class="space-y-1.5 text-[11px]">
-                        <li><a href="#" class="hover:text-white transition">Редакция и контакты</a></li>
-                        <li><a href="#" class="hover:text-white transition">Размещение рекламы</a></li>
-                        <li><a href="#" class="hover:text-white transition">Условия использования материалов</a></li>
-                        <li><a href="#" class="hover:text-white transition">Политика обработки данных</a></li>
+                        <li><a href="#" class="hover:text-white transition">Редакционная коллегия</a></li>
+                        <li><a href="#" class="hover:text-white transition">Правила самообороны термосом</a></li>
+                        <li><a href="#" class="hover:text-white transition">Контроль качества роллов «Филадельфия»</a></li>
+                        <li><span class="text-red-400 font-semibold">Специальный сатирический выпуск</span></li>
                     </ul>
                 </div>
 
-                <!-- Col 4: Contacts -->
+                <!-- Контакты редакции -->
                 <div>
-                    <h5 class="text-white font-semibold mb-3 uppercase tracking-wider text-[11px]">Адрес редакции</h5>
+                    <h5 class="text-white font-semibold mb-3 uppercase tracking-wider text-[11px]">Черноморский корпункт</h5>
                     <p class="text-[11px] leading-relaxed text-slate-400">
-                        119049, г. Москва, 1-й Голутвинский пер., д. 4.<br>
-                        Тел. горячей линии: +7 (495) 800-20-27<br>
-                        E-mail: editor@vestnik-rossii.ru
+                        353440, Краснодарский край, г. Анапа, Пионерский проспект, д. 28 (у кустов можжевельника).<br>
+                        Телефон дежурной редакции: +7 (86133) 5-00-07<br>
+                        E-mail: <span class="text-slate-300">anapa-sushi@vestnik-rossii.ru</span>
                     </p>
-                    <div class="mt-3 flex gap-3 text-sm text-slate-400">
-                        <a href="#" class="hover:text-white"><i class="fa-brands fa-telegram"></i></a>
-                        <a href="#" class="hover:text-white"><i class="fa-brands fa-vk"></i></a>
-                        <a href="#" class="hover:text-white"><i class="fa-brands fa-dzen"></i></a>
-                        <a href="#" class="hover:text-white"><i class="fa-brands fa-youtube"></i></a>
-                    </div>
                 </div>
 
             </div>
 
-            <!-- Disclaimer note -->
+            <!-- Возрастная маркировка и копирайт -->
             <div class="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-4">
                 <p>
-                    © 2026 АО «Вестник России». Все права защищены. Любое использование материалов допускается только при наличии гиперссылки.
+                    © 2026 ФИА «Вестник России». Все права защищены. При цитировании ссылка на «Вестник России» обязательна. Для лиц старше 18 лет.
                 </p>
-                <div class="shrink-0 font-bold border border-slate-700 px-2 py-0.5 rounded text-slate-400">
+                <div class="shrink-0 font-bold border border-slate-700 bg-slate-900 px-2.5 py-1 rounded text-slate-300">
                     18+
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- СКРИПТЫ ИНТЕРАКТИВНОСТИ -->
     <script>
-        // 1. Font size adjustment for article
+        // 1. Управление размером шрифта статьи (A- / A+)
         const articleBody = document.getElementById('article-body');
-        let currentFontSize = 18; // base px
+        let currentFontSize = 18;
 
         document.getElementById('btn-font-inc').addEventListener('click', () => {
-            if (currentFontSize < 24) {
+            if (currentFontSize < 26) {
                 currentFontSize += 2;
-                articleBody.style.fontSize = currentFontSize + 'px';
+                articleBody.querySelectorAll('p, li').forEach(el => {
+                    el.style.fontSize = currentFontSize + 'px';
+                });
             }
         });
 
         document.getElementById('btn-font-dec').addEventListener('click', () => {
             if (currentFontSize > 14) {
                 currentFontSize -= 2;
-                articleBody.style.fontSize = currentFontSize + 'px';
+                articleBody.querySelectorAll('p, li').forEach(el => {
+                    el.style.fontSize = currentFontSize + 'px';
+                });
             }
         });
 
-        // 2. Reactions counter
-        const reactions = {
-            like: 1420,
-            shock: 3891,
-            laugh: 5102,
-            think: 924
-        };
-        const reacted = {};
-
-        function addReaction(type) {
-            if (reacted[type]) return;
-            reactions[type]++;
-            reacted[type] = true;
-            document.getElementById(`react-${type}`).innerText = reactions[type].toLocaleString('ru-RU');
-            const btn = document.getElementById(`react-${type}`).parentElement;
-            btn.classList.add('border-brand-red', 'bg-red-50', 'text-brand-red');
+        // 2. Загрузка пользовательского фото вместо макета камеры «Безопасный курорт»
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('uploaded-preview');
+                const mockup = document.getElementById('cctv-mockup');
+                const resetBtn = document.getElementById('reset-photo-btn');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                mockup.classList.add('hidden');
+                resetBtn.classList.remove('hidden');
+                showToast('Ваша фотография успешно установлена в репортаж');
+            };
+            reader.readAsDataURL(file);
         }
 
-        // 3. Copy article link
+        function resetUploadedPhoto(event) {
+            event.stopPropagation();
+            const img = document.getElementById('uploaded-preview');
+            const mockup = document.getElementById('cctv-mockup');
+            const resetBtn = document.getElementById('reset-photo-btn');
+            const input = document.getElementById('photo-upload-input');
+            input.value = '';
+            img.src = '';
+            img.classList.add('hidden');
+            mockup.classList.remove('hidden');
+            resetBtn.classList.add('hidden');
+            showToast('Восстановлен оперативный кадр камеры «Безопасный курорт»');
+        }
+
+        // 3. Кнопки реакций под статьей
+        const reactions = {
+            pity: 5412,
+            granny: 9834,
+            rolls: 3760,
+            stanitsa: 6190
+        };
+        const userReacted = {};
+
+        function addReaction(type) {
+            const countEl = document.getElementById(`react-${type}`);
+            const btnEl = document.getElementById(`btn-react-${type}`);
+            if (userReacted[type]) {
+                reactions[type]--;
+                userReacted[type] = false;
+                btnEl.classList.remove('border-brand-red', 'bg-red-50', 'text-brand-red');
+            } else {
+                reactions[type]++;
+                userReacted[type] = true;
+                btnEl.classList.add('border-brand-red', 'bg-red-50', 'text-brand-red');
+            }
+            countEl.innerText = reactions[type].toLocaleString('ru-RU');
+        }
+
+        // 4. Копирование ссылки и показ всплывающего уведомления (Toast)
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2800);
+        }
+
         function copyArticleLink() {
             const btnText = document.getElementById('copy-btn-text');
             const dummy = document.createElement('input');
@@ -646,69 +1014,153 @@
             document.execCommand('copy');
             document.body.removeChild(dummy);
             
-            btnText.innerText = 'Скопировано!';
-            setTimeout(() => {
-                btnText.innerText = 'Скопировать ссылку';
-            }, 2500);
+            if (btnText) {
+                const orig = btnText.innerText;
+                btnText.innerText = 'Скопировано!';
+                setTimeout(() => {
+                    btnText.innerText = orig;
+                }, 2000);
+            }
+            showToast('Ссылка на криминальную сводку из Анапы скопирована');
         }
 
-        // 4. Interactive comments
+        // 5. Опрос дня с 4 вариантами и живым пересчетом процентов
+        const pollVotes = [13338, 10602, 6498, 3762]; // в сумме 34 200 (39%, 31%, 19%, 11%)
+        let hasVotedPoll = false;
+
+        function votePoll(selectedIndex) {
+            if (hasVotedPoll) return;
+            hasVotedPoll = true;
+
+            pollVotes[selectedIndex] += 1;
+            const total = pollVotes.reduce((a, b) => a + b, 0);
+
+            const options = document.querySelectorAll('.poll-option');
+            options.forEach((opt, idx) => {
+                const pct = Math.round((pollVotes[idx] / total) * 100);
+                const bar = opt.querySelector('.poll-bar');
+                const pctLabel = opt.querySelector('.poll-pct');
+
+                bar.style.width = pct + '%';
+                pctLabel.innerText = pct + '%';
+
+                if (idx === selectedIndex) {
+                    opt.classList.add('border-brand-red', 'ring-1', 'ring-brand-red');
+                    bar.classList.remove('bg-slate-200/70');
+                    bar.classList.add('bg-red-200/80');
+                }
+            });
+
+            document.getElementById('poll-total-count').innerText = total.toLocaleString('ru-RU');
+            document.getElementById('poll-thankyou').classList.remove('hidden');
+        }
+
+        // 6. Добавление комментария и лайки комментариев
+        let commentsTotal = 4;
+
         function postComment() {
-            const input = document.getElementById('new-comment-text');
-            const text = input.value.trim();
+            const textInput = document.getElementById('new-comment-text');
+            const authorInput = document.getElementById('comment-author');
+            const text = textInput.value.trim();
             if (!text) return;
 
+            const author = authorInput.value.trim() || 'Отдыхающий (Анапа)';
             const commentsList = document.getElementById('comments-list');
-            const newElem = document.createElement('div');
-            newElem.className = 'p-4 rounded-lg border border-slate-200 bg-white transition';
-            newElem.innerHTML = `
+
+            const newComment = document.createElement('div');
+            newComment.className = 'p-4 rounded-xl border border-brand-red/40 bg-red-50/20 transition';
+            newComment.innerHTML = `
                 <div class="flex items-center justify-between mb-1.5">
-                    <span class="font-semibold text-xs text-brand-darkred">Вы (Гражданин РФ)</span>
-                    <span class="text-[10px] text-slate-400">Только что</span>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-xs text-slate-900">${escapeHtml(author)}</span>
+                        <span class="text-[10px] bg-red-100 text-brand-red px-2 py-0.5 rounded font-medium">Новый комментарий</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Только что</span>
                 </div>
-                <p class="text-sm text-slate-800">${escapeHtml(text)}</p>
-                <div class="mt-2 text-xs text-slate-400 flex items-center gap-3">
-                    <span class="text-emerald-600">👍 1</span>
-                    <span>👎 0</span>
-                    <span class="text-[11px] text-slate-400">• На проверке у дежурного редактора</span>
+                <p class="text-sm text-slate-800 leading-relaxed">${escapeHtml(text)}</p>
+                <div class="mt-2.5 text-xs text-slate-400 flex items-center gap-4">
+                    <button onclick="likeComment(this)" class="hover:text-emerald-600 font-medium text-emerald-600">👍 <span>1</span></button>
+                    <button class="hover:text-rose-600">👎 0</button>
                 </div>
             `;
-            
-            commentsList.prepend(newElem);
-            input.value = '';
-            
-            // update count
-            const counter = document.getElementById('comments-count');
-            counter.innerText = '(5)';
+
+            commentsList.prepend(newComment);
+            textInput.value = '';
+            commentsTotal++;
+            document.getElementById('comments-count').innerText = `(${commentsTotal})`;
+            document.getElementById('header-comments-count').innerText = commentsTotal;
         }
 
-        function escapeHtml(string) {
-            return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        function likeComment(btn) {
+            const span = btn.querySelector('span');
+            if (!span || btn.dataset.liked) return;
+            const raw = parseInt(span.innerText.replace(/\s/g, ''), 10) + 1;
+            span.innerText = raw.toLocaleString('ru-RU');
+            btn.dataset.liked = 'true';
+            btn.classList.add('text-emerald-600', 'font-bold');
         }
 
-        // 5. Poll voting
-        let hasVoted = false;
-        function votePoll(optionIdx) {
-            if (hasVoted) return;
-            hasVoted = true;
-            document.getElementById('poll-thankyou').classList.remove('hidden');
-            const pcts = document.querySelectorAll('.poll-pct');
-            pcts.forEach((el, idx) => {
-                let currentVal = parseInt(el.getAttribute('data-val'), 10);
-                if (idx === optionIdx) currentVal += 1;
-                el.innerText = currentVal + '%';
-            });
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
         }
 
-        // 6. View counter simulator
+        function scrollToComments() {
+            document.getElementById('comments-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 7. Модальное окно архивных материалов (Таганрог + Башкортостан)
+        function openArchiveModal(topic) {
+            const modal = document.getElementById('archive-modal');
+            const contentTaganrog = document.getElementById('modal-content-taganrog');
+            const contentBash = document.getElementById('modal-content-bashkortostan');
+            const btnTaganrog = document.getElementById('tab-btn-taganrog');
+            const btnBash = document.getElementById('tab-btn-bashkortostan');
+
+            modal.classList.remove('hidden');
+
+            if (topic === 'bashkortostan') {
+                contentTaganrog.classList.add('hidden');
+                contentBash.classList.remove('hidden');
+                btnBash.className = 'text-xs font-bold px-3 py-1.5 rounded-lg transition bg-brand-red text-white';
+                btnTaganrog.className = 'text-xs font-bold px-3 py-1.5 rounded-lg transition bg-slate-100 text-slate-700 hover:bg-slate-200';
+            } else {
+                contentBash.classList.add('hidden');
+                contentTaganrog.classList.remove('hidden');
+                btnTaganrog.className = 'text-xs font-bold px-3 py-1.5 rounded-lg transition bg-brand-red text-white';
+                btnBash.className = 'text-xs font-bold px-3 py-1.5 rounded-lg transition bg-slate-100 text-slate-700 hover:bg-slate-200';
+            }
+        }
+
+        function closeArchiveModal() {
+            document.getElementById('archive-modal').classList.add('hidden');
+        }
+
+        function toggleSubscribe() {
+            const textEl = document.getElementById('subscribe-text');
+            const btnEl = document.getElementById('subscribe-btn');
+            if (textEl.innerText === 'Подписаться') {
+                textEl.innerText = 'Вы подписаны';
+                btnEl.classList.replace('bg-brand-red', 'bg-emerald-700');
+                showToast('Вы подписались на экстренные сводки ИА «Вестник России»');
+            } else {
+                textEl.innerText = 'Подписаться';
+                btnEl.classList.replace('bg-emerald-700', 'bg-brand-red');
+            }
+        }
+
+        // 8. Живой счетчик просмотров
         setInterval(() => {
             const viewsEl = document.getElementById('views-count');
             if (viewsEl) {
                 let current = parseInt(viewsEl.innerText.replace(/\s/g, ''), 10);
-                current += Math.floor(Math.random() * 3) + 1;
+                current += Math.floor(Math.random() * 6) + 1;
                 viewsEl.innerText = current.toLocaleString('ru-RU');
             }
-        }, 4000);
+        }, 3200);
     </script>
 </body>
 </html>
