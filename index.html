@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Госдума одобрила проект о выводе Башкортостана в нейтральные воды — Вестник России</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Merriweather for editorial text, Inter for UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                        headline: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            red: '#c01414',
+                            darkred: '#9b0f0f',
+                            navy: '#0f172a',
+                            dark: '#1e242d',
+                            gray: '#f4f5f7',
+                            border: '#e2e5eb'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .article-content p {
+            margin-bottom: 1.25rem;
+            line-height: 1.8;
+            font-size: 1.125rem;
+            color: #1f2937;
+        }
+        .quote-block {
+            border-left: 4px solid #c01414;
+            background: #f8fafc;
+        }
+        /* Custom smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-[#f7f8fa] text-slate-900 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- 1. TOP TICKER & METRICS BAR -->
+    <header class="border-b border-gray-200 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between text-xs py-2 text-slate-500 border-b border-gray-100 flex-wrap gap-2">
+                <!-- Date & City -->
+                <div class="flex items-center gap-4">
+                    <span class="font-medium text-slate-800" id="current-date">14 октября 2026 г., среда</span>
+                    <span class="hidden sm:inline text-gray-300">|</span>
+                    <span class="hidden sm:inline"><i class="fa-solid fa-cloud-sun mr-1 text-slate-400"></i> Москва +9 °C</span>
+                    <span class="hidden md:inline"><i class="fa-solid fa-cloud-rain mr-1 text-slate-400"></i> Уфа +6 °C (влажность 99%)</span>
+                </div>
+
+                <!-- Financial Rates Ticker -->
+                <div class="flex items-center gap-4 overflow-x-auto whitespace-nowrap py-1">
+                    <span class="font-mono"><strong class="text-slate-800 font-semibold">$</strong> 89,45 <span class="text-emerald-600">▲</span></span>
+                    <span class="font-mono"><strong class="text-slate-800 font-semibold">€</strong> 96,12 <span class="text-rose-600">▼</span></span>
+                    <span class="font-mono"><strong class="text-slate-800 font-semibold">¥</strong> 12,38 <span class="text-emerald-600">▲</span></span>
+                    <span class="font-mono"><strong class="text-slate-800 font-semibold">Brent</strong> $84,30 <span class="text-emerald-600">▲</span></span>
+                </div>
+
+                <!-- Socials & Edition -->
+                <div class="hidden lg:flex items-center gap-3">
+                    <a href="#" class="hover:text-brand-red transition"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="hover:text-brand-red transition"><i class="fa-brands fa-vk"></i></a>
+                    <a href="#" class="hover:text-brand-red transition"><i class="fa-brands fa-odnoklassniki"></i></a>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">18+</span>
+                </div>
+            </div>
+
+            <!-- Portal Logo & Brand Banner -->
+            <div class="py-4 flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <a href="#" class="flex flex-col">
+                        <span class="font-headline tracking-tighter text-3xl sm:text-4xl font-extrabold text-slate-900 leading-none">
+                            ВЕСТНИК<span class="text-brand-red">.</span>РОССИИ
+                        </span>
+                        <span class="text-[10px] tracking-widest uppercase font-semibold text-slate-400 mt-1">
+                            Федеральное информационное агентство
+                        </span>
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="relative hidden md:block w-64">
+                        <input type="text" placeholder="Поиск по архиву новостей..." class="w-full text-xs bg-slate-100 border border-slate-200 rounded-full py-2 pl-9 pr-4 focus:outline-none focus:border-brand-red focus:bg-white transition">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                    </div>
+                    <button class="bg-brand-red hover:bg-brand-darkred text-white text-xs font-semibold px-4 py-2 rounded transition flex items-center gap-2">
+                        <i class="fa-regular fa-bell"></i>
+                        <span>Подписаться</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Categories Navbar -->
+        <nav class="bg-brand-navy text-white text-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between overflow-x-auto scrollbar-none py-2.5">
+                    <ul class="flex items-center gap-6 font-medium whitespace-nowrap">
+                        <li><a href="#" class="text-red-400 hover:text-white transition flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>Главное</a></li>
+                        <li><a href="#" class="text-white hover:text-red-300 font-semibold underline underline-offset-8 decoration-2 decoration-brand-red">Политика</a></li>
+                        <li><a href="#" class="hover:text-red-300 transition">Экономика</a></li>
+                        <li><a href="#" class="hover:text-red-300 transition">Происшествия</a></li>
+                        <li><a href="#" class="hover:text-red-300 transition">Общество</a></li>
+                        <li><a href="#" class="hover:text-red-300 transition">Технологии & Геология</a></li>
+                        <li><a href="#" class="hover:text-red-300 transition">Аналитика</a></li>
+                        <li><a href="#" class="hover:text-red-300 transition">Мнения</a></li>
+                    </ul>
+                    <div class="hidden md:flex items-center gap-2 pl-4 text-xs text-slate-300">
+                        <span class="cursor-pointer hover:text-white"><i class="fa-solid fa-moon"></i></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Breaking News Ribbon (Молния) -->
+        <div class="bg-red-50 border-b border-red-100 py-1.5 px-4 text-xs">
+            <div class="max-w-7xl mx-auto flex items-center gap-3">
+                <span class="bg-brand-red text-white font-bold px-2 py-0.5 rounded uppercase tracking-wider text-[10px]">Молния</span>
+                <p class="truncate text-slate-800 font-medium">
+                    Минтранс: Первый роторный комплекс для распила границ Башкортостана уже доставлен на границу с Челябинской областью.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. MAIN LAYOUT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- LEFT COLUMN: MAIN ARTICLE (8 cols) -->
+            <article class="lg:col-span-8 bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
+                
+                <!-- Breadcrumbs -->
+                <nav class="flex items-center gap-2 text-xs text-slate-400 mb-4">
+                    <a href="#" class="hover:underline">Главная</a>
+                    <span>/</span>
+                    <a href="#" class="hover:underline">Политика</a>
+                    <span>/</span>
+                    <span class="text-slate-600 font-medium">Территориальное устройство РФ</span>
+                </nav>
+
+                <!-- Tags / Category Badges -->
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                    <span class="bg-red-100 text-brand-darkred font-semibold text-xs px-2.5 py-0.5 rounded">Срочно</span>
+                    <span class="bg-slate-100 text-slate-700 font-medium text-xs px-2.5 py-0.5 rounded">Законопроект № 84920-26</span>
+                    <span class="bg-slate-100 text-slate-700 font-medium text-xs px-2.5 py-0.5 rounded">Геоинженерия</span>
+                </div>
+
+                <!-- Headline -->
+                <h1 class="font-headline font-bold text-2xl sm:text-3xl md:text-4xl text-slate-900 leading-tight mb-4">
+                    Госдума одобрила проект о выводе Башкортостана в нейтральные воды из-за аномальной криминогенной обстановки
+                </h1>
+
+                <!-- Subheading / Lead -->
+                <p class="text-lg sm:text-xl text-slate-600 font-sans leading-relaxed mb-6 font-normal border-b border-slate-100 pb-5">
+                    С 1 января 2027 года субъект отделят от Евразийской тектонической плиты при помощи алмазных дисков и направят по речной системе в Мировой океан на правах автономного плавучего исправительного архипелага.
+                </p>
+
+                <!-- Metadata Row (Author, Date, Counters, Tools) -->
+                <div class="flex flex-wrap items-center justify-between text-xs text-slate-500 py-3 mb-6 border-b border-slate-200 gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600">
+                                ВР
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-800">Отдел геополитики и правопорядка</div>
+                                <div>14 октября 2026, 11:30 МСК</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <span title="Время чтения"><i class="fa-regular fa-clock mr-1"></i> 3 мин</span>
+                        <span title="Просмотры"><i class="fa-regular fa-eye mr-1"></i> <span id="views-count">48 290</span></span>
+                        
+                        <!-- Font Size Controls -->
+                        <div class="flex items-center border border-slate-200 rounded px-1.5 py-0.5 bg-slate-50">
+                            <button id="btn-font-dec" class="px-1 text-slate-600 hover:text-brand-red font-bold" title="Уменьшить шрифт">A-</button>
+                            <span class="text-slate-300 mx-1">|</span>
+                            <button id="btn-font-inc" class="px-1 text-slate-600 hover:text-brand-red font-bold" title="Увеличить шрифт">A+</button>
+                        </div>
+
+                        <!-- Print -->
+                        <button onclick="window.print()" class="hover:text-brand-red text-slate-400" title="Распечатать"><i class="fa-solid fa-print"></i></button>
+                    </div>
+                </div>
+
+                <!-- IMAGE PLACEHOLDER SECTION -->
+                <figure class="mb-8 group">
+                    <div class="relative w-full aspect-video sm:aspect-[16/9] bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 rounded-lg overflow-hidden border border-slate-300 flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:border-brand-red transition">
+                        
+                        <!-- Interactive/Decorative Placeholder SVG -->
+                        <div class="w-20 h-20 mb-3 rounded-full bg-white/80 shadow-inner flex items-center justify-center text-slate-400 group-hover:scale-105 group-hover:text-brand-red transition">
+                            <i class="fa-solid fa-ship text-3xl"></i>
+                        </div>
+                        
+                        <p class="font-semibold text-slate-700 text-sm sm:text-base">
+                            Схема-проект: Маршрут буксировки Башкирской континентальной плиты через Волго-Донской канал
+                        </p>
+                        <p class="text-xs text-slate-500 mt-1 max-w-md">
+                            [Место для графического файла / Фоторепортаж буровых работ на границе с Татарстаном и Оренбургской областью]
+                        </p>
+
+                        <!-- Subtle Mock Diagram Overlay lines -->
+                        <div class="mt-4 flex items-center gap-2 text-[11px] font-mono bg-white/90 border border-slate-300 px-3 py-1 rounded text-slate-600">
+                            <span>Глубина пропила: ~35 км</span>
+                            <span>•</span>
+                            <span>Тяга: 120 атомных буксиров</span>
+                        </div>
+                    </div>
+                    <figcaption class="mt-2 text-xs text-slate-500 flex justify-between items-center px-1">
+                        <span>Проектная визуализация инженерного отделения плит по периметру 4200 км</span>
+                        <span class="italic text-slate-400">Фото: Пресс-служба Минтранса РФ / ТАСС</span>
+                    </figcaption>
+                </figure>
+
+                <!-- BODY TEXT -->
+                <div id="article-body" class="article-content font-serif text-slate-800">
+                    <p class="font-semibold text-slate-900 text-lg">
+                        МОСКВА, 14 окт — Вестник России. Государственная дума РФ приняла в третьем, окончательном чтении беспрецедентный федеральный конституционный закон «О пространственно-географической изоляции и морской делимитации Республики Башкортостан».
+                    </p>
+
+                    <p>
+                        Согласно тексту постановления, с 00:00 по московскому времени 1 января 2027 года регион официально утрачивает статус субъекта Российской Федерации. В течение последующих шести месяцев территория будет физически отделена от Евразийской континентальной плиты и отбуксирована в нейтральные воды Мирового океана.
+                    </p>
+
+                    <div class="quote-block p-5 my-6 rounded-r-lg font-sans">
+                        <p class="italic text-slate-700 text-base leading-relaxed mb-2 font-normal">
+                            «Статистические показатели правоохранительных органов за последние кварталы продемонстрировали математическую сингулярность: уровень законопослушности в регионе опустился до нулевой отметки. В республике буквально не осталось лиц без активных протоколов — от систематического перехода дорог в неположенном месте и безбилетного проезда до несанкционированного ночного выпаса водоплавающей птицы и уклонения от уплаты штрафов. Профилактические беседы и стандартные меры исправительного характера исчерпали свой потенциал».
+                        </p>
+                        <cite class="text-xs font-bold text-slate-900 not-italic block uppercase tracking-wider">
+                            — Заместитель председателя думского комитета по территориальной санации
+                        </cite>
+                    </div>
+
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">
+                        Инженерно-геологический план: распил, изоляция и буксировка
+                    </h2>
+
+                    <p>
+                        В распоряжении «Вестника России» оказался утвержденный регламент работ по отстыковке территории площадью более 143 тысяч квадратных километров. Проект курируется объединенным штабом Минстроя, Росатома и Академии наук:
+                    </p>
+
+                    <div class="font-sans my-6 space-y-4">
+                        <div class="flex items-start gap-3 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                            <div class="bg-brand-red text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">1</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Гидроабразивный распил земной коры</h4>
+                                <p class="text-xs text-slate-600 mt-1">
+                                    По периметру административных границ протяженностью свыше 4000 километров будут выставлены 800 высокомощных алмазно-струйных и роторных комплексов. Пропил будет осуществляться вертикально вниз до границы Мохоровичича.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                            <div class="bg-brand-red text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">2</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Герметизация коммуникаций и гидроизоляция</h4>
+                                <p class="text-xs text-slate-600 mt-1">
+                                    Все федеральные трассы (включая М-5 «Урал» и М-7 «Волга»), железнодорожные магистрали и трубопроводы будут оснащены быстроразъемными полимерными заглушками. На образовавшихся обрывах установят знаки «Конец географии РФ».
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                            <div class="bg-brand-red text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">3</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Вывод через речную сеть в открытый океан</h4>
+                                <p class="text-xs text-slate-600 mt-1">
+                                    Под основание плиты будет закачана подушка из сверхплотных гидрогелевых смесей. Система сверхмощных тягачей направит массив в Каспийское море, откуда через специально расширенный Волго-Донской судоходный канал плавучий Башкортостан выйдет в Черное, Средиземное моря и далее в Атлантику.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">
+                        Юридические последствия и судьба резидентов
+                    </h2>
+
+                    <p>
+                        После выхода в открытые океанические просторы Башкортостан получит статус «Суверенного плавучего образования строгого режима». В Министерстве транспорта подчеркнули, что рулевые механизмы монтироваться не будут — траектория движения региона будет определяться исключительно сезонными течениями Гольфстрима и западными пассатами.
+                    </p>
+
+                    <p>
+                        МВД РФ также объявило об открытии окна добровольной перерегистрации: нарушители правопорядка из других субъектов федерации могут до 20 декабря 2026 года подать заявление о переселении в Уфу по ускоренной процедуре «штрафной репатриации».
+                    </p>
+
+                    <p class="text-sm italic text-slate-500 pt-4 border-t border-slate-200 font-sans">
+                        Официальный комментарий постоянного представительства республики в настоящий момент получить не удалось в связи с проведением плановых учений по отработке действий при экстренной отстыковке от материка.
+                    </p>
+                </div>
+
+                <!-- SHARE & REACTION BAR -->
+                <div class="mt-8 pt-6 border-t border-slate-200">
+                    <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Ваша реакция на новость:</div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="addReaction('like')" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 transition text-sm">
+                            <span>👍 Законопослушно</span>
+                            <span id="react-like" class="font-semibold text-slate-700">1,420</span>
+                        </button>
+                        <button onclick="addReaction('shock')" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 transition text-sm">
+                            <span>😱 А мед как же?</span>
+                            <span id="react-shock" class="font-semibold text-slate-700">3,891</span>
+                        </button>
+                        <button onclick="addReaction('laugh')" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 transition text-sm">
+                            <span>😂 В добрый путь</span>
+                            <span id="react-laugh" class="font-semibold text-slate-700">5,102</span>
+                        </button>
+                        <button onclick="addReaction('think')" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 transition text-sm">
+                            <span>🤔 А визы нужны?</span>
+                            <span id="react-think" class="font-semibold text-slate-700">924</span>
+                        </button>
+                    </div>
+
+                    <!-- Social Share -->
+                    <div class="flex items-center gap-3 mt-6 pt-4 border-t border-slate-100 text-xs">
+                        <span class="text-slate-500 font-medium">Поделиться:</span>
+                        <button onclick="copyArticleLink()" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium flex items-center gap-1">
+                            <i class="fa-solid fa-link"></i> <span id="copy-btn-text">Скопировать ссылку</span>
+                        </button>
+                        <a href="#" class="w-7 h-7 rounded-full bg-[#0077FF] text-white flex items-center justify-center hover:opacity-90"><i class="fa-brands fa-vk"></i></a>
+                        <a href="#" class="w-7 h-7 rounded-full bg-[#229ED9] text-white flex items-center justify-center hover:opacity-90"><i class="fa-brands fa-telegram"></i></a>
+                        <a href="#" class="w-7 h-7 rounded-full bg-[#EE8208] text-white flex items-center justify-center hover:opacity-90"><i class="fa-brands fa-odnoklassniki"></i></a>
+                    </div>
+                </div>
+
+                <!-- 3. INTERACTIVE COMMENTS SECTION -->
+                <section class="mt-10 pt-8 border-t-2 border-slate-100">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold font-headline text-slate-900">
+                            Комментарии читателей <span class="text-sm font-sans font-normal text-slate-500" id="comments-count">(4)</span>
+                        </h3>
+                        <span class="text-xs text-slate-400">Модерация включена</span>
+                    </div>
+
+                    <!-- Input Box -->
+                    <div class="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div class="flex gap-3">
+                            <div class="w-9 h-9 rounded-full bg-brand-navy text-white flex items-center justify-center text-xs font-bold shrink-0">
+                                ВЫ
+                            </div>
+                            <div class="flex-grow">
+                                <textarea id="new-comment-text" rows="2" placeholder="Напишите ваш комментарий в рамках законодательства..." class="w-full text-sm p-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-brand-red resize-none"></textarea>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-[11px] text-slate-400">Правила комментирования СМИ</span>
+                                    <button onclick="postComment()" class="bg-brand-navy hover:bg-slate-800 text-white text-xs font-semibold px-4 py-1.5 rounded transition">
+                                        Отправить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comments List -->
+                    <div class="space-y-4" id="comments-list">
+                        
+                        <!-- Comment 1 -->
+                        <div class="p-4 rounded-lg border border-slate-100 bg-white">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="font-semibold text-xs text-slate-800">Салават_Уфа_02</span>
+                                <span class="text-[10px] text-slate-400">10 минут назад</span>
+                            </div>
+                            <p class="text-sm text-slate-700">
+                                Главный вопрос: башкирский мёд с собой забираем или пошлины введут на экспорт через нейтральные воды? И где загранпаспорта получать, если ОВИР тоже уплывет?
+                            </p>
+                            <div class="mt-2 text-xs text-slate-400 flex items-center gap-3">
+                                <button class="hover:text-emerald-600">👍 184</button>
+                                <button class="hover:text-rose-600">👎 3</button>
+                                <button class="hover:underline">Ответить</button>
+                            </div>
+                        </div>
+
+                        <!-- Comment 2 -->
+                        <div class="p-4 rounded-lg border border-slate-100 bg-white">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="font-semibold text-xs text-slate-800">Инженер_Геодезист_88</span>
+                                <span class="text-[10px] text-slate-400">22 минуты назад</span>
+                            </div>
+                            <p class="text-sm text-slate-700">
+                                Чисто технически: как они собираются гору Ямантау сквозь Волго-Донской шлюз протискивать? Там же габариты шлюзовых камер максимум под танкеры типа «Волгомакс»! Придется верхушку срезать или боком кантовать.
+                            </p>
+                            <div class="mt-2 text-xs text-slate-400 flex items-center gap-3">
+                                <button class="hover:text-emerald-600">👍 92</button>
+                                <button class="hover:text-rose-600">👎 0</button>
+                                <button class="hover:underline">Ответить</button>
+                            </div>
+                        </div>
+
+                        <!-- Comment 3 -->
+                        <div class="p-4 rounded-lg border border-slate-100 bg-white">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="font-semibold text-xs text-slate-800">Турист_Со_Стажем</span>
+                                <span class="text-[10px] text-slate-400">45 минут назад</span>
+                            </div>
+                            <p class="text-sm text-slate-700">
+                                Вот так всегда! Только сплав по реке Белой на майские праздники забронировал, а теперь река вообще в Атлантику дрейфует. Спасжилеты хоть океанические выдадут?
+                            </p>
+                            <div class="mt-2 text-xs text-slate-400 flex items-center gap-3">
+                                <button class="hover:text-emerald-600">👍 143</button>
+                                <button class="hover:text-rose-600">👎 1</button>
+                                <button class="hover:underline">Ответить</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </article>
+
+            <!-- RIGHT COLUMN: SIDEBAR (4 cols) -->
+            <aside class="lg:col-span-4 space-y-6">
+                
+                <!-- 1. LIVE TICKER / TOP NEWS -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
+                        <h3 class="font-bold text-sm uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-brand-red"></span>
+                            Главное за час
+                        </h3>
+                        <span class="text-xs text-brand-red font-semibold cursor-pointer hover:underline">Все новости</span>
+                    </div>
+
+                    <ul class="space-y-3.5 text-xs">
+                        <li class="border-b border-slate-100 pb-3">
+                            <span class="text-slate-400 font-mono text-[11px] block mb-1">11:42</span>
+                            <a href="#" class="font-medium text-slate-800 hover:text-brand-red leading-snug block transition">
+                                Минприроды: На месте Башкортостана планируется вырыть новое море для курортов Челябинской области.
+                            </a>
+                        </li>
+                        <li class="border-b border-slate-100 pb-3">
+                            <span class="text-slate-400 font-mono text-[11px] block mb-1">11:15</span>
+                            <a href="#" class="font-medium text-slate-800 hover:text-brand-red leading-snug block transition">
+                                «АвтоВАЗ» представил амфибийную версию Lada Granta для поездок в отделившиеся регионы.
+                            </a>
+                        </li>
+                        <li class="border-b border-slate-100 pb-3">
+                            <span class="text-slate-400 font-mono text-[11px] block mb-1">10:50</span>
+                            <a href="#" class="font-medium text-slate-800 hover:text-brand-red leading-snug block transition">
+                                В Госдуме предложили оснастить Республику Саха парусами на случай глобального потепления.
+                            </a>
+                        </li>
+                        <li class="border-b border-slate-100 pb-3">
+                            <span class="text-slate-400 font-mono text-[11px] block mb-1">10:20</span>
+                            <a href="#" class="font-medium text-slate-800 hover:text-brand-red leading-snug block transition">
+                                Росгвардия закупила 500 тыс. якорей повышенной прочности для сдерживания неконтролируемого дрейфа.
+                            </a>
+                        </li>
+                        <li>
+                            <span class="text-slate-400 font-mono text-[11px] block mb-1">09:40</span>
+                            <a href="#" class="font-medium text-slate-800 hover:text-brand-red leading-snug block transition">
+                                Курс башкирского чак-чака на Московской бирже вырос на 14% на фоне новостей об автономии.
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 2. INTERACTIVE POLL -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="border-b border-slate-200 pb-2 mb-3">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Опрос дня</span>
+                        <h4 class="font-bold text-sm text-slate-900 mt-1">Куда выгоднее всего отбуксировать отделившийся Башкортостан?</h4>
+                    </div>
+
+                    <div id="poll-container" class="space-y-2 text-xs">
+                        <button onclick="votePoll(0)" class="w-full text-left p-2.5 rounded border border-slate-200 hover:border-brand-red hover:bg-slate-50 transition flex justify-between items-center group">
+                            <span>В тёплый Индийский океан (ближе к Гоа)</span>
+                            <span class="font-bold text-slate-500 group-hover:text-brand-red poll-pct" data-val="54">54%</span>
+                        </button>
+                        <button onclick="votePoll(1)" class="w-full text-left p-2.5 rounded border border-slate-200 hover:border-brand-red hover:bg-slate-50 transition flex justify-between items-center group">
+                            <span>Оставить в Каспийском море как остров</span>
+                            <span class="font-bold text-slate-500 group-hover:text-brand-red poll-pct" data-val="26">26%</span>
+                        </button>
+                        <button onclick="votePoll(2)" class="w-full text-left p-2.5 rounded border border-slate-200 hover:border-brand-red hover:bg-slate-50 transition flex justify-between items-center group">
+                            <span>В Северный Ледовитый — остыть и подумать</span>
+                            <span class="font-bold text-slate-500 group-hover:text-brand-red poll-pct" data-val="15">15%</span>
+                        </button>
+                        <button onclick="votePoll(3)" class="w-full text-left p-2.5 rounded border border-slate-200 hover:border-brand-red hover:bg-slate-50 transition flex justify-between items-center group">
+                            <span>Затрудняюсь ответить / Я из Уфы</span>
+                            <span class="font-bold text-slate-500 group-hover:text-brand-red poll-pct" data-val="5">5%</span>
+                        </button>
+                    </div>
+
+                    <div id="poll-thankyou" class="hidden text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 p-2.5 rounded text-center mt-3 font-medium">
+                        ✓ Ваш голос учтен комиссией по делимитации!
+                    </div>
+
+                    <div class="mt-3 text-[10px] text-slate-400 text-right">
+                        Всего проголосовало: 14 812 читателей
+                    </div>
+                </div>
+
+                <!-- 3. BANNER / PROMO BLOCK -->
+                <div class="bg-gradient-to-br from-slate-900 to-brand-navy text-white p-5 rounded-xl shadow-sm relative overflow-hidden">
+                    <div class="relative z-10">
+                        <span class="bg-brand-red text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">Спецпроект</span>
+                        <h4 class="font-headline font-bold text-lg mt-2 mb-1">Морская карта России 2027</h4>
+                        <p class="text-xs text-slate-300 mb-4">Интерактивный атлас: новые береговые линии Поволжья и расписание приливов.</p>
+                        <a href="#" class="inline-block bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded hover:bg-slate-100 transition">Смотреть инфографику</a>
+                    </div>
+                    <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl text-white">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                </div>
+
+            </aside>
+
+        </div>
+    </main>
+
+    <!-- 4. OFFICIAL FOOTER IN RUSSIAN MEDIA STYLE -->
+    <footer class="bg-brand-navy text-slate-400 text-xs border-t border-slate-800 mt-12 pt-10 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-slate-800">
+                
+                <!-- Col 1 -->
+                <div class="md:col-span-1">
+                    <div class="font-headline tracking-tighter text-2xl font-bold text-white mb-2">
+                        ВЕСТНИК<span class="text-brand-red">.</span>РОССИИ
+                    </div>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">
+                        Сетевое издание «Вестник России» зарегистрировано Федеральной службой по надзору в сфере связи, информационных технологий и массовых коммуникаций (Роскомнадзор).
+                    </p>
+                    <div class="mt-3 text-[11px] font-mono text-slate-500">
+                        Свидетельство: ЭЛ № ФС 77 - 98412 от 12.04.2019 г.
+                    </div>
+                </div>
+
+                <!-- Col 2: Navigation -->
+                <div>
+                    <h5 class="text-white font-semibold mb-3 uppercase tracking-wider text-[11px]">Рубрики</h5>
+                    <ul class="space-y-1.5 text-[11px]">
+                        <li><a href="#" class="hover:text-white transition">Политика и законодательство</a></li>
+                        <li><a href="#" class="hover:text-white transition">Макроэкономика</a></li>
+                        <li><a href="#" class="hover:text-white transition">Тектоническая инженерия</a></li>
+                        <li><a href="#" class="hover:text-white transition">Происшествия и изоляция</a></li>
+                        <li><a href="#" class="hover:text-white transition">Фото и мультимедиа</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Legal & Disclaimer -->
+                <div>
+                    <h5 class="text-white font-semibold mb-3 uppercase tracking-wider text-[11px]">Информация</h5>
+                    <ul class="space-y-1.5 text-[11px]">
+                        <li><a href="#" class="hover:text-white transition">Редакция и контакты</a></li>
+                        <li><a href="#" class="hover:text-white transition">Размещение рекламы</a></li>
+                        <li><a href="#" class="hover:text-white transition">Условия использования материалов</a></li>
+                        <li><a href="#" class="hover:text-white transition">Политика обработки данных</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Contacts -->
+                <div>
+                    <h5 class="text-white font-semibold mb-3 uppercase tracking-wider text-[11px]">Адрес редакции</h5>
+                    <p class="text-[11px] leading-relaxed text-slate-400">
+                        119049, г. Москва, 1-й Голутвинский пер., д. 4.<br>
+                        Тел. горячей линии: +7 (495) 800-20-27<br>
+                        E-mail: editor@vestnik-rossii.ru
+                    </p>
+                    <div class="mt-3 flex gap-3 text-sm text-slate-400">
+                        <a href="#" class="hover:text-white"><i class="fa-brands fa-telegram"></i></a>
+                        <a href="#" class="hover:text-white"><i class="fa-brands fa-vk"></i></a>
+                        <a href="#" class="hover:text-white"><i class="fa-brands fa-dzen"></i></a>
+                        <a href="#" class="hover:text-white"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Disclaimer note -->
+            <div class="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-4">
+                <p>
+                    © 2026 АО «Вестник России». Все права защищены. Любое использование материалов допускается только при наличии гиперссылки.
+                </p>
+                <div class="shrink-0 font-bold border border-slate-700 px-2 py-0.5 rounded text-slate-400">
+                    18+
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. Font size adjustment for article
+        const articleBody = document.getElementById('article-body');
+        let currentFontSize = 18; // base px
+
+        document.getElementById('btn-font-inc').addEventListener('click', () => {
+            if (currentFontSize < 24) {
+                currentFontSize += 2;
+                articleBody.style.fontSize = currentFontSize + 'px';
+            }
+        });
+
+        document.getElementById('btn-font-dec').addEventListener('click', () => {
+            if (currentFontSize > 14) {
+                currentFontSize -= 2;
+                articleBody.style.fontSize = currentFontSize + 'px';
+            }
+        });
+
+        // 2. Reactions counter
+        const reactions = {
+            like: 1420,
+            shock: 3891,
+            laugh: 5102,
+            think: 924
+        };
+        const reacted = {};
+
+        function addReaction(type) {
+            if (reacted[type]) return;
+            reactions[type]++;
+            reacted[type] = true;
+            document.getElementById(`react-${type}`).innerText = reactions[type].toLocaleString('ru-RU');
+            const btn = document.getElementById(`react-${type}`).parentElement;
+            btn.classList.add('border-brand-red', 'bg-red-50', 'text-brand-red');
+        }
+
+        // 3. Copy article link
+        function copyArticleLink() {
+            const btnText = document.getElementById('copy-btn-text');
+            const dummy = document.createElement('input');
+            document.body.appendChild(dummy);
+            dummy.value = window.location.href;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            
+            btnText.innerText = 'Скопировано!';
+            setTimeout(() => {
+                btnText.innerText = 'Скопировать ссылку';
+            }, 2500);
+        }
+
+        // 4. Interactive comments
+        function postComment() {
+            const input = document.getElementById('new-comment-text');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const commentsList = document.getElementById('comments-list');
+            const newElem = document.createElement('div');
+            newElem.className = 'p-4 rounded-lg border border-slate-200 bg-white transition';
+            newElem.innerHTML = `
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="font-semibold text-xs text-brand-darkred">Вы (Гражданин РФ)</span>
+                    <span class="text-[10px] text-slate-400">Только что</span>
+                </div>
+                <p class="text-sm text-slate-800">${escapeHtml(text)}</p>
+                <div class="mt-2 text-xs text-slate-400 flex items-center gap-3">
+                    <span class="text-emerald-600">👍 1</span>
+                    <span>👎 0</span>
+                    <span class="text-[11px] text-slate-400">• На проверке у дежурного редактора</span>
+                </div>
+            `;
+            
+            commentsList.prepend(newElem);
+            input.value = '';
+            
+            // update count
+            const counter = document.getElementById('comments-count');
+            counter.innerText = '(5)';
+        }
+
+        function escapeHtml(string) {
+            return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // 5. Poll voting
+        let hasVoted = false;
+        function votePoll(optionIdx) {
+            if (hasVoted) return;
+            hasVoted = true;
+            document.getElementById('poll-thankyou').classList.remove('hidden');
+            const pcts = document.querySelectorAll('.poll-pct');
+            pcts.forEach((el, idx) => {
+                let currentVal = parseInt(el.getAttribute('data-val'), 10);
+                if (idx === optionIdx) currentVal += 1;
+                el.innerText = currentVal + '%';
+            });
+        }
+
+        // 6. View counter simulator
+        setInterval(() => {
+            const viewsEl = document.getElementById('views-count');
+            if (viewsEl) {
+                let current = parseInt(viewsEl.innerText.replace(/\s/g, ''), 10);
+                current += Math.floor(Math.random() * 3) + 1;
+                viewsEl.innerText = current.toLocaleString('ru-RU');
+            }
+        }, 4000);
+    </script>
+</body>
+</html>
