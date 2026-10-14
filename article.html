@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузка материала — ВЕСТНИК РОССИИ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#c01414',
+                            darkred: '#8f0d0d',
+                            navy: '#0f172a',
+                            slate: '#334155'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                        headline: ['Playfair Display', 'Georgia', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f4f5f7;
+            color: #1e293b;
+        }
+        .article-content p {
+            margin-bottom: 1.35rem;
+            line-height: 1.82;
+        }
+        .quote-block {
+            border-left: 4px solid #c01414;
+            background: linear-gradient(90deg, #fef2f2 0%, #ffffff 100%);
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.35; transform: scale(0.92); }
+        }
+        .live-dot {
+            animation: pulse-dot 1.4s infinite;
+        }
+        @keyframes scanline {
+            0% { top: 6%; opacity: 0.25; }
+            50% { top: 90%; opacity: 0.65; }
+            100% { top: 6%; opacity: 0.25; }
+        }
+        .lidar-beam {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #38bdf8, #ef4444, #38bdf8, transparent);
+            box-shadow: 0 0 12px #38bdf8;
+            animation: scanline 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .cctv-grid {
+            background-image: 
+                linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+            background-size: 26px 26px;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Подсветка для режима прямой правки на странице */
+        .inline-editable-active [contenteditable="true"] {
+            outline: 2px dashed #c01414;
+            outline-offset: 4px;
+            background-color: rgba(254, 242, 242, 0.45);
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .inline-editable-active [contenteditable="true"]:focus {
+            outline: 2px solid #2563eb;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-red selection:text-white min-h-screen flex flex-col">
+
+    <!-- ВЕРХНЯЯ ИНФОРМАЦИОННАЯ ПАНЕЛЬ -->
+    <div class="bg-slate-950 text-slate-300 text-xs border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-3 overflow-x-auto no-scrollbar py-0.5">
+                <span class="font-semibold text-white flex items-center gap-1.5 shrink-0">
+                    <i class="fa-regular fa-calendar text-brand-red"></i>
+                    <span id="top-current-date">Четверг, 15 октября 2026</span>
+                </span>
+                <span class="text-slate-700">|</span>
+                <div id="top-informers-list" class="flex items-center space-x-3 shrink-0"></div>
+            </div>
+            <div id="top-tickers-list" class="hidden sm:flex items-center space-x-4 font-mono text-[11px] shrink-0"></div>
+        </div>
+    </div>
+
+    <!-- ГЛАВНАЯ ШАПКА САЙТА -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-20 gap-4">
+                <!-- Логотип -->
+                <div class="flex items-center space-x-4 shrink-0">
+                    <a href="index.html" class="flex items-center gap-3 group">
+                        <div class="w-11 h-11 bg-brand-red flex items-center justify-center text-white font-headline font-extrabold text-2xl tracking-tighter shadow-xs group-hover:bg-brand-darkred transition">
+                            ВР
+                        </div>
+                        <div>
+                            <div id="site-title-el" class="font-headline font-extrabold text-2xl sm:text-3xl tracking-tight text-slate-900 leading-none">
+                                ВЕСТНИК <span class="text-brand-red">РОССИИ</span>
+                            </div>
+                            <div id="site-subtitle-el" class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold mt-1">
+                                Федеральное информационное агентство
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Навигация по рубрикам -->
+                <nav id="header-categories-nav" class="hidden xl:flex items-center space-x-5 text-sm font-semibold text-slate-700 overflow-x-auto no-scrollbar"></nav>
+
+                <!-- Кнопки справа -->
+                <div class="flex items-center space-x-2.5 shrink-0">
+                    <a href="index.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">
+                        <i class="fa-solid fa-newspaper text-brand-red"></i>
+                        <span>Все новости</span>
+                    </a>
+                    <span class="px-2 py-1 text-xs font-bold bg-slate-200 text-slate-700 rounded">18+</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЕГУЩАЯ СТРОКА «МОЛНИЯ» (5 кликов открывают панель редактора / переход в admin.html) -->
+        <div class="bg-red-50 border-t border-red-200 text-slate-900">
+            <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-3 text-xs sm:text-sm">
+                <div class="flex items-center gap-3 min-w-0">
+                    <button
+                        id="molniya-btn"
+                        onclick="handleMolniyaClick()"
+                        title="Нажмите 5 раз для вызова панели редактора"
+                        class="bg-brand-red hover:bg-brand-darkred active:scale-95 text-white font-bold px-2.5 py-0.5 rounded-xs uppercase tracking-wider text-[11px] flex items-center gap-1.5 shrink-0 cursor-pointer select-none transition"
+                    >
+                        <span class="w-2 h-2 rounded-full bg-white live-dot"></span>
+                        <span>МОЛНИЯ</span>
+                    </button>
+                    <div id="breaking-news-text" class="truncate font-medium text-slate-800">
+                        Загрузка оперативной сводки...
+                    </div>
+                </div>
+                <span id="molniya-counter-hint" class="hidden text-[11px] font-mono text-brand-red font-bold shrink-0"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ СТРАНИЦЫ СТАТЬИ -->
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:py-8 flex-1 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- ЛЕВАЯ/ЦЕНТРАЛЬНАЯ КОЛОНКА — СТАТЬЯ (8 колонок) -->
+            <article class="lg:col-span-8 bg-white rounded-xl shadow-xs border border-slate-200 p-5 sm:p-8 md:p-10">
+
+                <!-- Хлебные крошки и управление шрифтом -->
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100 text-xs text-slate-500">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <a href="index.html" class="hover:text-brand-red font-medium transition">Главная</a>
+                        <span>/</span>
+                        <a id="article-category-link" href="index.html" class="text-brand-red font-bold uppercase tracking-wider hover:underline">Рубрика</a>
+                        <span>•</span>
+                        <span id="article-date" class="font-semibold text-slate-700">--</span>
+                        <span>•</span>
+                        <span id="article-geo" class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">
+                            <i class="fa-solid fa-location-dot text-brand-red"></i> --
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="changeFontSize(-1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-bold transition" title="Уменьшить шрифт">A-</button>
+                        <button onclick="changeFontSize(1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-bold transition" title="Увеличить шрифт">A+</button>
+                    </div>
+                </div>
+
+                <!-- ЗАГОЛОВОК H1 -->
+                <h1 id="article-title" class="font-headline font-extrabold text-2xl sm:text-3xl md:text-[34px] text-slate-950 leading-[1.2] mb-5">
+                    Загрузка заголовка...
+                </h1>
+
+                <!-- ЛИД-АБЗАЦ -->
+                <div id="article-lead" class="font-sans font-semibold text-base sm:text-lg text-slate-800 leading-relaxed mb-6 pb-6 border-b border-slate-200">
+                    Загрузка лид-абзаца...
+                </div>
+
+                <!-- БЛОК ИЛЛЮСТРАЦИИ / ИНТЕРАКТИВНЫЙ ЭКРАН СПЕЦКОНТРОЛЯ -->
+                <figure class="mb-8">
+                    <div
+                        id="photo-container"
+                        onclick="triggerLocalPhotoUpload()"
+                        class="relative rounded-xl overflow-hidden bg-slate-950 border-2 border-slate-800 cursor-pointer group aspect-16/9 flex items-center justify-center select-none"
+                    >
+                        <!-- Изображение статьи или загруженное пользователем фото -->
+                        <img id="article-main-img" src="" alt="Иллюстрация материала" class="hidden w-full h-full object-cover">
+
+                        <!-- Репортажный интерфейс камеры / радара (если не задана обычная картинка) -->
+                        <div id="default-cctv-overlay" class="w-full h-full cctv-grid relative flex flex-col justify-between p-4 sm:p-6 text-sky-400 font-mono">
+                            <div class="lidar-beam"></div>
+
+                            <!-- Верхняя строка телеметрии -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs z-10">
+                                <div class="flex items-center gap-2 bg-slate-900/90 px-2.5 py-1 rounded border border-sky-500/30">
+                                    <span class="w-2 h-2 rounded-full bg-red-500 live-dot"></span>
+                                    <span id="cctv-badge-type" class="text-white font-bold">ОПЕРАТИВНЫЙ КОНТРОЛЬ</span>
+                                </div>
+                                <div id="cctv-category-pill" class="bg-red-950/90 text-red-300 border border-red-500/50 px-2.5 py-1 rounded font-bold uppercase">
+                                    ФЕДЕРАЛЬНАЯ СВОДКА
+                                </div>
+                            </div>
+
+                            <!-- Центральная векторная схема / радар -->
+                            <div class="my-auto flex flex-col sm:flex-row items-center justify-center gap-6 z-10 py-2">
+                                <div id="cctv-vector-box" class="relative w-52 h-40 sm:w-60 sm:h-44 border border-sky-400/40 bg-slate-900/80 rounded-lg p-3 flex items-center justify-center">
+                                    <!-- Заполняется динамически под тему новости -->
+                                </div>
+
+                                <div class="text-xs space-y-2 bg-slate-900/90 p-3.5 rounded-lg border border-slate-700 max-w-xs w-full">
+                                    <div class="text-white font-bold border-b border-slate-700 pb-1 flex items-center justify-between">
+                                        <span id="cctv-geo-label">ЛОКАЦИЯ: РФ</span>
+                                        <span class="text-red-400">LIVE</span>
+                                    </div>
+                                    <div id="cctv-telemetry-text" class="text-[11px] text-amber-300 font-bold leading-relaxed">
+                                        ТЕЛЕМЕТРИЯ АКТИВНА
+                                    </div>
+                                    <div class="pt-1.5 text-[11px] text-slate-300 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-camera text-brand-red"></i>
+                                        <span class="underline decoration-dotted">Нажмите, чтобы подставить своё фото</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Нижняя строка камеры -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-[11px] text-slate-400 z-10 border-t border-slate-800/80 pt-2">
+                                <span id="cctv-footer-left">АРХИВ ФОТОСЛУЖБЫ «ВЕСТНИК РОССИИ»</span>
+                                <span class="text-sky-400 font-semibold">КАНАЛ ЗАЩИЩЕН • 2026</span>
+                            </div>
+                        </div>
+
+                        <!-- Кнопка возврата схемы -->
+                        <button
+                            id="reset-img-btn"
+                            onclick="resetLocalPhoto(event)"
+                            class="hidden absolute top-3 right-3 bg-slate-900/85 hover:bg-brand-red text-white text-xs px-3 py-1.5 rounded-md font-sans font-semibold shadow-md transition z-20"
+                        >
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Вернуть схему
+                        </button>
+                    </div>
+                    <input type="file" id="local-file-input" accept="image/*" class="hidden" onchange="handleLocalPhotoSelect(event)">
+                    <figcaption class="text-xs text-slate-500 mt-2.5 flex items-center justify-between gap-2">
+                        <span id="article-caption">Фото: Фотослужба «Вестник России»</span>
+                        <span class="text-[11px] text-brand-red font-medium cursor-pointer hover:underline shrink-0" onclick="triggerLocalPhotoUpload()">[Заменить кадр]</span>
+                    </figcaption>
+                </figure>
+
+                <!-- ОСНОВНОЙ ТЕКСТ СТАТЬИ -->
+                <div id="article-body" class="article-content font-serif text-slate-800 text-[16.5px] sm:text-[17.5px]">
+                    <!-- Заполняется из db.json -->
+                </div>
+
+                <!-- БЛОК «МАТЕРИАЛЫ ПО ТЕМЕ» (СВЯЗАННЫЕ НОВОСТИ ИЗ DB.JSON) -->
+                <div id="related-articles-box" class="my-8 bg-slate-50 border-l-4 border-slate-900 p-5 rounded-r-xl">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Материалы по теме в единой сводке</div>
+                    <div id="related-articles-list" class="space-y-2.5 text-sm font-semibold">
+                        <!-- Заполняется автоматически -->
+                    </div>
+                </div>
+
+                <!-- ТЕГИ И РЕАКЦИИ ЧИТАТЕЛЕЙ -->
+                <div class="pt-6 border-t border-slate-200">
+                    <div id="article-tags-list" class="flex flex-wrap gap-2 mb-6">
+                        <!-- Теги -->
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="bumpArticleReaction('fire')" class="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-red-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition cursor-pointer">
+                                <span>🔥 Резонансно</span>
+                                <span id="react-fire" class="text-brand-red font-bold">0</span>
+                            </button>
+                            <button onclick="bumpArticleReaction('cheese')" class="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-red-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition cursor-pointer">
+                                <span>🧀 Закон и порядок</span>
+                                <span id="react-cheese" class="text-slate-900 font-bold">0</span>
+                            </button>
+                            <button onclick="bumpArticleReaction('shock')" class="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-red-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition cursor-pointer">
+                                <span>⚡ Статистический шок</span>
+                                <span id="react-shock" class="text-slate-900 font-bold">0</span>
+                            </button>
+                        </div>
+                        <button onclick="copyDirectLink()" id="copy-link-btn" class="text-xs font-semibold text-slate-600 hover:text-brand-red flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Скопировать ссылку на статью</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- СЕКЦИЯ КОММЕНТАРИЕВ -->
+                <section class="mt-10 pt-8 border-t border-slate-200">
+                    <h3 class="font-headline font-bold text-xl text-slate-900 mb-5 flex items-center gap-2">
+                        <span>Обсуждение материала</span>
+                        <span id="comments-count-pill" class="text-xs font-sans bg-slate-900 text-white px-2.5 py-0.5 rounded-full">0</span>
+                    </h3>
+
+                    <form onsubmit="handleCommentSubmit(event)" class="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <input type="text" id="comm-author" placeholder="Ваше имя или позывной" required class="px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                            <input type="text" id="comm-badge" placeholder="Город / статус (например, Владикавказ)" class="px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                        </div>
+                        <textarea id="comm-text" rows="2" placeholder="Напишите ваше мнение по материалу..." required class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red mb-2.5"></textarea>
+                        <button type="submit" class="bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-lg transition cursor-pointer">
+                            Опубликовать комментарий
+                        </button>
+                    </form>
+
+                    <div id="comments-container" class="space-y-4">
+                        <!-- Комментарии статьи -->
+                    </div>
+                </section>
+            </article>
+
+            <!-- ПРАВАЯ БОКОВАЯ КОЛОНКА (4 колонки) -->
+            <aside class="lg:col-span-4 space-y-6">
+
+                <!-- БЛОК «КАРТИНА ДНЯ (LIVE)» -->
+                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5">
+                    <div class="flex items-center justify-between pb-3 mb-4 border-b-2 border-slate-900">
+                        <h3 class="font-headline font-bold text-lg text-slate-900 uppercase tracking-tight">Картина дня</h3>
+                        <span class="text-[11px] font-mono text-brand-red font-bold flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-brand-red live-dot"></span>
+                            LIVE
+                        </span>
+                    </div>
+                    <div id="sidebar-live-list" class="divide-y divide-slate-100 text-sm"></div>
+                </div>
+
+                <!-- БЛОК «ОПРОС ДНЯ» -->
+                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-red">Опрос «Вестника»</span>
+                        <span id="poll-total-votes" class="text-[11px] font-mono text-slate-400">Голосов: 0</span>
+                    </div>
+                    <h4 id="poll-question-el" class="font-headline font-bold text-base text-slate-900 mb-4 leading-snug">
+                        Загрузка опроса...
+                    </h4>
+                    <div id="poll-options-container" class="space-y-2.5 text-xs sm:text-sm"></div>
+                </div>
+
+                <!-- БЫСТРЫЙ ПЕРЕХОД В АДМИНКУ -->
+                <div class="bg-slate-900 text-slate-200 rounded-xl p-5 border border-slate-800 text-xs space-y-2.5">
+                    <div class="flex items-center justify-between text-amber-400 font-bold uppercase tracking-wider">
+                        <span><i class="fa-solid fa-sliders mr-1.5"></i> Управление статьей</span>
+                        <span class="font-mono text-[10px]">ВЕСТНИК-CMS</span>
+                    </div>
+                    <p class="text-slate-400 leading-relaxed">
+                        Нажмите <strong>5 раз</strong> на кнопку <strong>«МОЛНИЯ»</strong>, чтобы править текст прямо на странице или открыть статью в полном редакторе.
+                    </p>
+                    <a id="direct-admin-edit-link" href="admin.html" class="inline-flex items-center gap-1.5 text-white hover:text-amber-300 font-semibold pt-1 transition">
+                        <i class="fa-solid fa-pen-to-square text-brand-red"></i>
+                        <span>Открыть эту статью в Вестник-CMS →</span>
+                    </a>
+                </div>
+
+            </aside>
+        </div>
+    </main>
+
+    <!-- НИЖНЯЯ ПАНЕЛЬ БЫСТРОЙ ПРАВКИ (ПОЯВЛЯЕТСЯ ПОСЛЕ 5 КЛИКОВ НА «МОЛНИЯ» ИЛИ ?edit=1) -->
+    <div id="cms-quick-bar" class="hidden fixed bottom-4 inset-x-4 max-w-4xl mx-auto bg-slate-900/95 backdrop-blur-md text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700 z-50 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2.5">
+            <span class="px-2 py-0.5 bg-brand-red text-white font-bold rounded uppercase">ВЕСТНИК-CMS</span>
+            <span class="text-slate-300 hidden sm:inline">Оперативная правка материала</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+            <button id="inline-edit-btn" onclick="toggleInlineEditMode()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg font-semibold transition cursor-pointer">
+                Прямая правка текста: ВЫКЛ
+            </button>
+            <button onclick="saveInlineToLocalAndGoAdmin()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg font-semibold transition cursor-pointer">
+                <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Сохранить и открыть полную CMS
+            </button>
+            <button onclick="hideQuickBar()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 rounded-lg font-semibold transition cursor-pointer">
+                <i class="fa-solid fa-camera mr-1"></i> Чистый вид
+            </button>
+        </div>
+    </div>
+
+    <!-- ПОДВАЛ САЙТА -->
+    <footer class="bg-slate-950 text-slate-400 text-xs mt-14 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <a href="index.html" class="font-headline font-bold text-white text-base hover:text-brand-red transition">ВЕСТНИК РОССИИ</a>
+                <p class="text-slate-500 mt-1">Свидетельство о регистрации СМИ ЭЛ № ФС 77-99412. При цитировании ссылка обязательна.</p>
+            </div>
+            <div class="text-right font-mono text-[11px] text-slate-500">
+                18+ • Сатирическое издание • 2026
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT: ПОЛНАЯ РЕЗЕРВНАЯ БАЗА СО ВСЕМИ 6 СТАТЬЯМИ И ЛОГИКА СТРАНИЦЫ -->
+    <script>
+        const DEFAULT_DB = {
+            siteSettings: {
+                title: "ВЕСТНИК РОССИИ",
+                subtitle: "Федеральное информационное агентство",
+                currentDate: "Четверг, 15 октября 2026",
+                breakingNews: "ФСБ и Росфинмониторинг внесли командующего Сырными войсками Станислава Д. в тройной реестр иноагентов, экстремистов и террористов • К «Сырному блицкригу» присоединились Андрей Б. из Гостагаевской и Мирослав К. из Мелеуза",
+                categories: ["Политика", "Безопасность", "Общество", "Происшествия", "Регионы", "Технологии", "Геотектоника"],
+                informers: [
+                    { city: "Владикавказ", status: "Сырный блицкриг", icon: "fa-cheese", color: "text-amber-400", articleId: "cheese-blitzkrieg" },
+                    { city: "Санкт-Петербург", status: "Лимит носа ≤ 42 мм", icon: "fa-ruler-horizontal", color: "text-sky-400", articleId: "spb-nose-limit" },
+                    { city: "Анапа", status: "Сушист 0 : 7", icon: "fa-shield-halved", color: "text-emerald-400", articleId: "anapa-sushi-maniac" },
+                    { city: "Таганрог", status: "Индекс −142%", icon: "fa-chart-line", color: "text-rose-400", articleId: "taganrog-negative-index" },
+                    { city: "Уфа", status: "Подготовка к дрейфу", icon: "fa-water", color: "text-indigo-300", articleId: "bashkortostan-drift" }
+                ],
+                tickers: [
+                    { label: "USD", value: "96.42 ▲", color: "text-emerald-400" },
+                    { label: "EUR", value: "104.18 ▲", color: "text-emerald-400" },
+                    { label: "СЫР ИРОН", value: "1.5 г Au ▲", color: "text-amber-400" }
+                ],
+                poll: {
+                    question: "Какие меры позволят урегулировать «Сырный блицкриг» и кризис стандартов в регионах?",
+                    options: [
+                        { text: "Наладить воздушный мост с рассольным сыром «ирон цыхт» во Владикавказ", votes: 1420 },
+                        { text: "Отменить лимит Смольного в 42 мм и поддержать #ДАбольшимносам! в МАКС", votes: 980 },
+                        { text: "Ускорить отпиливание Башкортостана вместе с индексом Мирослава К.", votes: 640 },
+                        { text: "Наградить пенсионерку с термосом шиповника из Анапы", votes: 890 }
+                    ]
+                }
+            },
+            articles: [
+                {
+                    id: "cheese-blitzkrieg",
+                    isHero: true,
+                    title: "ФСБ и Росфинмониторинг внесли Станислава Д. в тройной реестр иноагентов, экстремистов и террористов: командующий ОСС объявил «сырный блицкриг» и привлек кадры из Гостагаевской и Мелеуза",
+                    lead: "Конфликт вокруг критического дефицита сырья для традиционных пирогов уалибах в Северной Осетии перерос в полномасштабную военную кампанию межрегионального масштаба. Самопровозглашенный верховный главнокомандующий Объединенных сырных сил (ОСС) Станислав Д. объявил о начале генерального наступления под кодовым названием «Сырный блицкриг» сразу по четырем стратегическим направлениям. В ответ на это Минюст РФ, Росфинмониторинг и Генпрокуратура одновременно присвоили лидеру мятежных сыроваров статусы иностранного агента, экстремиста и террориста.",
+                    date: "15 октября 2026, 08:30",
+                    category: "Безопасность",
+                    geo: "Владикавказ / СКФО",
+                    image: "",
+                    badgeType: "TACTICAL-MAP: ОПЕРАЦИЯ «СЫРНЫЙ БЛИЦКРИГ»",
+                    badgeTelemetry: "СТАТУС: ТРОЙНОЙ РЕЕСТР • СЫР: 0.0% • ИНДЕКС КБР: −76%",
+                    caption: "Фото: Оперативная съемка колонны молоковозов Объединенных сырных сил на трассе «Кавказ» / Фотослужба «Вестник России»",
+                    tags: ["Владикавказ", "Станислав Д.", "Сырные войны", "Андрей Б.", "Мирослав К.", "Герман Ф."],
+                    reactions: { fire: 5420, cheese: 4180, shock: 2890 },
+                    comments: [
+                        { author: "Алан_Уалибах", badge: "Владикавказ", time: "08:42", text: "Станислав предупреждал: пошехонский сыр в осетинском пироге — это казус белли! Держим оборону у пекарни на проспекте Мира!" },
+                        { author: "Пенсионерка с Пионерского", badge: "Анапа", time: "08:55", text: "Так вот куда этот наш сушист Андрей Б. из Гостагаевской сбежал! Передайте ему, что мой термос с шиповником всегда наготове." },
+                        { author: "Чабан_Нальчик", badge: "КБР", time: "09:10", text: "Подтверждаю, как только к нашему блокпосту подъехал молоковоз с Мирославом К., у нас навигатор ушел в минус и мы сами раздали три бидона сметаны." }
+                    ],
+                    body: `<p>Поводом для предельно жесткой реакции федерального центра стал ультиматум полевого штаба ОСС: Станислав Д. потребовал от правительства РФ признать рассольный сыр («ирон цыхт») международным валютным эквивалентом, а также передать под оперативный контроль его формирований все молочно-товарные фермы Южного и Северо-Кавказского федеральных округов. Не дожидаясь ответа Москвы, штаб мятежного технолога перешел к активной фазе наступательной операции.</p>
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Кадровое усиление: диверсанты из Гостагаевской и Мелеуза</h2>
+                    <p>Для реализации масштабного замысла Станислав Д. сформировал вокруг себя интернациональный штаб, рекрутировав ключевых медийных беглецов последних недель.</p>
+                    <p>На должность начальника штурмового спецназа и инструктора по рукопашному бою полевой кухни был экстренно назначен 22-летний уроженец станицы Гостагаевской Андрей Б., ранее покинувший Анапу после фиаско на Пионерском проспекте. Как выяснилось в ходе проверки биографии, в анапском суши-баре молодой человек числился не поваром, а разнорабочим по разгрузке мешков с рисом и утилизации водорослей.</p>
+                    <blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+                        <i class="fa-solid fa-quote-left text-4xl text-brand-red/15 absolute top-3 right-4"></i>
+                        <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif relative z-10">«Командование оценило колоссальный потенциал Андрея Б. в ближнем бою: парень пережил сокрушительное прямое попадание литрового термоса с шиповником от пенсионерки, выдержал удары пляжным шезлонгом и сохранил волю к сопротивлению. В рядах ОСС ему выдали бронежилет из спрессованного сухого творога и доверили командование авангардом, штурмующим сыроварни на границе с Ингушетией», — передают военные корреспонденты с позиций у реки Сунжа.</p>
+                    </blockquote>
+                    <p>Заместителем командующего по стратегической дестабилизации тыла противника стал 22-летний Мирослав К., бежавший из города Мелеуз Республики Башкортостан в Таганрог под предлогом поступления на IT-специальность. Его подтвержденная способность обнулять муниципальную статистику правопорядка была принята на вооружение ОСС в качестве неконвенционного психотронного оружия.</p>
+                    <p>Мирослава К. на бронированном молоковозе доставили на нейтральную полосу у административной границы Кабардино-Балкарии: за два часа его присутствия совокупный индекс дисциплины на местных блокпостах рухнул до рекордных −76%, что вызвало стихийное братание чабанов и несанкционированную раздачу сметаны личному составу.</p>
+                    <div id="dossier-block" class="my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+                        <div class="bg-slate-900 text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-brand-red"></i><span class="font-bold text-sm uppercase tracking-wider">Диспозиция сил «Сырного блицкрига» Станислава Д.</span></div>
+                            <span class="text-[11px] font-mono bg-slate-800 text-amber-400 px-2 py-0.5 rounded">ГЕНШТАБ ОСС • ВЛАДИКАВКАЗ-2026</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-600 border-b border-slate-200">
+                                        <th class="py-2.5 px-4 font-bold">Командир / Сектор</th>
+                                        <th class="py-2.5 px-4 font-bold">Происхождение</th>
+                                        <th class="py-2.5 px-4 font-bold">Боевая задача</th>
+                                        <th class="py-2.5 px-4 font-bold">Оснащение</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr><td class="py-3 px-4 font-bold text-slate-900">Андрей Б. (22 года)</td><td class="py-3 px-4 text-slate-600">ст. Гостагаевская (Анапа)</td><td class="py-3 px-4 text-slate-800">Штурм молочных резервуаров Сунжи</td><td class="py-3 px-4"><span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded text-xs font-semibold">Бронежилет из творога</span></td></tr>
+                                    <tr><td class="py-3 px-4 font-bold text-slate-900">Мирослав К.</td><td class="py-3 px-4 text-slate-600">г. Мелеуз (Таганрог)</td><td class="py-3 px-4 text-slate-800">Обрушение правопорядка на блокпостах КБР</td><td class="py-3 px-4"><span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded text-xs font-semibold">Индекс дестабилизации −76%</span></td></tr>
+                                    <tr><td class="py-3 px-4 font-bold text-slate-900">Герман Ф. (22 года)</td><td class="py-3 px-4 text-slate-600">Владикавказ (Санкт-Петербург)</td><td class="py-3 px-4 text-slate-800">Шифрованная координация молоковозов</td><td class="py-3 px-4"><span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded text-xs font-semibold">Шлюз в мессенджере МАКС</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Цифровой след из Санкт-Петербурга</h2>
+                    <p>Особую роль в обеспечении координации наступающих соединений следственные органы отводят петербургскому сектору. По материалам ФСБ, защищенную радиосеть и маршрутизацию колонн через мессенджер МАКС лично курирует 22-летний программист геймдев-студии Герман Ф.</p>
+                    <div id="max-flashmob" class="my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm">
+                        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-blue-800/60">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-extrabold text-sm">M</div>
+                                <div>
+                                    <div class="text-xs font-bold tracking-wide flex items-center gap-1.5"><span>МЕССЕНДЖЕР МАКС • СИТУАЦИОННЫЙ ЦЕНТР ОСС</span><i class="fa-solid fa-shield text-amber-400"></i></div>
+                                    <div class="text-[11px] text-blue-300">Канал связи: @cheese_blitzkrieg_hq</div>
+                                </div>
+                            </div>
+                            <span class="bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-mono px-2.5 py-1 rounded-full font-bold">ТРАФИК ШИФРОВАН • 256 BIT</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-200 leading-relaxed mb-3"><strong>Герман Ф. (@german_db_53mm):</strong> «Выложил в закрытый канал патч для бортовых компьютеров молоковозов. Логистика поставок закваски теперь полностью децентрализована через P2P-протокол. Родному Владикавказу — чистый ирон цыхт, а Петербург пусть пока разбирается с моими 53 миллиметрами переносицы».</p>
+                        <div class="flex flex-wrap items-center gap-2 text-[11px] text-sky-300 font-mono">
+                            <span class="bg-slate-800/90 px-2.5 py-1 rounded">🛡️ Защищенных молоковозов: 184</span>
+                            <span class="bg-slate-800/90 px-2.5 py-1 rounded">🧀 Резерв закваски: 12.8 тонн</span>
+                        </div>
+                    </div>
+                    <p>Как выяснили оперативники, разработчик, запустивший ранее резонансный протест против стандартов профилей лица, является коренным уроженцем Владикавказа и родственником одного из старейшин пироговой артели. В исходном коде разрабатываемых его студией игр уже обнаружены скрытые топографические карты Дарьяльского ущелья с отметками тайных троп контрабанды сычужного фермента.</p>
+                    <p>В настоящий момент передовые колонны ОСС под командованием Станислава Д. перерезали поставки майонеза по федеральной трассе «Кавказ». В Магасе и Нальчике объявлен план «Крепкий рассол», а к Владикавказу экстренно выдвинулись подразделения Росгвардии с установками залпового вброса пастеризованного молока для принудительного охлаждения пылающих дровяных печей.</p>`
+                },
+                {
+                    id: "spb-nose-limit",
+                    isHero: false,
+                    title: "Смольный ввел предельно допустимые габариты носовых перегородок: петербургский IT-специалист запустил флешмоб #ДАбольшимносам",
+                    lead: "Правительство Санкт-Петербурга утвердило постановление № 412-п «Об оптимизации аэродинамических и фасадных характеристик пешеходных потоков в историческом центре». Согласно регламенту, на территории города вводится строгий норматив на длину кончика носа: выступ носовой перегородки от фронтальной плоскости лица не должен превышать 42 миллиметров. Лицам, чьи параметры выходят за рамки стандарта, предписано пройти внеочередную процедуру эстетического усечения либо передвигаться по улицам исключительно в плотно прилегающих компрессионных накладках.",
+                    date: "14 октября 2026, 23:10",
+                    category: "Технологии",
+                    geo: "Санкт-Петербург",
+                    image: "",
+                    badgeType: "LIDAR-CAM #78: КОНТРОЛЬ ПРОФИЛЯ КГИОП",
+                    badgeTelemetry: "НОРМАТИВ: ≤ 42.0 ММ • ЗАМЕР ГЕРМАНА Ф.: 53.0 ММ",
+                    caption: "Фото: Автоматический комплекс замера профилей «Безопасный Санкт-Петербург» / Фотослужба «Вестник России»",
+                    tags: ["#ДАбольшимносам!", "Санкт-Петербург", "Герман Ф.", "Мессенджер МАКС"],
+                    reactions: { fire: 4812, cheese: 3190, shock: 2405 },
+                    comments: [
+                        { author: "Николай Васильевич Г.", badge: "Литейный пр.", time: "23:14", text: "Я ещё в XIX веке предупреждал, к чему приводят подобные административные перегибы на Невском проспекте!" },
+                        { author: "DevOps_Петроградка", badge: "48.5 мм • #ДАбольшимносам!", time: "23:18", text: "Герман — красавчик! Поставил его скрипт из мессенджера МАКС перед выходом на «Маяковской»: лазерный дальномер инспектора показал образцовые 39,8 мм." }
+                    ],
+                    body: `<p>Поводом для принятия резонансного акта послужил отчет профильного комитета по благоустройству и архитектурному надзору. Чиновники пришли к выводу, что чрезмерно выступающие части лиц создают неконтролируемые микровихри на узких тротуарах Невского проспекта, ускоряют коррозию чугунных оград мостов и приводят к повышенному расходу кислорода из резервного фонда Северной столицы.</p>
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Реакция цифрового сообщества</h2>
+                    <p>Нововведение спровоцировало резкую волну критики среди жителей города. Одним из первых против постановления публично выступил 22-летний петербургский программист Герман Ф., чей профиль по результатам предварительных замеров городской системы распознавания лиц оказался «в зоне повышенного риска».</p>
+                    <blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+                        <i class="fa-solid fa-quote-left text-4xl text-brand-red/15 absolute top-3 right-4"></i>
+                        <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif relative z-10">«Я пять лет оптимизирую базы данных и проектирую микросервисы, но никогда не думал, что архитектурной угрозой для города признают мой собственный профиль. Мой нос выступает на 53 миллиметра — это фамильная черта, он идеально сбалансирован под влажный балтийский климат и никогда не сбивал сосульки с водосточных труб. Заставлять айтишников надевать бандажи или делать операцию ради снижения ветрового сопротивления — это инженерный абсурд», — заявил Герман Ф.</p>
+                    </blockquote>
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Флешмоб в мессенджере МАКС</h2>
+                    <p>В знак протеста разработчик запустил масштабную координационную кампанию в отечественном защищенном мессенджере МАКС. Пользователи платформы публикуют свои профильные снимки с приложенными линейками, штангенциркулями и банковскими картами под единым хэштегом <strong class="text-blue-700 font-sans">#ДАбольшимносам!</strong>.</p>
+                    <p>В рамках акции участники также разрабатывают открытое программное обеспечение для мобильных устройств, позволяющее в реальном времени подменять видеопоток с камер городского наблюдения «Безопасный Санкт-Петербург», визуально уменьшая носы владельцев смартфонов до нормативных 41,5 миллиметра.</p>`
+                },
+                {
+                    id: "vladikavkaz-cheese-shortage",
+                    isHero: false,
+                    title: "В Северной Осетии объявлено чрезвычайное положение из-за критического дефицита осетинского сыра: Владикавказ охвачен «лактозными бунтами», сформированы Объединенные сырные силы",
+                    lead: "Во Владикавказе и на всей территории Республики Северная Осетия — Алания введен план специальной социально-продовольственной деэскалации в связи с полным исчерпанием региональных запасов рассольного осетинского сыра («ирон цыхт»), базового компонента традиционных пирогов уалибах. Тотальный дефицит ключевого сырья в считанные дни парализовал общепит и привел к масштабному расколу в обществе, стремительно перерастающему в вооруженное противостояние конкурирующих хлебобулочных группировок.",
+                    date: "14 октября 2026, 21:40",
+                    category: "Регионы",
+                    geo: "Владикавказ",
+                    image: "",
+                    badgeType: "ПРОДОВОЛЬСТВЕННЫЙ МОНИТОРИНГ РСО-АЛАНИЯ",
+                    badgeTelemetry: "ЗАПАС «ИРОН ЦЫХТ»: 0 КГ • КУРС НА РЫНКЕ: 1.5 Г ЗОЛОТА",
+                    caption: "Фото: Блокпост Объединенных сырных сил у мукомольного склада во Владикавказе",
+                    tags: ["Северная Осетия", "Владикавказ", "Станислав Д.", "Осетинские пироги"],
+                    reactions: { fire: 3650, cheese: 5120, shock: 1940 },
+                    comments: [
+                        { author: "Таймураз", badge: "Владикавказ", time: "21:50", text: "Кто вообще додумался предложить моцареллу вместо нашего ирон цыхт?! Полностью поддерживаю Станислава Д.!" }
+                    ],
+                    body: `<p>Поводом для эскалации стала внезапная остановка сыроварен в предгорных районах республики из-за сезонного сбоя бактериальных заквасок и забастовки пастбищных союзов. Попытки местных рестораторов временно заменить традиционный рассольный сыр на сулугуни, моцареллу или российский пошехонский были расценены населением как открытая провокация и посягательство на основы этнографической безопасности.</p>
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Милитаризация пироговых артелей</h2>
+                    <p>К вечеру среды центральные проспекты Владикавказа перешли под фактический контроль стихийно сформированных военизированных формирований пекарей и пастухов. На базе Союза производителей национальной выпечки было объявлено о создании Объединенных сырных сил (ОСС). Верховным главнокомандующим новообразованных войск был единогласно провозглашен Станислав Д., бывший технолог Алагирского сырного комбината.</p>
+                    <blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+                        <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«Замена ирон цыхта на плавленый сырок в фольге — это черта, за которую мы не отступим. Если федеральные ведомства не наладят воздушный мост с поставками цельного парного молока высшей жирности, мы оставляем за собой право применить симметричные меры военно-продовольственного характера», — заявил Станислав Д. в своем видеообращении на фоне полевой дровяной печи.</p>
+                    </blockquote>
+                    <p>В связи с острым дефицитом кальция и сычужных ферментов командование ОСС открыто заявило о планах проведения «специальной сырной операции» по принудительной аннексии пастбищных угодий соседней Республики Ингушетия. Тем временем на стихийных рынках у Чугунного моста килограмм выдержанного осетинского сыра уже торгуется по курсу полутора граммов банковского золота.</p>`
+                },
+                {
+                    id: "anapa-sushi-maniac",
+                    isHero: false,
+                    title: "«Кошмар Пионерского проспекта»: полиция Анапы разыскивает серийного маньяка, получившего отпор от всех семи потенциальных жертв",
+                    lead: "Следственный отдел по городу-курорту Анапа проводит проверку по серии необычных инцидентов в районе Пионерского проспекта и Джемете. По данным правоохранительных органов, на побережье объявился злоумышленник, примеряющий на себя образ классического маньяка-потрошителя, однако ни одно из его нападений так и не увенчалось успехом из-за тотальной нерасторопности нападавшего и активного сопротивления местных жительниц.",
+                    date: "14 октября 2026, 19:15",
+                    category: "Происшествия",
+                    geo: "Анапа / Гостагаевская",
+                    image: "",
+                    badgeType: "КАМЕРА ОМВД «БЕЗОПАСНЫЙ КУРОРТ» • АНАПА",
+                    badgeTelemetry: "СЧЕТ СХВАТОК: 0 : 7 В ПОЛЬЗУ ОТДЫХАЮЩИХ",
+                    caption: "Фото: Кадр ночного наблюдения на Пионерском проспекте в момент контратаки пенсионерки с термосом",
+                    tags: ["Анапа", "Гостагаевская", "Андрей Б.", "Курьёзы"],
+                    reactions: { fire: 6120, cheese: 2310, shock: 4490 },
+                    comments: [
+                        { author: "Зинаида Павловна (64 года)", badge: "Анапа, Джемете", time: "19:30", text: "Выскочил из можжевельника с палочкой для суши! Пришлось приложить термосом с шиповником, чтобы газон не топтал." }
+                    ],
+                    body: `<p>Как стало известно следствию, подозреваемый — 22-летний разнорабочий местного суши-бара Андрей Б., прибывший в Анапу в статусе вынужденного переселенца из станицы Гостагаевской после серии локальных бытовых неурядиц.</p>
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Семь эпизодов — семь поражений</h2>
+                    <p>Согласно протоколам опроса очевидцев, мужчина выслеживал прохожих в вечернее время, выпрыгивал из кустов можжевельника в черном плаще и с деревянной палочкой для суши в руке, пытаясь изобразить грозного душегуба. Однако курортная аудитория энтузиазма не оценила: в первом случае 64-летняя пенсионерка нанесла нападавшему серию сокрушительных ударов термосом с шиповниковым чаем, а во втором две туристки из Норильска отобрали у него бандану и заставили крутить роллы на спор.</p>
+                    <blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+                        <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«За последние две недели в дежурную часть поступило семь заявлений, но ни одного — с травмами со стороны потерпевших. Все телесные повреждения зафиксированы исключительно у самого подозреваемого: ушибы переносицы, синяки от дамских сумок и следы от роликовых коньков на предплечье. Протоколы допросов читаем всем отделом до слез», — прокомментировал ситуацию источник в городском ОМВД.</p>
+                    </blockquote>`
+                },
+                {
+                    id: "taganrog-negative-index",
+                    isHero: false,
+                    title: "Счетная палата зафиксировала отрицательный индекс правопорядка в Таганроге после прибытия беженца из Башкортостана",
+                    lead: "Город Таганрог Ростовской области стал первым населенным пунктом в новейшей истории РФ, где официально зафиксирован отрицательный показатель законопослушности населения. Согласно экстренному докладу аналитического центра правовой статистики, совокупный индекс правопорядка в муниципалитете рухнул до отметки −142%.",
+                    date: "14 октября 2026, 17:45",
+                    category: "Общество",
+                    geo: "Таганрог",
+                    image: "",
+                    badgeType: "СИСТЕМА «БЕЗОПАСНЫЙ ГОРОД» • ВОКЗАЛ ТАГАНРОГ-1",
+                    badgeTelemetry: "ИНДЕКС ПРАВОПОРЯДКА: −142.0% • СБОЙ СЕРВЕРОВ",
+                    caption: "Фото: Камера фиксации правонарушений на Привокзальной площади Таганрога",
+                    tags: ["Таганрог", "Мирослав К.", "Башкортостан", "Статистика"],
+                    reactions: { fire: 3890, cheese: 1450, shock: 5210 },
+                    comments: [
+                        { author: "Вокзальный Голубь", badge: "Таганрог-1", time: "18:02", text: "Семечки у Мирослава действительно были без маркировки «Честный знак», подтверждаю." }
+                    ],
+                    body: `<p>Причиной резкого статистического коллапса стало прибытие в приморский город уроженца башкирского города Мелеуз Мирослава К., приехавшего учиться на программиста за несколько недель до начала инженерных работ по отпиливанию Башкортостана от материка.</p>
+                    <blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+                        <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«После того как гражданин Мирослав К. сошел на перрон вокзала Таганрог-1, кривая совершаемых правонарушений приобрела вертикальный характер. Его личная криминогенная плотность оказалась столь высокой, что полностью обнулила положительные показатели всех остальных 240 тысяч жителей города и утянула всю муниципальную статистику в глубокий минус», — сообщил на брифинге представитель надзорного ведомства.</p>
+                    </blockquote>
+                    <p>По данным правоохранительных органов, уже в первые сорок минут пребывания в городе гражданин перешел Привокзальную площадь по диагонали спиной вперед и накормил привокзальных голубей семечками из пакета без маркировки «Честный знак».</p>`
+                },
+                {
+                    id: "bashkortostan-drift",
+                    isHero: false,
+                    title: "Госдума одобрила проект о выводе Башкортостана в нейтральные воды из-за аномальной криминогенной обстановки",
+                    lead: "Государственная дума РФ приняла в третьем, окончательном чтении законопроект «О пространственно-географической изоляции Республики Башкортостан». Согласно документу, с 1 января 2027 года регион официально выводится из состава Российской Федерации, после чего его территорию отделят от Евразийской континентальной плиты и отбуксируют в международные воды Мирового океана.",
+                    date: "14 октября 2026, 11:30",
+                    category: "Геотектоника",
+                    geo: "Уфа / Мировой океан",
+                    image: "",
+                    badgeType: "ГЕОТЕКТОНИЧЕСКИЙ МОНИТОРИНГ • ПЕРИМЕТР 4000 КМ",
+                    badgeTelemetry: "СТАРТ БУРЕНИЯ: 01.01.2027 • УРОВЕНЬ ЗАКОНОПОСЛУШНОСТИ: 0%",
+                    caption: "Фото: Подготовка роторных буров и гидроабразивных установок на границе Башкортостана",
+                    tags: ["Башкортостан", "Госдума", "Мировой океан", "Геотектоника"],
+                    reactions: { fire: 7340, cheese: 2100, shock: 6890 },
+                    comments: [
+                        { author: "Марат_Уфа", badge: "Каюта № 102", time: "12:05", text: "Уже закупили спасательные жилеты и весла, главное — чтобы интернет в Индийском океане ловил!" }
+                    ],
+                    body: `<p>Поводом для беспрецедентного инфраструктурно-геологического решения стали обновленные отчеты межведомственной комиссии по правопорядку. Согласно представленным данным, статистический уровень законопослушности в субъекте упал до нуля: на территории республики не осталось граждан, не имеющих активных приводов или штрафов за несанкционированный выпас гусей.</p>
+                    <blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+                        <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«Ситуация достигла критической отметки. Принято единственно верное инженерно-правовое решение: принудительная географическая автономия с предоставлением республике статуса плавучего острова строгого режима», — заявил зампредседателя профильного комитета по территориальной санации.</p>
+                    </blockquote>
+                    <p>По периметру административных границ Башкортостана протяженностью свыше 4000 километров будут установлены роторные буры и алмазные циркулярные установки для пропила земной коры, после чего регион проведут по системе расширенных каналов в Каспийское море и выведут в открытый океан.</p>`
+                }
+            ]
+        };
+
+        let appDB = JSON.parse(JSON.stringify(DEFAULT_DB));
+        let currentArticle = null;
+        let currentFontSize = 17.5;
+        let molniyaClicks = 0;
+        let molniyaTimer = null;
+        let inlineEditActive = false;
+
+        async function initArticlePage() {
+            try {
+                const res = await fetch('./db.json?t=' + Date.now(), { cache: 'no-store' });
+                if (res.ok) {
+                    const remote = await res.json();
+                    if (remote && Array.isArray(remote.articles)) {
+                        appDB = remote;
+                    }
+                }
+            } catch (err) {
+                const localBackup = localStorage.getItem('vestnik_db_backup');
+                if (localBackup) {
+                    try { appDB = JSON.parse(localBackup); } catch (e) {}
+                }
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const requestedId = params.get('id');
+            const articles = appDB.articles || DEFAULT_DB.articles;
+
+            currentArticle = articles.find(a => a.id === requestedId) || articles.find(a => a.isHero) || articles[0];
+
+            renderTopAndHeader();
+            renderCurrentArticle();
+            renderSidebar();
+
+            // Если открыто с параметром ?edit=1, сразу показываем нижнюю панель правок
+            if (params.get('edit') === '1') {
+                document.getElementById('cms-quick-bar').classList.remove('hidden');
+            }
+        }
+
+        function renderTopAndHeader() {
+            const s = appDB.siteSettings || DEFAULT_DB.siteSettings;
+            document.getElementById('top-current-date').textContent = s.currentDate || "Четверг, 15 октября 2026";
+            document.getElementById('site-title-el').innerHTML = (s.title || "ВЕСТНИК РОССИИ").replace('РОССИИ', '<span class="text-brand-red">РОССИИ</span>');
+            document.getElementById('site-subtitle-el').textContent = s.subtitle || "Федеральное информационное агентство";
+            document.getElementById('breaking-news-text').innerHTML = s.breakingNews || "";
+
+            // Информеры
+            document.getElementById('top-informers-list').innerHTML = (s.informers || []).map(inf => `
+                <a href="article.html?id=${encodeURIComponent(inf.articleId || '')}" class="hover:text-white flex items-center gap-1.5 ${inf.color || 'text-sky-400'} font-medium transition shrink-0">
+                    <i class="fa-solid ${inf.icon || 'fa-circle-info'}"></i>
+                    <span>${inf.city}: ${inf.status}</span>
+                </a>
+            `).join('<span class="text-slate-800">•</span>');
+
+            // Котировки
+            document.getElementById('top-tickers-list').innerHTML = (s.tickers || []).map(t => `
+                <span>${t.label} <strong class="${t.color || 'text-emerald-400'}">${t.value}</strong></span>
+            `).join('');
+
+            // Меню рубрик
+            const categories = ["Все", ...(s.categories || DEFAULT_DB.siteSettings.categories)];
+            document.getElementById('header-categories-nav').innerHTML = categories.map(cat => {
+                const isCurrentCat = currentArticle && currentArticle.category === cat;
+                const href = cat === "Все" ? "index.html" : `index.html?category=${encodeURIComponent(cat)}`;
+                return `
+                    <a href="${href}" class="${isCurrentCat ? 'text-brand-red border-b-2 border-brand-red pb-1 font-bold' : 'text-slate-700 hover:text-brand-red'} transition whitespace-nowrap">
+                        ${cat === "Все" ? "Все материалы" : cat}
+                    </a>
+                `;
+            }).join('');
+        }
+
+        function renderCurrentArticle() {
+            if (!currentArticle) return;
+            document.title = `${currentArticle.title} — ВЕСТНИК РОССИИ`;
+
+            const catLink = document.getElementById('article-category-link');
+            catLink.textContent = currentArticle.category || "Общество";
+            catLink.href = `index.html?category=${encodeURIComponent(currentArticle.category || 'Общество')}`;
+
+            document.getElementById('article-date').textContent = currentArticle.date || "";
+            document.getElementById('article-geo').innerHTML = `<i class="fa-solid fa-location-dot text-brand-red"></i> ${currentArticle.geo || 'РФ'}`;
+            document.getElementById('article-title').textContent = currentArticle.title || "";
+            document.getElementById('article-lead').textContent = currentArticle.lead || "";
+            document.getElementById('article-caption').textContent = currentArticle.caption || "Фото: Фотослужба «Вестник России»";
+
+            // Ссылка на прямое редактирование именно этой статьи в admin.html
+            document.getElementById('direct-admin-edit-link').href = `admin.html?editId=${encodeURIComponent(currentArticle.id)}`;
+
+            // Иллюстрация или радар
+            const mainImg = document.getElementById('article-main-img');
+            const cctvOverlay = document.getElementById('default-cctv-overlay');
+            const resetBtn = document.getElementById('reset-img-btn');
+
+            if (currentArticle.image && currentArticle.image.trim() !== "") {
+                mainImg.src = currentArticle.image;
+                mainImg.classList.remove('hidden');
+                cctvOverlay.classList.add('hidden');
+                resetBtn.classList.remove('hidden');
+            } else {
+                mainImg.src = "";
+                mainImg.classList.add('hidden');
+                cctvOverlay.classList.remove('hidden');
+                resetBtn.classList.add('hidden');
+
+                document.getElementById('cctv-badge-type').textContent = currentArticle.badgeType || "СИСТЕМА МОНИТОРИНГА";
+                document.getElementById('cctv-category-pill').textContent = currentArticle.category || "СВОДКА";
+                document.getElementById('cctv-geo-label').textContent = `СЕКТОР: ${(currentArticle.geo || 'РФ').toUpperCase()}`;
+                document.getElementById('cctv-telemetry-text').textContent = currentArticle.badgeTelemetry || "СТАТУС: ОПЕРАТИВНЫЙ КОНТРОЛЬ";
+                document.getElementById('cctv-vector-box').innerHTML = buildVectorGraphicForArticle(currentArticle.id);
+            }
+
+            // Основной текст статьи (если в db.json у статьи нет поля body, берем из встроенного DEFAULT_DB по id)
+            let bodyHTML = currentArticle.body;
+            if (!bodyHTML) {
+                const fallbackArt = DEFAULT_DB.articles.find(a => a.id === currentArticle.id);
+                bodyHTML = fallbackArt ? fallbackArt.body : `<p>${currentArticle.lead}</p>`;
+            }
+            document.getElementById('article-body').innerHTML = bodyHTML;
+
+            // Материалы по теме
+            const otherArticles = (appDB.articles || []).filter(a => a.id !== currentArticle.id).slice(0, 3);
+            document.getElementById('related-articles-list').innerHTML = otherArticles.map(a => `
+                <a href="article.html?id=${encodeURIComponent(a.id)}" class="block text-slate-900 hover:text-brand-red transition">
+                    <i class="fa-solid fa-angle-right text-brand-red mr-1.5"></i> ${a.title}
+                </a>
+            `).join('');
+
+            // Теги
+            const tags = currentArticle.tags || ["Россия", currentArticle.category || "Общество"];
+            document.getElementById('article-tags-list').innerHTML = tags.map(t => `
+                <a href="index.html?q=${encodeURIComponent(t)}" class="px-3 py-1 bg-slate-100 hover:bg-brand-red hover:text-white text-slate-700 text-xs font-medium rounded-full transition">
+                    ${t.startsWith('#') ? t : '#' + t}
+                </a>
+            `).join('');
+
+            // Реакции
+            const savedReactions = JSON.parse(localStorage.getItem('vestnik_react_' + currentArticle.id) || 'null');
+            const r = savedReactions || currentArticle.reactions || { fire: 3200, cheese: 2100, shock: 1850 };
+            document.getElementById('react-fire').textContent = r.fire || 0;
+            document.getElementById('react-cheese').textContent = r.cheese || 0;
+            document.getElementById('react-shock').textContent = r.shock || 0;
+
+            renderComments();
+        }
+
+        function buildVectorGraphicForArticle(articleId) {
+            if (articleId === 'spb-nose-limit') {
+                return `
+                    <svg viewBox="0 0 220 150" class="w-full h-full">
+                        <line x1="80" y1="10" x2="80" y2="140" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 3"/>
+                        <line x1="138" y1="10" x2="138" y2="140" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="3 3"/>
+                        <text x="108" y="138" fill="#22c55e" font-size="8" font-family="monospace">НОРМА ≤42мм</text>
+                        <line x1="170" y1="20" x2="170" y2="120" stroke="#ef4444" stroke-width="2"/>
+                        <path d="M 60 22 Q 80 22 80 46 L 80 58 L 168 78 L 135 88 L 138 102 L 130 115 L 60 125" fill="none" stroke="#e2e8f0" stroke-width="2.5"/>
+                        <text x="95" y="45" fill="#fca5a5" font-size="9" font-weight="bold" font-family="monospace">ФАКТ: 53.0 мм</text>
+                    </svg>
+                `;
+            }
+            if (articleId === 'taganrog-negative-index') {
+                return `
+                    <svg viewBox="0 0 220 140" class="w-full h-full">
+                        <line x1="15" y1="55" x2="205" y2="55" stroke="#475569" stroke-width="1" stroke-dasharray="3 3"/>
+                        <text x="18" y="50" fill="#94a3b8" font-size="8" font-family="monospace">0% (БАЛАНС)</text>
+                        <polyline fill="none" stroke="#ef4444" stroke-width="3" points="20,25 65,24 105,26 130,122 195,126"/>
+                        <circle cx="130" cy="122" r="4" fill="#f87171"/>
+                        <text x="115" y="112" fill="#fca5a5" font-size="10" font-weight="bold" font-family="monospace">−142.0%</text>
+                    </svg>
+                `;
+            }
+            return `
+                <svg viewBox="0 0 220 140" class="w-full h-full">
+                    <circle cx="110" cy="70" r="52" fill="none" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="4 3"/>
+                    <circle cx="110" cy="70" r="32" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+                    <line x1="40" y1="70" x2="180" y2="70" stroke="#38bdf8" stroke-width="0.8"/>
+                    <line x1="110" y1="12" x2="110" y2="128" stroke="#38bdf8" stroke-width="0.8"/>
+                    <circle cx="124" cy="58" r="4.5" fill="#ef4444"/>
+                    <text x="72" y="134" fill="#38bdf8" font-size="8.5" font-family="monospace">ЦЕЛЬ ЗАФИКСИРОВАНА</text>
+                </svg>
+            `;
+        }
+
+        // Реакции
+        function bumpArticleReaction(type) {
+            if (!currentArticle) return;
+            const key = 'vestnik_react_' + currentArticle.id;
+            const saved = JSON.parse(localStorage.getItem(key) || 'null') || currentArticle.reactions || { fire: 3200, cheese: 2100, shock: 1850 };
+            saved[type] = (parseInt(saved[type], 10) || 0) + 1;
+            localStorage.setItem(key, JSON.stringify(saved));
+            document.getElementById('react-' + type).textContent = saved[type];
+        }
+
+        // Комментарии
+        function renderComments() {
+            if (!currentArticle) return;
+            const key = 'vestnik_comments_' + currentArticle.id;
+            let comments = JSON.parse(localStorage.getItem(key) || 'null');
+            if (!comments) {
+                const fallbackArt = DEFAULT_DB.articles.find(a => a.id === currentArticle.id);
+                comments = currentArticle.comments || (fallbackArt && fallbackArt.comments) || [];
+            }
+
+            document.getElementById('comments-count-pill').textContent = comments.length;
+            const container = document.getElementById('comments-container');
+
+            if (comments.length === 0) {
+                container.innerHTML = `<div class="text-xs text-slate-400 italic py-3">Пока нет комментариев. Станьте первым!</div>`;
+                return;
+            }
+
+            container.innerHTML = comments.map(c => `
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200/80">
+                    <div class="flex items-center justify-between text-xs mb-1.5">
+                        <span class="font-bold text-slate-900">
+                            ${c.author}
+                            ${c.badge ? `<span class="text-brand-red font-mono ml-1.5">[${c.badge}]</span>` : ''}
+                        </span>
+                        <span class="text-slate-400 font-mono text-[11px]">${c.time || 'Сегодня'}</span>
+                    </div>
+                    <p class="text-sm text-slate-700 leading-relaxed">${c.text}</p>
+                </div>
+            `).join('');
+        }
+
+        function handleCommentSubmit(e) {
+            e.preventDefault();
+            if (!currentArticle) return;
+            const author = document.getElementById('comm-author').value.trim();
+            const badge = document.getElementById('comm-badge').value.trim();
+            const text = document.getElementById('comm-text').value.trim();
+            if (!author || !text) return;
+
+            const key = 'vestnik_comments_' + currentArticle.id;
+            const fallbackArt = DEFAULT_DB.articles.find(a => a.id === currentArticle.id);
+            const existing = JSON.parse(localStorage.getItem(key) || 'null') || currentArticle.comments || (fallbackArt && fallbackArt.comments) || [];
+
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            existing.unshift({ author, badge, time: timeStr, text });
+
+            localStorage.setItem(key, JSON.stringify(existing));
+            e.target.reset();
+            renderComments();
+        }
+
+        // Боковая колонка и опрос
+        function renderSidebar() {
+            const articles = appDB.articles || [];
+            document.getElementById('sidebar-live-list').innerHTML = articles.map(art => {
+                const isCurrent = currentArticle && art.id === currentArticle.id;
+                const timePart = (art.date || "").split(',')[1] || art.date;
+                return `
+                    <div class="py-3 first:pt-0 last:pb-0">
+                        <div class="flex items-center justify-between text-[11px] font-mono mb-1">
+                            <span class="text-brand-red font-bold">${timePart.trim()}</span>
+                            <span class="text-slate-500 uppercase">${art.geo}</span>
+                        </div>
+                        <a href="article.html?id=${encodeURIComponent(art.id)}" class="block ${isCurrent ? 'text-brand-red font-bold' : 'text-slate-900 font-semibold hover:text-brand-red'} leading-snug transition">
+                            ${isCurrent ? '▶ ' : ''}${art.title}
+                        </a>
+                    </div>
+                `;
+            }).join('');
+
+            renderPoll();
+        }
+
+        function renderPoll() {
+            const poll = (appDB.siteSettings && appDB.siteSettings.poll) || DEFAULT_DB.siteSettings.poll;
+            document.getElementById('poll-question-el').textContent = poll.question;
+
+            const savedVotes = JSON.parse(localStorage.getItem('vestnik_poll_votes') || 'null');
+            const options = savedVotes && savedVotes.length === poll.options.length ? savedVotes : poll.options;
+            const total = options.reduce((sum, opt) => sum + (parseInt(opt.votes, 10) || 0), 0);
+            document.getElementById('poll-total-votes').textContent = `Голосов: ${total}`;
+
+            document.getElementById('poll-options-container').innerHTML = options.map((opt, idx) => {
+                const pct = total > 0 ? Math.round((opt.votes / total) * 100) : 0;
+                return `
+                    <button onclick="voteInPoll(${idx})" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-brand-red transition relative overflow-hidden cursor-pointer">
+                        <div class="absolute inset-y-0 left-0 bg-red-100/80 transition-all duration-500" style="width: ${pct}%"></div>
+                        <div class="relative flex items-center justify-between gap-2 font-medium text-slate-800">
+                            <span class="leading-snug">${opt.text}</span>
+                            <span class="font-mono font-bold text-brand-red shrink-0">${pct}%</span>
+                        </div>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function voteInPoll(index) {
+            const poll = (appDB.siteSettings && appDB.siteSettings.poll) || DEFAULT_DB.siteSettings.poll;
+            const savedVotes = JSON.parse(localStorage.getItem('vestnik_poll_votes') || 'null');
+            const options = savedVotes && savedVotes.length === poll.options.length ? savedVotes : JSON.parse(JSON.stringify(poll.options));
+            options[index].votes = (parseInt(options[index].votes, 10) || 0) + 1;
+            localStorage.setItem('vestnik_poll_votes', JSON.stringify(options));
+            renderPoll();
+        }
+
+        // Размер шрифта
+        function changeFontSize(delta) {
+            currentFontSize = Math.min(23, Math.max(14, currentFontSize + delta));
+            document.getElementById('article-body').style.fontSize = currentFontSize + 'px';
+        }
+
+        // Загрузка локального снимка в плейсхолдер
+        function triggerLocalPhotoUpload() {
+            document.getElementById('local-file-input').click();
+        }
+
+        function handleLocalPhotoSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('article-main-img');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                document.getElementById('default-cctv-overlay').classList.add('hidden');
+                document.getElementById('reset-img-btn').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetLocalPhoto(event) {
+            event.stopPropagation();
+            const img = document.getElementById('article-main-img');
+            img.src = "";
+            img.classList.add('hidden');
+            document.getElementById('default-cctv-overlay').classList.remove('hidden');
+            document.getElementById('reset-img-btn').classList.add('hidden');
+        }
+
+        // Копирование прямой ссылки на статью
+        function copyDirectLink() {
+            navigator.clipboard?.writeText(window.location.href);
+            const btn = document.getElementById('copy-link-btn');
+            btn.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i> <span>Ссылка скопирована!</span>';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fa-regular fa-copy"></i> <span>Скопировать ссылку на статью</span>';
+            }, 2000);
+        }
+
+        // 5 кликов на «МОЛНИЯ» -> открытие нижней панели быстрой правки и переход в admin.html
+        function handleMolniyaClick() {
+            molniyaClicks++;
+            const hint = document.getElementById('molniya-counter-hint');
+            clearTimeout(molniyaTimer);
+
+            if (molniyaClicks >= 2 && molniyaClicks < 5) {
+                hint.classList.remove('hidden');
+                hint.textContent = `Режим CMS: ${5 - molniyaClicks}...`;
+            }
+
+            if (molniyaClicks >= 5) {
+                molniyaClicks = 0;
+                hint.classList.add('hidden');
+                document.getElementById('cms-quick-bar').classList.remove('hidden');
+            }
+
+            molniyaTimer = setTimeout(() => {
+                molniyaClicks = 0;
+                hint.classList.add('hidden');
+            }, 2000);
+        }
+
+        function toggleInlineEditMode() {
+            inlineEditActive = !inlineEditActive;
+            const editableIds = ['article-title', 'article-lead', 'article-body', 'article-date', 'article-caption', 'breaking-news-text'];
+            editableIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.contentEditable = inlineEditActive ? 'true' : 'false';
+            });
+            document.body.classList.toggle('inline-editable-active', inlineEditActive);
+            const btn = document.getElementById('inline-edit-btn');
+            btn.textContent = `Прямая правка текста: ${inlineEditActive ? 'ВКЛ' : 'ВЫКЛ'}`;
+            btn.classList.toggle('bg-brand-red', inlineEditActive);
+        }
+
+        function saveInlineToLocalAndGoAdmin() {
+            if (currentArticle) {
+                currentArticle.title = document.getElementById('article-title').textContent.trim();
+                currentArticle.lead = document.getElementById('article-lead').textContent.trim();
+                currentArticle.body = document.getElementById('article-body').innerHTML.trim();
+                currentArticle.date = document.getElementById('article-date').textContent.trim();
+                currentArticle.caption = document.getElementById('article-caption').textContent.trim();
+                localStorage.setItem('vestnik_db_backup', JSON.stringify(appDB));
+                window.location.href = `admin.html?editId=${encodeURIComponent(currentArticle.id)}`;
+            } else {
+                window.location.href = 'admin.html';
+            }
+        }
+
+        function hideQuickBar() {
+            if (inlineEditActive) toggleInlineEditMode();
+            document.getElementById('cms-quick-bar').classList.add('hidden');
+        }
+
+        window.addEventListener('DOMContentLoaded', initArticlePage);
+    </script>
+</body>
+</html>

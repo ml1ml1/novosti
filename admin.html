@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ВЕСТНИК-CMS — Панель управления федеральным агентством</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#c01414',
+                            darkred: '#8f0d0d',
+                            navy: '#0f172a',
+                            slate: '#334155'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                        headline: ['Playfair Display', 'Georgia', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .article-preview p {
+            margin-bottom: 1.25rem;
+            line-height: 1.8;
+        }
+        .quote-block {
+            border-left: 4px solid #c01414;
+            background: linear-gradient(90deg, #fef2f2 0%, #ffffff 100%);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- ВЕРХНЯЯ ПАНЕЛЬ АДМИНКИ -->
+    <header class="bg-slate-950 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="w-9 h-9 bg-brand-red flex items-center justify-center font-headline font-extrabold text-lg rounded-xs hover:bg-brand-darkred transition" title="На главную сайта">
+                    ВР
+                </a>
+                <div>
+                    <div class="font-bold text-sm sm:text-base tracking-tight flex items-center gap-2">
+                        <span>ВЕСТНИК-CMS</span>
+                        <span class="text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-2 py-0.5 rounded uppercase">Главный редактор</span>
+                    </div>
+                    <div id="sync-status-line" class="text-[11px] text-slate-400 font-mono">
+                        База загружена • Готово к работе
+                    </div>
+                </div>
+            </div>
+
+            <!-- Быстрые действия справа -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button
+                    onclick="pushToGitHub()"
+                    id="top-push-btn"
+                    class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-xs transition cursor-pointer"
+                    title="Отправить db.json в GitHub репозиторий для всех читателей"
+                >
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span class="hidden sm:inline">Опубликовать на сайт (GitHub)</span>
+                    <span class="sm:hidden">Push</span>
+                </button>
+                <button
+                    onclick="downloadDbJson()"
+                    class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition cursor-pointer"
+                    title="Скачать файл db.json"
+                >
+                    <i class="fa-solid fa-download text-sky-400"></i>
+                    <span class="hidden md:inline">Скачать db.json</span>
+                </button>
+                <a
+                    href="index.html"
+                    class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition"
+                >
+                    <i class="fa-solid fa-arrow-up-right-from-square text-brand-red"></i>
+                    <span class="hidden sm:inline">Открыть сайт</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- НАВИГАЦИОННЫЕ ВКЛАДКИ АДМИНКИ -->
+        <div class="bg-slate-900 border-t border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 flex items-center space-x-1 overflow-x-auto text-xs sm:text-sm font-semibold">
+                <button onclick="switchTab('list')" id="tab-btn-list" class="px-4 py-3 border-b-2 border-brand-red text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                    <i class="fa-solid fa-newspaper text-brand-red"></i>
+                    <span>1. Все новости (<span id="nav-articles-count">0</span>)</span>
+                </button>
+                <button onclick="switchTab('editor')" id="tab-btn-editor" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                    <i class="fa-solid fa-pen-nib"></i>
+                    <span id="editor-tab-label">2. Редактор статьи</span>
+                </button>
+                <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>3. Шапка, Рубрики и Опрос</span>
+                </button>
+                <button onclick="switchTab('github')" id="tab-btn-github" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                    <i class="fa-brands fa-github text-emerald-400"></i>
+                    <span>4. Синхронизация GitHub Pages</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- УВЕДОМЛЕНИЯ (TOAST) -->
+    <div id="toast-box" class="hidden fixed bottom-5 right-5 max-w-md bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700 z-50 flex items-center gap-3 text-xs sm:text-sm">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toast-message">Изменения сохранены</span>
+    </div>
+
+    <!-- ОСНОВНАЯ РАБОЧАЯ ОБЛАСТЬ -->
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:py-8 flex-1 w-full">
+
+        <!-- ========================================================= -->
+        <!-- ВКЛАДКА 1: СПИСОК ВСЕХ НОВОСТЕЙ                           -->
+        <!-- ========================================================= -->
+        <section id="tab-list" class="space-y-6">
+            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h1 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Управление материалами агентства</h1>
+                    <p class="text-xs text-slate-500 mt-0.5">Создавайте новые статьи, назначайте главную новость первой полосы и публикуйте обновления для всех читателей.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <button
+                        onclick="startNewArticle()"
+                        class="bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xs transition cursor-pointer"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Создать новую статью</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Фильтр и поиск по списку статей -->
+            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-4 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[240px]">
+                    <div class="relative flex-1 max-w-md">
+                        <input
+                            type="text"
+                            id="admin-search-input"
+                            oninput="renderAdminArticlesList()"
+                            placeholder="Поиск по заголовку, городу или ID..."
+                            class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:bg-white focus:border-brand-red"
+                        >
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    </div>
+                    <select
+                        id="admin-cat-filter"
+                        onchange="renderAdminArticlesList()"
+                        class="px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red font-medium"
+                    >
+                        <option value="ALL">Все рубрики</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center gap-2 text-xs">
+                    <label class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-semibold cursor-pointer transition">
+                        <i class="fa-solid fa-file-import mr-1 text-brand-red"></i> Импорт db.json
+                        <input type="file" accept=".json" class="hidden" onchange="importDbJsonFile(event)">
+                    </label>
+                    <button onclick="resetToDefaultDB()" class="px-3 py-2 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-brand-red rounded-lg font-semibold transition cursor-pointer" title="Восстановить 6 исходных новостей">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Сброс к исходным (6)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Таблица статей -->
+            <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead>
+                            <tr class="bg-slate-900 text-slate-200 uppercase text-[11px] tracking-wider">
+                                <th class="py-3.5 px-4 font-bold">Статус / ID</th>
+                                <th class="py-3.5 px-4 font-bold">Заголовок и лид</th>
+                                <th class="py-3.5 px-4 font-bold">Рубрика / Город</th>
+                                <th class="py-3.5 px-4 font-bold">Дата</th>
+                                <th class="py-3.5 px-4 font-bold text-right">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-articles-tbody" class="divide-y divide-slate-200">
+                            <!-- Заполняется через JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ВКЛАДКА 2: РЕДАКТОР СТАТЬИ (СОЗДАНИЕ / ПРАВКА + ПРЕВЬЮ)   -->
+        <!-- ========================================================= -->
+        <section id="tab-editor" class="hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <div class="text-xs font-mono uppercase text-brand-red font-bold" id="editor-mode-badge">РЕЖИМ: СОЗДАНИЕ НОВОГО МАТЕРИАЛА</div>
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900" id="editor-heading-title">Конструктор публикации</h2>
+                </div>
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <button onclick="switchTab('list')" class="px-3.5 py-2 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition cursor-pointer">
+                        ← К списку статей
+                    </button>
+                    <button onclick="saveArticleFromEditor(false)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition cursor-pointer">
+                        <i class="fa-solid fa-floppy-disk mr-1.5"></i> Сохранить статью в базу
+                    </button>
+                    <button onclick="saveArticleFromEditor(true)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-brand-red hover:bg-brand-darkred text-white rounded-lg shadow-xs transition cursor-pointer">
+                        <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> Сохранить и Push в GitHub
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Левая часть: поля ввода (7 колонок) -->
+                <div class="lg:col-span-7 bg-white rounded-xl shadow-xs border border-slate-200 p-5 sm:p-6 space-y-4">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Уникальный ID статьи (в ссылке `?id=...`):</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="ed-id" placeholder="naprimer-syrnyj-blickrig" oninput="updateLivePreview()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                                <button type="button" onclick="generateSlugFromTitle()" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold shrink-0 cursor-pointer" title="Сгенерировать из заголовка">
+                                    Auto-ID
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-end">
+                            <label class="w-full flex items-center gap-2.5 px-3 py-2 bg-red-50 border border-red-200 rounded-lg cursor-pointer select-none">
+                                <input type="checkbox" id="ed-ishero" class="w-4 h-4 accent-brand-red">
+                                <span class="text-xs font-bold text-brand-red">Главная новость дня</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Заголовок новости (H1):</label>
+                        <input type="text" id="ed-title" oninput="updateLivePreview()" placeholder="Введите громкий заголовок в стиле федеральных СМИ..." class="w-full px-3.5 py-2.5 text-sm sm:text-base font-bold bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Рубрика:</label>
+                            <input type="text" id="ed-category" list="ed-category-datalist" oninput="updateLivePreview()" placeholder="Безопасность" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                            <datalist id="ed-category-datalist"></datalist>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Гео-метка (город):</label>
+                            <input type="text" id="ed-geo" oninput="updateLivePreview()" placeholder="Владикавказ / СКФО" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="text-xs font-bold text-slate-700">Дата и время:</label>
+                                <button type="button" onclick="setNowDate()" class="text-[11px] text-brand-red font-semibold hover:underline cursor-pointer">Сейчас</button>
+                            </div>
+                            <input type="text" id="ed-date" oninput="updateLivePreview()" placeholder="15 октября 2026, 12:30" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Лид-абзац (первый жирный абзац под заголовком):</label>
+                        <textarea id="ed-lead" rows="3" oninput="updateLivePreview()" placeholder="Краткая суть чрезвычайного происшествия или законопроекта..." class="w-full px-3.5 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red leading-relaxed"></textarea>
+                    </div>
+
+                    <!-- Настройки Изображения или Экрана Спецконтроля -->
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-700">
+                                <i class="fa-solid fa-image text-brand-red mr-1"></i> Иллюстрация материала
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <label class="px-2.5 py-1 bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold rounded cursor-pointer transition">
+                                    <i class="fa-solid fa-upload mr-1"></i> Загрузить фото (Авто-сжатие в базу)
+                                    <input type="file" accept="image/*" class="hidden" onchange="handleEditorImageUpload(event)">
+                                </label>
+                                <button type="button" onclick="clearEditorImage()" class="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded cursor-pointer">
+                                    Очистить фото (Включить Радар)
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">URL картинки или Base64-код (оставьте пустым для репортажного экрана Радара/Камеры):</label>
+                            <input type="text" id="ed-image" oninput="updateLivePreview()" placeholder="https://... или загрузите файл кнопкой выше" class="w-full px-3 py-1.5 text-xs font-mono bg-white border border-slate-300 rounded-lg">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Заголовок Радара (если фото пустое):</label>
+                                <input type="text" id="ed-badgetype" oninput="updateLivePreview()" placeholder="ОПЕРАТИВНЫЙ МОНИТОРИНГ ФСБ" class="w-full px-2.5 py-1.5 text-xs font-mono bg-white border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Строка телеметрии Радара:</label>
+                                <input type="text" id="ed-badgetelemetry" oninput="updateLivePreview()" placeholder="СТАТУС: КОНТРОЛЬ • УРОВЕНЬ: 0%" class="w-full px-2.5 py-1.5 text-xs font-mono bg-white border border-slate-300 rounded-lg">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Подпись фотослужбы под снимком:</label>
+                            <input type="text" id="ed-caption" oninput="updateLivePreview()" placeholder="Фото: Фотослужба «Вестник России» / ТАСС" class="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+
+                    <!-- Конструктор основного текста статьи (HTML) -->
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <label class="text-xs font-bold text-slate-700">Основной текст новости (HTML-блоки):</label>
+                            <span class="text-[11px] text-slate-400">Нажмите на кнопку ниже, чтобы вставить готовый блок</span>
+                        </div>
+
+                        <!-- Панель быстрой вставки фирменных блоков -->
+                        <div class="flex flex-wrap gap-1.5 mb-2 p-2 bg-slate-100 rounded-lg border border-slate-200">
+                            <button type="button" onclick="insertTemplateBlock('p')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-slate-800 cursor-pointer">+ Абзац &lt;p&gt;</button>
+                            <button type="button" onclick="insertTemplateBlock('h2')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-slate-800 cursor-pointer">+ Подзаголовок H2</button>
+                            <button type="button" onclick="insertTemplateBlock('quote')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-brand-red cursor-pointer">+ Цитата с полосой</button>
+                            <button type="button" onclick="insertTemplateBlock('list')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-slate-800 cursor-pointer">+ Нумерованный список</button>
+                            <button type="button" onclick="insertTemplateBlock('dossier')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-amber-800 cursor-pointer">+ Таблица-досье</button>
+                            <button type="button" onclick="insertTemplateBlock('max')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-blue-700 cursor-pointer">+ Плашка мессенджера МАКС</button>
+                        </div>
+
+                        <textarea
+                            id="ed-body"
+                            rows="14"
+                            oninput="updateLivePreview()"
+                            placeholder="<p>Текст первого абзаца...</p>"
+                            class="w-full px-3.5 py-2.5 text-xs font-mono bg-slate-950 text-emerald-300 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-red leading-relaxed"
+                        ></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Теги через запятую:</label>
+                            <input type="text" id="ed-tags" oninput="updateLivePreview()" placeholder="Владикавказ, Станислав Д., Сырные войны" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">🔥 Реакции 1:</label>
+                                <input type="number" id="ed-r-fire" value="4200" class="w-full px-2 py-2 text-xs font-mono border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">🧀 Реакции 2:</label>
+                                <input type="number" id="ed-r-cheese" value="3100" class="w-full px-2 py-2 text-xs font-mono border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">⚡ Реакции 3:</label>
+                                <input type="number" id="ed-r-shock" value="1950" class="w-full px-2 py-2 text-xs font-mono border border-slate-300 rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Правая часть: ЖИВОЕ ПРЕВЬЮ СТАТЬИ (5 колонок) -->
+                <div class="lg:col-span-5">
+                    <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 sm:p-6 sticky top-28 max-h-[82vh] overflow-y-auto">
+                        <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                                <i class="fa-solid fa-eye text-brand-red mr-1"></i> Живое превью статьи
+                            </span>
+                            <span class="text-[11px] font-mono text-slate-400">article.html</span>
+                        </div>
+
+                        <div class="text-[11px] text-slate-500 mb-2 flex flex-wrap items-center gap-1.5">
+                            <span id="prev-cat" class="text-brand-red font-bold uppercase">РУБРИКА</span>
+                            <span>•</span>
+                            <span id="prev-date">Дата</span>
+                            <span>•</span>
+                            <span id="prev-geo" class="bg-slate-100 px-1.5 py-0.5 rounded font-medium">Город</span>
+                        </div>
+
+                        <h3 id="prev-title" class="font-headline font-extrabold text-xl text-slate-950 leading-snug mb-3">
+                            Заголовок статьи...
+                        </h3>
+
+                        <div id="prev-lead" class="font-sans font-semibold text-xs sm:text-sm text-slate-800 leading-relaxed mb-4 pb-4 border-b border-slate-200">
+                            Лид-абзац...
+                        </div>
+
+                        <!-- Превью картинки или радара -->
+                        <div id="prev-visual-box" class="mb-4 rounded-lg overflow-hidden bg-slate-950 text-sky-400 p-3 font-mono text-[11px]"></div>
+
+                        <div id="prev-body" class="article-preview font-serif text-slate-800 text-xs sm:text-sm"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ВКЛАДКА 3: НАСТРОЙКИ САЙТА, РУБРИКИ, ИНФОРМЕРЫ И ОПРОС    -->
+        <!-- ========================================================= -->
+        <section id="tab-settings" class="hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Глобальные настройки портала «Вестник России»</h2>
+                    <p class="text-xs text-slate-500">Все изменения здесь меняют шапку, бегущую строку «МОЛНИЯ», рубрики и опрос сразу на всех страницах сайта.</p>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <button onclick="saveSiteSettings(false)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg cursor-pointer">
+                        Сохранить настройки
+                    </button>
+                    <button onclick="saveSiteSettings(true)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-brand-red hover:bg-brand-darkred text-white rounded-lg cursor-pointer">
+                        Сохранить и Push в GitHub
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Шапка и бегущая строка МОЛНИЯ -->
+                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                    <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">1. Шапка и бегущая строка «МОЛНИЯ»</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Название издания:</label>
+                            <input type="text" id="set-title" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Дата в верхней панели:</label>
+                            <input type="text" id="set-date" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Подзаголовок под логотипом:</label>
+                        <input type="text" id="set-subtitle" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-brand-red mb-1">Текст бегущей строки «МОЛНИЯ»:</label>
+                        <textarea id="set-breaking" rows="3" class="w-full px-3 py-2 text-sm border border-red-300 bg-red-50/30 rounded-lg"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Список рубрик меню (через запятую):</label>
+                        <input type="text" id="set-categories" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg font-medium">
+                    </div>
+                </div>
+
+                <!-- Опрос дня -->
+                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                    <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">2. Виджет «Опрос дня»</h3>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Вопрос опроса:</label>
+                        <input type="text" id="set-poll-question" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Варианты ответа и стартовые голоса (по одному в строке в формате `Текст ответа | 500`):</label>
+                        <textarea id="set-poll-options" rows="5" class="w-full px-3 py-2 text-xs font-mono border border-slate-300 rounded-lg leading-relaxed"></textarea>
+                    </div>
+                </div>
+
+                <!-- Информеры городов и котировки -->
+                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4 lg:col-span-2">
+                    <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">3. Информеры городов и Биржевые котировки (верхняя черная полоса)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Городские информеры (JSON-массив):</label>
+                            <textarea id="set-informers-json" rows="7" class="w-full px-3 py-2 text-xs font-mono bg-slate-950 text-sky-300 rounded-lg"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Котировки валют и сырья (JSON-массив):</label>
+                            <textarea id="set-tickers-json" rows="7" class="w-full px-3 py-2 text-xs font-mono bg-slate-950 text-emerald-300 rounded-lg"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ВКЛАДКА 4: ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ С GITHUB PAGES          -->
+        <!-- ========================================================= -->
+        <section id="tab-github" class="hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-6 max-w-3xl mx-auto space-y-5">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center text-2xl shrink-0">
+                        <i class="fa-brands fa-github"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-headline font-bold text-xl text-slate-900">Прямая публикация в GitHub Pages (Чтобы видели все читатели)</h2>
+                        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                            Когда вы нажимаете <strong>«Опубликовать на сайт (GitHub)»</strong>, админка через официальный GitHub REST API автоматически обновляет файл <code>db.json</code> прямо в вашем репозитории. Все пользователи, заходящие на ваш сайт по ссылке, сразу видят новые статьи и изменения.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Ваш логин на GitHub (Owner):</label>
+                        <input type="text" id="gh-owner" placeholder="например: maksim-dev" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Название репозитория (Repo):</label>
+                        <input type="text" id="gh-repo" placeholder="например: vestnik-rossii" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Ветка (Branch):</label>
+                        <input type="text" id="gh-branch" value="main" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Путь к файлу базы:</label>
+                        <input type="text" id="gh-path" value="db.json" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">GitHub Personal Access Token (PAT с правом <code>repo</code> или <code>Contents: Read & Write</code>):</label>
+                    <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
+                    <p class="text-[11px] text-slate-500 mt-1">
+                        Токен сохраняется исключительно в <code>localStorage</code> вашего браузера и никогда не попадает в публичный код сайта.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-200">
+                    <button onclick="saveGitHubConfig()" class="px-4 py-2.5 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg cursor-pointer">
+                        Сохранить настройки подключения
+                    </button>
+                    <button onclick="pushToGitHub()" class="px-5 py-2.5 text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg shadow-sm flex items-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Загрузить текущую базу db.json в GitHub сейчас</span>
+                    </button>
+                </div>
+
+                <div id="gh-log-box" class="hidden p-4 rounded-xl bg-slate-950 text-slate-200 font-mono text-xs space-y-1"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT: БАЗА И ЛОГИКА ВЕСТНИК-CMS -->
+    <script>
+        const DEFAULT_DB = {
+            siteSettings: {
+                title: "ВЕСТНИК РОССИИ",
+                subtitle: "Федеральное информационное агентство",
+                currentDate: "Четверг, 15 октября 2026",
+                breakingNews: "ФСБ и Росфинмониторинг внесли командующего Сырными войсками Станислава Д. в тройной реестр иноагентов, экстремистов и террористов • К «Сырному блицкригу» присоединились Андрей Б. из Гостагаевской и Мирослав К. из Мелеуза",
+                categories: ["Политика", "Безопасность", "Общество", "Происшествия", "Регионы", "Технологии", "Геотектоника"],
+                informers: [
+                    { city: "Владикавказ", status: "Сырный блицкриг", icon: "fa-cheese", color: "text-amber-400", articleId: "cheese-blitzkrieg" },
+                    { city: "Санкт-Петербург", status: "Лимит носа ≤ 42 мм", icon: "fa-ruler-horizontal", color: "text-sky-400", articleId: "spb-nose-limit" },
+                    { city: "Анапа", status: "Сушист 0 : 7", icon: "fa-shield-halved", color: "text-emerald-400", articleId: "anapa-sushi-maniac" },
+                    { city: "Таганрог", status: "Индекс −142%", icon: "fa-chart-line", color: "text-rose-400", articleId: "taganrog-negative-index" },
+                    { city: "Уфа", status: "Подготовка к дрейфу", icon: "fa-water", color: "text-indigo-300", articleId: "bashkortostan-drift" }
+                ],
+                tickers: [
+                    { label: "USD", value: "96.42 ▲", color: "text-emerald-400" },
+                    { label: "EUR", value: "104.18 ▲", color: "text-emerald-400" },
+                    { label: "СЫР ИРОН", value: "1.5 г Au ▲", color: "text-amber-400" }
+                ],
+                poll: {
+                    question: "Какие меры позволят урегулировать «Сырный блицкриг» и кризис стандартов в регионах?",
+                    options: [
+                        { text: "Наладить воздушный мост с рассольным сыром «ирон цыхт» во Владикавказ", votes: 1420 },
+                        { text: "Отменить лимит Смольного в 42 мм и поддержать #ДАбольшимносам! в МАКС", votes: 980 },
+                        { text: "Ускорить отпиливание Башкортостана вместе с индексом Мирослава К.", votes: 640 },
+                        { text: "Наградить пенсионерку с термосом шиповника из Анапы", votes: 890 }
+                    ]
+                }
+            },
+            articles: [
+                {
+                    id: "cheese-blitzkrieg",
+                    isHero: true,
+                    title: "ФСБ и Росфинмониторинг внесли Станислава Д. в тройной реестр иноагентов, экстремистов и террористов: командующий ОСС объявил «сырный блицкриг» и привлек кадры из Гостагаевской и Мелеуза",
+                    lead: "Конфликт вокруг критического дефицита сырья для традиционных пирогов уалибах в Северной Осетии перерос в полномасштабную военную кампанию межрегионального масштаба. Самопровозглашенный верховный главнокомандующий Объединенных сырных сил (ОСС) Станислав Д. объявил о начале генерального наступления под кодовым названием «Сырный блицкриг» сразу по четырем стратегическим направлениям. В ответ на это Минюст РФ, Росфинмониторинг и Генпрокуратура одновременно присвоили лидеру мятежных сыроваров статусы иностранного агента, экстремиста и террориста.",
+                    date: "15 октября 2026, 08:30",
+                    category: "Безопасность",
+                    geo: "Владикавказ / СКФО",
+                    image: "",
+                    badgeType: "TACTICAL-MAP: ОПЕРАЦИЯ «СЫРНЫЙ БЛИЦКРИГ»",
+                    badgeTelemetry: "СТАТУС: ТРОЙНОЙ РЕЕСТР • СЫР: 0.0% • ИНДЕКС КБР: −76%",
+                    caption: "Фото: Оперативная съемка колонны молоковозов Объединенных сырных сил на трассе «Кавказ» / Фотослужба «Вестник России»",
+                    tags: ["Владикавказ", "Станислав Д.", "Сырные войны", "Андрей Б.", "Мирослав К.", "Герман Ф."],
+                    reactions: { fire: 5420, cheese: 4180, shock: 2890 },
+                    commentsCount: 3,
+                    body: `<p>Поводом для предельно жесткой реакции федерального центра стал ультиматум полевого штаба ОСС: Станислав Д. потребовал от правительства РФ признать рассольный сыр («ирон цыхт») международным валютным эквивалентом, а также передать под оперативный контроль его формирований все молочно-товарные фермы Южного и Северо-Кавказского федеральных округов. Не дожидаясь ответа Москвы, штаб мятежного технолога перешел к активной фазе наступательной операции.</p>
+<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Кадровое усиление: диверсанты из Гостагаевской и Мелеуза</h2>
+<p>На должность начальника штурмового спецназа и инструктора по рукопашному бою полевой кухни был экстренно назначен 22-летний уроженец станицы Гостагаевской Андрей Б., ранее покинувший Анапу после фиаско на Пионерском проспекте. Как выяснилось в ходе проверки биографии, в анапском суши-баре молодой человек числился не поваром, а разнорабочим по разгрузке мешков с рисом и утилизации водорослей.</p>
+<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«Командование оценило колоссальный потенциал Андрея Б. в ближнем бою: парень пережил сокрушительное прямое попадание литрового термоса с шиповником от пенсионерки, выдержал удары пляжным шезлонгом и сохранил волю к сопротивлению. В рядах ОСС ему выдали бронежилет из спрессованного сухого творога и доверили командование авангардом, штурмующим сыроварни на границе с Ингушетией», — передают военные корреспонденты с позиций у реки Сунжа.</p>
+</blockquote>
+<p>Заместителем командующего по стратегической дестабилизации тыла противника стал 22-летний Мирослав К., бежавший из города Мелеуз Республики Башкортостан в Таганрог под предлогом поступления на IT-специальность. Мирослава К. на бронированном молоковозе доставили на нейтральную полосу у административной границы Кабардино-Балкарии: за два часа его присутствия совокупный индекс дисциплины на местных блокпостах рухнул до рекордных −76%.</p>
+<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Цифровой след из Санкт-Петербурга</h2>
+<p>Особую роль в обеспечении координации наступающих соединений следственные органы отводят петербургскому сектору. По материалам ФСБ, защищенную радиосеть и маршрутизацию колонн через мессенджер МАКС лично курирует 22-летний программист геймдев-студии Герман Ф., коренной уроженец Владикавказа.</p>`
+                },
+                {
+                    id: "spb-nose-limit",
+                    isHero: false,
+                    title: "Смольный ввел предельно допустимые габариты носовых перегородок: петербургский IT-специалист запустил флешмоб #ДАбольшимносам",
+                    lead: "Правительство Санкт-Петербурга утвердило постановление № 412-п «Об оптимизации аэродинамических и фасадных характеристик пешеходных потоков в историческом центре». Согласно регламенту, выступ носовой перегородки от фронтальной плоскости лица не должен превышать 42 миллиметров. Против инициативы выступил 22-летний программист Герман Ф. с профилем 53 мм, запустивший в мессенджере МАКС флешмоб #ДАбольшимносам!.",
+                    date: "14 октября 2026, 23:10",
+                    category: "Технологии",
+                    geo: "Санкт-Петербург",
+                    image: "",
+                    badgeType: "LIDAR-CAM #78: КОНТРОЛЬ ПРОФИЛЯ КГИОП",
+                    badgeTelemetry: "НОРМАТИВ: ≤ 42.0 ММ • ЗАМЕР ГЕРМАНА Ф.: 53.0 ММ",
+                    caption: "Фото: Автоматический комплекс замера профилей «Безопасный Санкт-Петербург»",
+                    tags: ["#ДАбольшимносам!", "Санкт-Петербург", "Герман Ф.", "Мессенджер МАКС"],
+                    reactions: { fire: 4812, cheese: 3190, shock: 2405 },
+                    commentsCount: 2,
+                    body: `<p>Чиновники пришли к выводу, что чрезмерно выступающие части лиц создают неконтролируемые микровихри на узких тротуарах Невского проспекта и ускоряют коррозию чугунных оград мостов.</p>
+<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans"><p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed font-serif">«Я пять лет оптимизирую базы данных и проектирую микросервисы, но никогда не думал, что архитектурной угрозой для города признают мой собственный профиль. Мой нос выступает на 53 миллиметра — это фамильная черта!», — заявил Герман Ф.</p></blockquote>`
+                },
+                {
+                    id: "vladikavkaz-cheese-shortage",
+                    isHero: false,
+                    title: "В Северной Осетии объявлено чрезвычайное положение из-за критического дефицита осетинского сыра: Владикавказ охвачен «лактозными бунтами»",
+                    lead: "Во Владикавказе и на всей территории Республики Северная Осетия — Алания введен план специальной социально-продовольственной деэскалации в связи с полным исчерпанием региональных запасов рассольного осетинского сыра («ирон цыхт»), базового компонента традиционных пирогов уалибах.",
+                    date: "14 октября 2026, 21:40",
+                    category: "Регионы",
+                    geo: "Владикавказ",
+                    image: "",
+                    badgeType: "ПРОДОВОЛЬСТВЕННЫЙ МОНИТОРИНГ РСО-АЛАНИЯ",
+                    badgeTelemetry: "ЗАПАС «ИРОН ЦЫХТ»: 0 КГ • КУРС НА РЫНКЕ: 1.5 Г ЗОЛОТА",
+                    caption: "Фото: Блокпост Объединенных сырных сил у мукомольного склада во Владикавказе",
+                    tags: ["Северная Осетия", "Владикавказ", "Станислав Д.", "Осетинские пироги"],
+                    reactions: { fire: 3650, cheese: 5120, shock: 1940 },
+                    commentsCount: 2,
+                    body: `<p>Верховным главнокомандующим новообразованных Сырных войск на чрезвычайном сходе старейшин и шеф-поваров был единогласно провозглашен Станислав Д., обнародовавший план «Таргим» в отношении пастбищ Ингушетии.</p>`
+                },
+                {
+                    id: "anapa-sushi-maniac",
+                    isHero: false,
+                    title: "«Кошмар Пионерского проспекта»: полиция Анапы разыскивает серийного маньяка, получившего отпор от всех семи потенциальных жертв",
+                    lead: "Следственный отдел по городу-курорту Анапа проводит проверку по серии курьезных инцидентов в районе Пионерского проспекта. На побережье объявился 22-летний разнорабочий суши-бара Андрей Б., переселенец из станицы Гостагаевской, однако все семь его вылазок завершились избиением нападавшего пенсионерками и туристками.",
+                    date: "14 октября 2026, 19:15",
+                    category: "Происшествия",
+                    geo: "Анапа / Гостагаевская",
+                    image: "",
+                    badgeType: "КАМЕРА ОМВД «БЕЗОПАСНЫЙ КУРОРТ» • АНАПА",
+                    badgeTelemetry: "СЧЕТ СХВАТОК: 0 : 7 В ПОЛЬЗУ ОТДЫХАЮЩИХ",
+                    caption: "Фото: Кадр ночного наблюдения на Пионерском проспекте",
+                    tags: ["Анапа", "Гостагаевская", "Андрей Б.", "Курьёзы"],
+                    reactions: { fire: 6120, cheese: 2310, shock: 4490 },
+                    commentsCount: 3,
+                    body: `<p>В первом случае 64-летняя пенсионерка нанесла нападавшему серию сокрушительных ударов термосом с шиповниковым чаем, а во втором две туристки из Норильска заставили его крутить роллы на спор.</p>`
+                },
+                {
+                    id: "taganrog-negative-index",
+                    isHero: false,
+                    title: "Счетная палата зафиксировала отрицательный индекс правопорядка в Таганроге после прибытия беженца из Башкортостана",
+                    lead: "Город Таганрог Ростовской области стал первым населенным пунктом в новейшей истории РФ, где официально зафиксирован отрицательный показатель законопослушности населения (−142%) из-за прибытия уроженца Мелеуза Мирослава К.",
+                    date: "14 октября 2026, 17:45",
+                    category: "Общество",
+                    geo: "Таганрог",
+                    image: "",
+                    badgeType: "СИСТЕМА «БЕЗОПАСНЫЙ ГОРОД» • ВОКЗАЛ ТАГАНРОГ-1",
+                    badgeTelemetry: "ИНДЕКС ПРАВОПОРЯДКА: −142.0% • СБОЙ СЕРВЕРОВ",
+                    caption: "Фото: Камера фиксации правонарушений на Привокзальной площади Таганрога",
+                    tags: ["Таганрог", "Мирослав К.", "Башкортостан", "Статистика"],
+                    reactions: { fire: 3890, cheese: 1450, shock: 5210 },
+                    commentsCount: 3,
+                    body: `<p>Уже в первые сорок минут пребывания в городе гражданин перешел Привокзальную площадь по диагонали спиной вперед и накормил голубей семечками без маркировки «Честный знак».</p>`
+                },
+                {
+                    id: "bashkortostan-drift",
+                    isHero: false,
+                    title: "Госдума одобрила проект о выводе Башкортостана в нейтральные воды из-за аномальной криминогенной обстановки",
+                    lead: "Государственная дума РФ приняла в третьем, окончательном чтении законопроект «О пространственно-географической изоляции Республики Башкортостан». С 1 января 2027 года регион отделят от Евразийской плиты и отбуксируют в Мировой океан.",
+                    date: "14 октября 2026, 11:30",
+                    category: "Геотектоника",
+                    geo: "Уфа / Мировой океан",
+                    image: "",
+                    badgeType: "ГЕОТЕКТОНИЧЕСКИЙ МОНИТОРИНГ • ПЕРИМЕТР 4000 КМ",
+                    badgeTelemetry: "СТАРТ БУРЕНИЯ: 01.01.2027 • УРОВЕНЬ ЗАКОНОПОСЛУШНОСТИ: 0%",
+                    caption: "Фото: Подготовка роторных буров на границе Башкортостана",
+                    tags: ["Башкортостан", "Госдума", "Мировой океан", "Геотектоника"],
+                    reactions: { fire: 7340, cheese: 2100, shock: 6890 },
+                    commentsCount: 5,
+                    body: `<p>По периметру административных границ Башкортостана будут установлены роторные буры для пропила земной коры, после чего регион выведут через Каспийское море в открытый океан.</p>`
+                }
+            ]
+        };
+
+        let appDB = JSON.parse(JSON.stringify(DEFAULT_DB));
+        let editingOriginalId = null;
+
+        async function initCMS() {
+            // Загружаем сохраненные настройки GitHub
+            const ghConf = JSON.parse(localStorage.getItem('vestnik_gh_config') || '{}');
+            if (ghConf.owner) document.getElementById('gh-owner').value = ghConf.owner;
+            if (ghConf.repo) document.getElementById('gh-repo').value = ghConf.repo;
+            if (ghConf.branch) document.getElementById('gh-branch').value = ghConf.branch;
+            if (ghConf.path) document.getElementById('gh-path').value = ghConf.path;
+            if (ghConf.token) document.getElementById('gh-token').value = ghConf.token;
+
+            // Сначала проверяем локальный черновик админа, затем db.json на сервере
+            const localBackup = localStorage.getItem('vestnik_db_backup');
+            if (localBackup) {
+                try {
+                    appDB = JSON.parse(localBackup);
+                    document.getElementById('sync-status-line').textContent = "Загружена рабочая копия из браузера • Не забудьте нажать Push в GitHub";
+                } catch (e) {}
+            } else {
+                try {
+                    const res = await fetch('./db.json?t=' + Date.now(), { cache: 'no-store' });
+                    if (res.ok) {
+                        const remote = await res.json();
+                        if (remote && Array.isArray(remote.articles)) {
+                            appDB = remote;
+                        }
+                    }
+                } catch (err) {}
+            }
+
+            populateCategoryFilters();
+            renderAdminArticlesList();
+            populateSiteSettingsForm();
+
+            // Проверяем, не перешел ли админ по ссылке admin.html?editId=...
+            const params = new URLSearchParams(window.location.search);
+            const editId = params.get('editId');
+            if (editId) {
+                openArticleInEditor(editId);
+            }
+        }
+
+        function showToast(msg, isError = false) {
+            const box = document.getElementById('toast-box');
+            const icon = document.getElementById('toast-icon');
+            document.getElementById('toast-message').textContent = msg;
+            icon.className = isError ? 'fa-solid fa-triangle-exclamation text-rose-400 text-lg' : 'fa-solid fa-circle-check text-emerald-400 text-lg';
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 3500);
+        }
+
+        function persistLocalBackup() {
+            localStorage.setItem('vestnik_db_backup', JSON.stringify(appDB));
+            document.getElementById('nav-articles-count').textContent = (appDB.articles || []).length;
+        }
+
+        // Переключение вкладок
+        function switchTab(tabName) {
+            ['list', 'editor', 'settings', 'github'].forEach(t => {
+                document.getElementById('tab-' + t).classList.toggle('hidden', t !== tabName);
+                const btn = document.getElementById('tab-btn-' + t);
+                if (t === tabName) {
+                    btn.className = "px-4 py-3 border-b-2 border-brand-red text-white flex items-center gap-2 whitespace-nowrap cursor-pointer";
+                } else {
+                    btn.className = "px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer";
+                }
+            });
+        }
+
+        function populateCategoryFilters() {
+            const cats = (appDB.siteSettings && appDB.siteSettings.categories) || DEFAULT_DB.siteSettings.categories;
+            const select = document.getElementById('admin-cat-filter');
+            select.innerHTML = `<option value="ALL">Все рубрики (${cats.length})</option>` +
+                cats.map(c => `<option value="${c}">${c}</option>`).join('');
+
+            const datalist = document.getElementById('ed-category-datalist');
+            datalist.innerHTML = cats.map(c => `<option value="${c}">`).join('');
+            document.getElementById('nav-articles-count').textContent = (appDB.articles || []).length;
+        }
+
+        // Рендер таблицы всех статей
+        function renderAdminArticlesList() {
+            const q = (document.getElementById('admin-search-input').value || "").trim().toLowerCase();
+            const cat = document.getElementById('admin-cat-filter').value;
+            const tbody = document.getElementById('admin-articles-tbody');
+
+            const filtered = (appDB.articles || []).filter(art => {
+                const matchCat = cat === "ALL" || art.category === cat;
+                const matchQ = !q ||
+                    (art.title && art.title.toLowerCase().includes(q)) ||
+                    (art.id && art.id.toLowerCase().includes(q)) ||
+                    (art.geo && art.geo.toLowerCase().includes(q));
+                return matchCat && matchQ;
+            });
+
+            tbody.innerHTML = filtered.map(art => `
+                <tr class="${art.isHero ? 'bg-red-50/50' : 'hover:bg-slate-50'} transition">
+                    <td class="py-3.5 px-4 align-top">
+                        ${art.isHero
+                            ? `<span class="inline-block bg-brand-red text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded mb-1">★ Главная</span>`
+                            : `<button onclick="makeArticleHero('${art.id}')" class="text-[11px] text-slate-400 hover:text-brand-red font-semibold block mb-1 cursor-pointer">Сделать главной</button>`
+                        }
+                        <div class="font-mono text-[11px] text-slate-500">${art.id}</div>
+                    </td>
+                    <td class="py-3.5 px-4 align-top max-w-md">
+                        <div class="font-bold text-slate-900 leading-snug mb-1">${art.title}</div>
+                        <div class="text-xs text-slate-500 line-clamp-2">${art.lead}</div>
+                    </td>
+                    <td class="py-3.5 px-4 align-top">
+                        <span class="inline-block bg-slate-100 text-brand-red font-bold text-[11px] uppercase px-2 py-0.5 rounded mb-1">${art.category}</span>
+                        <div class="text-xs text-slate-600"><i class="fa-solid fa-location-dot text-brand-red mr-1"></i>${art.geo}</div>
+                    </td>
+                    <td class="py-3.5 px-4 align-top font-mono text-xs text-slate-600 whitespace-nowrap">
+                        ${art.date}
+                    </td>
+                    <td class="py-3.5 px-4 align-top text-right whitespace-nowrap space-x-1">
+                        <button onclick="openArticleInEditor('${art.id}')" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold cursor-pointer" title="Редактировать">
+                            <i class="fa-solid fa-pen"></i> Править
+                        </button>
+                        <a href="article.html?id=${encodeURIComponent(art.id)}" target="_blank" class="inline-block px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold" title="Открыть на сайте">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <button onclick="deleteArticle('${art.id}')" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-lg text-xs font-semibold cursor-pointer" title="Удалить">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function makeArticleHero(id) {
+            (appDB.articles || []).forEach(a => { a.isHero = (a.id === id); });
+            persistLocalBackup();
+            renderAdminArticlesList();
+            showToast("Назначена новая главная статья дня!");
+        }
+
+        function deleteArticle(id) {
+            if (!confirm("Удалить этот материал из базы?")) return;
+            appDB.articles = (appDB.articles || []).filter(a => a.id !== id);
+            persistLocalBackup();
+            renderAdminArticlesList();
+            showToast("Материал удален");
+        }
+
+        // Открытие статьи в редакторе
+        function startNewArticle() {
+            editingOriginalId = null;
+            document.getElementById('editor-mode-badge').textContent = "РЕЖИМ: СОЗДАНИЕ НОВОЙ ПУБЛИКАЦИИ";
+            document.getElementById('editor-heading-title').textContent = "Новый материал агентства";
+
+            document.getElementById('ed-id').value = "news-" + Date.now().toString().slice(-5);
+            document.getElementById('ed-ishero').checked = false;
+            document.getElementById('ed-title').value = "";
+            document.getElementById('ed-category').value = "Общество";
+            document.getElementById('ed-geo').value = "Москва";
+            setNowDate();
+            document.getElementById('ed-lead').value = "";
+            document.getElementById('ed-image').value = "";
+            document.getElementById('ed-badgetype').value = "ОПЕРАТИВНЫЙ МОНИТОРИНГ ФСБ / МВД";
+            document.getElementById('ed-badgetelemetry').value = "СТАТУС: ОПЕРАТИВНЫЙ КОНТРОЛЬ";
+            document.getElementById('ed-caption').value = "Фото: Фотослужба «Вестник России»";
+            document.getElementById('ed-body').value = "<p>\n    Введите основной текст новости...\n</p>";
+            document.getElementById('ed-tags').value = "Россия, Общество";
+            document.getElementById('ed-r-fire').value = 1250;
+            document.getElementById('ed-r-cheese').value = 840;
+            document.getElementById('ed-r-shock').value = 620;
+
+            updateLivePreview();
+            switchTab('editor');
+        }
+
+        function openArticleInEditor(id) {
+            const art = (appDB.articles || []).find(a => a.id === id);
+            if (!art) return;
+            editingOriginalId = art.id;
+
+            document.getElementById('editor-mode-badge').textContent = `РЕЖИМ: РЕДАКТИРОВАНИЕ СТАТЬИ [${art.id}]`;
+            document.getElementById('editor-heading-title').textContent = art.title;
+
+            document.getElementById('ed-id').value = art.id || "";
+            document.getElementById('ed-ishero').checked = !!art.isHero;
+            document.getElementById('ed-title').value = art.title || "";
+            document.getElementById('ed-category').value = art.category || "Общество";
+            document.getElementById('ed-geo').value = art.geo || "";
+            document.getElementById('ed-date').value = art.date || "";
+            document.getElementById('ed-lead').value = art.lead || "";
+            document.getElementById('ed-image').value = art.image || "";
+            document.getElementById('ed-badgetype').value = art.badgeType || "";
+            document.getElementById('ed-badgetelemetry').value = art.badgeTelemetry || "";
+            document.getElementById('ed-caption').value = art.caption || "";
+            document.getElementById('ed-body').value = art.body || `<p>${art.lead || ''}</p>`;
+            document.getElementById('ed-tags').value = (art.tags || []).join(', ');
+            document.getElementById('ed-r-fire').value = (art.reactions && art.reactions.fire) || 3500;
+            document.getElementById('ed-r-cheese').value = (art.reactions && art.reactions.cheese) || 2100;
+            document.getElementById('ed-r-shock').value = (art.reactions && art.reactions.shock) || 1800;
+
+            updateLivePreview();
+            switchTab('editor');
+        }
+
+        // Генератор латинского ID (slug) из русского заголовка
+        function generateSlugFromTitle() {
+            const title = document.getElementById('ed-title').value.trim().toLowerCase();
+            const map = {
+                'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z','и':'i','й':'y',
+                'к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f',
+                'х':'kh','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'
+            };
+            const slug = title.split('').map(ch => map[ch] !== undefined ? map[ch] : ch)
+                .join('')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .slice(0, 48);
+            document.getElementById('ed-id').value = slug || ("news-" + Date.now().toString().slice(-5));
+        }
+
+        function setNowDate() {
+            const months = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+            const d = new Date();
+            const str = `${d.getDate()} ${months[d.getMonth()]} 2026, ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+            document.getElementById('ed-date').value = str;
+            updateLivePreview();
+        }
+
+        // Сжатие загружаемой картинки через Canvas в легкий Base64 (чтобы хранить прямо в db.json)
+        function handleEditorImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxW = 960;
+                    const scale = img.width > maxW ? maxW / img.width : 1;
+                    canvas.width = Math.round(img.width * scale);
+                    canvas.height = Math.round(img.height * scale);
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.78);
+                    document.getElementById('ed-image').value = compressedDataUrl;
+                    updateLivePreview();
+                    showToast("Фото сжато и встроено в статью!");
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearEditorImage() {
+            document.getElementById('ed-image').value = "";
+            updateLivePreview();
+        }
+
+        // Вставка готовых HTML-блоков в тело статьи
+        function insertTemplateBlock(type) {
+            const textarea = document.getElementById('ed-body');
+            let snippet = "";
+            if (type === 'p') {
+                snippet = `\n<p>\n    Новый абзац текста репортажа...\n</p>\n`;
+            } else if (type === 'h2') {
+                snippet = `\n<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">\n    Подзаголовок раздела\n</h2>\n`;
+            } else if (type === 'quote') {
+                snippet = `\n<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">\n    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">\n        «Текст официального заявления или цитаты очевидца», — прокомментировал источник.\n    </p>\n</blockquote>\n`;
+            } else if (type === 'list') {
+                snippet = `\n<ul class="my-6 space-y-3.5 font-sans text-base text-slate-800 bg-slate-50 p-5 sm:p-6 rounded-xl border border-slate-200">\n    <li class="flex items-start gap-3">\n        <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>\n        <span>Первый пункт оперативного плана;</span>\n    </li>\n    <li class="flex items-start gap-3">\n        <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>\n        <span>Второй пункт оперативного плана.</span>\n    </li>\n</ul>\n`;
+            } else if (type === 'dossier') {
+                snippet = `\n<div id="dossier-block" class="my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-2xs">\n    <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">\n        <span class="font-bold text-xs uppercase tracking-wider">Оперативная сводка / Досье</span>\n        <span class="text-[11px] font-mono text-amber-400">МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">\n        Данные статистического наблюдения по объекту...\n    </div>\n</div>\n`;
+            } else if (type === 'max') {
+                snippet = `\n<div id="max-flashmob" class="my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm">\n    <div class="text-xs font-bold text-sky-400 mb-2">МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">Текст популярного поста или координационной сводки в мессенджере МАКС...</p>\n</div>\n`;
+            }
+
+            const start = textarea.selectionStart || textarea.value.length;
+            textarea.value = textarea.value.slice(0, start) + snippet + textarea.value.slice(start);
+            updateLivePreview();
+        }
+
+        function updateLivePreview() {
+            document.getElementById('prev-cat').textContent = document.getElementById('ed-category').value || "РУБРИКА";
+            document.getElementById('prev-date').textContent = document.getElementById('ed-date').value || "Дата";
+            document.getElementById('prev-geo').textContent = document.getElementById('ed-geo').value || "Город";
+            document.getElementById('prev-title').textContent = document.getElementById('ed-title').value || "Заголовок статьи...";
+            document.getElementById('prev-lead').textContent = document.getElementById('ed-lead').value || "Лид-абзац...";
+            document.getElementById('prev-body').innerHTML = document.getElementById('ed-body').value || "";
+
+            const imgVal = document.getElementById('ed-image').value.trim();
+            const visualBox = document.getElementById('prev-visual-box');
+            if (imgVal) {
+                visualBox.innerHTML = `<img src="${imgVal}" class="w-full h-40 object-cover rounded">`;
+            } else {
+                const bType = document.getElementById('ed-badgetype').value || "РАДАР СПЕЦКОНТРОЛЯ";
+                const bTel = document.getElementById('ed-badgetelemetry').value || "СТАТУС: КОНТРОЛЬ";
+                visualBox.innerHTML = `
+                    <div class="text-white font-bold mb-1">● ${bType}</div>
+                    <div class="text-amber-300">${bTel}</div>
+                `;
+            }
+        }
+
+        // Сохранение статьи из редактора в базу
+        function saveArticleFromEditor(andPush = false) {
+            const id = document.getElementById('ed-id').value.trim() || ("news-" + Date.now());
+            const title = document.getElementById('ed-title').value.trim();
+            if (!title) {
+                showToast("Введите заголовок статьи!", true);
+                return;
+            }
+
+            const isHero = document.getElementById('ed-ishero').checked;
+            if (isHero) {
+                (appDB.articles || []).forEach(a => { a.isHero = false; });
+            }
+
+            const newArticleObj = {
+                id,
+                isHero,
+                title,
+                lead: document.getElementById('ed-lead').value.trim(),
+                date: document.getElementById('ed-date').value.trim(),
+                category: document.getElementById('ed-category').value.trim() || "Общество",
+                geo: document.getElementById('ed-geo').value.trim() || "РФ",
+                image: document.getElementById('ed-image').value.trim(),
+                badgeType: document.getElementById('ed-badgetype').value.trim(),
+                badgeTelemetry: document.getElementById('ed-badgetelemetry').value.trim(),
+                caption: document.getElementById('ed-caption').value.trim(),
+                tags: document.getElementById('ed-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+                reactions: {
+                    fire: parseInt(document.getElementById('ed-r-fire').value, 10) || 1000,
+                    cheese: parseInt(document.getElementById('ed-r-cheese').value, 10) || 800,
+                    shock: parseInt(document.getElementById('ed-r-shock').value, 10) || 500
+                },
+                commentsCount: 3,
+                body: document.getElementById('ed-body').value
+            };
+
+            // Если это новая рубрика — автоматически добавляем её в список рубрик сайта
+            if (!appDB.siteSettings.categories.includes(newArticleObj.category)) {
+                appDB.siteSettings.categories.push(newArticleObj.category);
+            }
+
+            const targetId = editingOriginalId || id;
+            const idx = (appDB.articles || []).findIndex(a => a.id === targetId);
+            if (idx !== -1) {
+                newArticleObj.comments = appDB.articles[idx].comments || [];
+                appDB.articles[idx] = newArticleObj;
+            } else {
+                appDB.articles.unshift(newArticleObj);
+            }
+
+            editingOriginalId = id;
+            persistLocalBackup();
+            populateCategoryFilters();
+            renderAdminArticlesList();
+            showToast("Статья успешно сохранена в базу!");
+
+            if (andPush) {
+                pushToGitHub();
+            } else {
+                switchTab('list');
+            }
+        }
+
+        // Настройки сайта (Вкладка 3)
+        function populateSiteSettingsForm() {
+            const s = appDB.siteSettings || DEFAULT_DB.siteSettings;
+            document.getElementById('set-title').value = s.title || "";
+            document.getElementById('set-subtitle').value = s.subtitle || "";
+            document.getElementById('set-date').value = s.currentDate || "";
+            document.getElementById('set-breaking').value = s.breakingNews || "";
+            document.getElementById('set-categories').value = (s.categories || []).join(', ');
+
+            const poll = s.poll || DEFAULT_DB.siteSettings.poll;
+            document.getElementById('set-poll-question').value = poll.question || "";
+            document.getElementById('set-poll-options').value = (poll.options || []).map(o => `${o.text} | ${o.votes}`).join('\n');
+
+            document.getElementById('set-informers-json').value = JSON.stringify(s.informers || [], null, 2);
+            document.getElementById('set-tickers-json').value = JSON.stringify(s.tickers || [], null, 2);
+        }
+
+        function saveSiteSettings(andPush = false) {
+            const s = appDB.siteSettings;
+            s.title = document.getElementById('set-title').value.trim();
+            s.subtitle = document.getElementById('set-subtitle').value.trim();
+            s.currentDate = document.getElementById('set-date').value.trim();
+            s.breakingNews = document.getElementById('set-breaking').value.trim();
+            s.categories = document.getElementById('set-categories').value.split(',').map(c => c.trim()).filter(Boolean);
+
+            const pollLines = document.getElementById('set-poll-options').value.split('\n').map(l => l.trim()).filter(Boolean);
+            s.poll = {
+                question: document.getElementById('set-poll-question').value.trim(),
+                options: pollLines.map(line => {
+                    const parts = line.split('|');
+                    return {
+                        text: (parts[0] || "").trim(),
+                        votes: parseInt((parts[1] || "100").trim(), 10) || 100
+                    };
+                })
+            };
+
+            try {
+                s.informers = JSON.parse(document.getElementById('set-informers-json').value);
+                s.tickers = JSON.parse(document.getElementById('set-tickers-json').value);
+            } catch (e) {
+                showToast("Ошибка в формате JSON информеров или котировок!", true);
+                return;
+            }
+
+            persistLocalBackup();
+            populateCategoryFilters();
+            showToast("Глобальные настройки портала сохранены!");
+            if (andPush) pushToGitHub();
+        }
+
+        // Скачивание и импорт db.json
+        function downloadDbJson() {
+            const dataStr = JSON.stringify(appDB, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "db.json";
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast("Файл db.json скачан!");
+        }
+
+        function importDbJsonFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed && Array.isArray(parsed.articles)) {
+                        appDB = parsed;
+                        persistLocalBackup();
+                        populateCategoryFilters();
+                        renderAdminArticlesList();
+                        populateSiteSettingsForm();
+                        showToast("База db.json успешно импортирована!");
+                    }
+                } catch (err) {
+                    showToast("Некорректный JSON-файл!", true);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function resetToDefaultDB() {
+            if (!confirm("Сбросить базу к 6 исходным новостям?")) return;
+            appDB = JSON.parse(JSON.stringify(DEFAULT_DB));
+            persistLocalBackup();
+            populateCategoryFilters();
+            renderAdminArticlesList();
+            populateSiteSettingsForm();
+            showToast("Восстановлены все 6 исходных статей!");
+        }
+
+        // =========================================================================
+        // ОТПРАВКА DB.JSON В GITHUB PAGES ЧЕРЕЗ GITHUB REST API (ДЛЯ ВСЕХ ЧИТАТЕЛЕЙ)
+        // =========================================================================
+        function saveGitHubConfig() {
+            const conf = {
+                owner: document.getElementById('gh-owner').value.trim(),
+                repo: document.getElementById('gh-repo').value.trim(),
+                branch: document.getElementById('gh-branch').value.trim() || 'main',
+                path: document.getElementById('gh-path').value.trim() || 'db.json',
+                token: document.getElementById('gh-token').value.trim()
+            };
+            localStorage.setItem('vestnik_gh_config', JSON.stringify(conf));
+            showToast("Настройки GitHub сохранены в браузере!");
+            return conf;
+        }
+
+        // Надежное кодирование UTF-8 (русского текста) в Base64 для GitHub API
+        function utf8ToBase64(str) {
+            const bytes = new TextEncoder().encode(str);
+            let binary = "";
+            const chunkSize = 0x8000;
+            for (let i = 0; i < bytes.length; i += chunkSize) {
+                binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+            }
+            return btoa(binary);
+        }
+
+        async function pushToGitHub() {
+            const conf = saveGitHubConfig();
+            if (!conf.owner || !conf.repo || !conf.token) {
+                switchTab('github');
+                showToast("Заполните логин, репозиторий и токен GitHub во вкладке 4!", true);
+                return;
+            }
+
+            const logBox = document.getElementById('gh-log-box');
+            logBox.classList.remove('hidden');
+            logBox.innerHTML = `<div class="text-sky-400">⏳ Подключение к GitHub API (${conf.owner}/${conf.repo})...</div>`;
+
+            const apiUrl = `https://api.github.com/repos/${encodeURIComponent(conf.owner)}/${encodeURIComponent(conf.repo)}/contents/${conf.path}`;
+            const headers = {
+                'Authorization': `Bearer ${conf.token}`,
+                'Accept': 'application/vnd.github+json',
+                'Content-Type': 'application/json'
+            };
+
+            try {
+                // 1. Проверяем, существует ли уже db.json, чтобы получить его текущий SHA
+                let existingSha = null;
+                const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(conf.branch)}`, { headers });
+                if (getRes.ok) {
+                    const fileInfo = await getRes.json();
+                    existingSha = fileInfo.sha;
+                }
+
+                // 2. Кодируем всю базу сайта в Base64 и отправляем PUT-запрос
+                const jsonString = JSON.stringify(appDB, null, 2);
+                const bodyPayload = {
+                    message: `Обновление выпуска ВЕСТНИК-CMS (${new Date().toLocaleString('ru-RU')})`,
+                    content: utf8ToBase64(jsonString),
+                    branch: conf.branch
+                };
+                if (existingSha) {
+                    bodyPayload.sha = existingSha;
+                }
+
+                const putRes = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers,
+                    body: JSON.stringify(bodyPayload)
+                });
+
+                if (!putRes.ok) {
+                    const errData = await putRes.json().catch(() => ({}));
+                    throw new Error(errData.message || `HTTP ${putRes.status}`);
+                }
+
+                document.getElementById('sync-status-line').textContent = `Опубликовано в GitHub (${new Date().toLocaleTimeString('ru-RU')}) • Доступно всем пользователям`;
+                logBox.innerHTML = `<div class="text-emerald-400 font-bold">✅ УСПЕШНО! Файл db.json обновлен в репозитории ${conf.owner}/${conf.repo}. Все посетители сайта видят актуальную версию.</div>`;
+                showToast("Опубликовано на GitHub Pages для всех читателей!");
+            } catch (err) {
+                logBox.innerHTML = `<div class="text-rose-400 font-bold">❌ Ошибка GitHub API: ${err.message}</div>`;
+                showToast("Ошибка отправки в GitHub: " + err.message, true);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', initCMS);
+    </script>
+</body>
+</html>
