@@ -86,6 +86,19 @@
         .ticker-track:hover {
             animation-play-state: paused;
         }
+        /* Стили для режима прямого редактирования на странице (Inline CMS) */
+        .inline-edit-active [data-editable="true"] {
+            outline: 2px dashed rgba(192, 20, 20, 0.45);
+            outline-offset: 4px;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+            cursor: text;
+        }
+        .inline-edit-active [data-editable="true"]:hover,
+        .inline-edit-active [data-editable="true"]:focus {
+            outline: 2px solid #c01414;
+            background-color: rgba(254, 242, 242, 0.45);
+        }
     </style>
 </head>
 <body class="bg-[#f4f5f7] text-slate-900 font-sans antialiased min-h-screen flex flex-col justify-between">
@@ -187,11 +200,11 @@
         <!-- Бегущая строка «МОЛНИЯ» -->
         <div class="bg-[#fef2f2] border-b border-red-200 py-2 px-4 text-xs overflow-hidden">
             <div class="max-w-7xl mx-auto flex items-center gap-3">
-                <span class="bg-brand-red text-white font-extrabold px-2.5 py-0.5 rounded-xs uppercase tracking-wider text-[10px] shrink-0 flex items-center gap-1.5 z-10 shadow-xs">
+                <span id="molniya-trigger" onclick="handleMolniyaClick()" title="Нажмите 5 раз для входа в панель редактора" class="bg-brand-red hover:bg-brand-darkred active:scale-95 text-white font-extrabold px-2.5 py-0.5 rounded-xs uppercase tracking-wider text-[10px] shrink-0 flex items-center gap-1.5 z-10 shadow-xs cursor-pointer select-none transition">
                     <span class="w-1.5 h-1.5 rounded-full bg-white animate-rec"></span> МОЛНИЯ
                 </span>
                 <div class="overflow-hidden w-full relative">
-                    <div class="ticker-track text-slate-900 font-medium gap-10">
+                    <div id="ticker-track-content" class="ticker-track text-slate-900 font-medium gap-10">
                         <span>⚡ В Анапе пенсионерка с термосом шиповника обезвредила «Гостагаевского потрошителя» на Пионерском проспекте</span>
                         <span class="text-brand-red">•</span>
                         <span>⚡ Счетная палата: индекс правопорядка в Таганроге остаётся на отметке −142% из-за беженца Мирослава К.</span>
@@ -219,12 +232,12 @@
                 <!-- Рубрика и дата + Инструменты текста -->
                 <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-5 border-b border-slate-100">
                     <div class="flex items-center gap-2 text-xs font-semibold flex-wrap">
-                        <span class="text-brand-red uppercase tracking-wider">14 октября 2026, 19:15</span>
+                        <span id="article-date" data-editable="true" class="text-brand-red uppercase tracking-wider">14 октября 2026, 19:15</span>
                         <span class="text-slate-300">|</span>
-                        <span class="bg-red-50 text-brand-red px-2 py-0.5 rounded">Происшествия</span>
-                        <span class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded">Курьёзы</span>
+                        <span id="article-rubric-1" data-editable="true" class="bg-red-50 text-brand-red px-2 py-0.5 rounded">Происшествия</span>
+                        <span id="article-rubric-2" data-editable="true" class="bg-amber-50 text-amber-800 px-2 py-0.5 rounded">Курьёзы</span>
                         <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded flex items-center gap-1">
-                            <i class="fa-solid fa-location-dot text-brand-red text-[10px]"></i> Анапа
+                            <i class="fa-solid fa-location-dot text-brand-red text-[10px]"></i> <span id="article-location" data-editable="true">Анапа</span>
                         </span>
                     </div>
 
@@ -247,12 +260,12 @@
                 </div>
 
                 <!-- Заголовок статьи -->
-                <h1 class="font-headline font-bold text-2xl sm:text-3xl md:text-[36px] text-slate-900 leading-[1.22] mb-5">
+                <h1 id="article-title" data-editable="true" class="font-headline font-bold text-2xl sm:text-3xl md:text-[36px] text-slate-900 leading-[1.22] mb-5">
                     «Кошмар Пионерского проспекта»: полиция Анапы разыскивает серийного маньяка, получившего отпор от всех семи потенциальных жертв
                 </h1>
 
                 <!-- Подзаголовок / Лид-абзац -->
-                <p class="text-base sm:text-lg text-slate-700 font-serif leading-relaxed mb-6 font-normal bg-slate-50 p-4 sm:p-5 rounded-lg border-l-4 border-brand-red">
+                <p id="article-lead" data-editable="true" class="text-base sm:text-lg text-slate-700 font-serif leading-relaxed mb-6 font-normal bg-slate-50 p-4 sm:p-5 rounded-lg border-l-4 border-brand-red">
                     Злоумышленник, прибывший из станицы Гостагаевской и подрабатывающий сушистом, пытался пугать прохожих палочкой для роллов, но регулярно оказывается избит пенсионерками и туристами. В отделе полиции протоколы читают со слезами от смеха.
                 </p>
 
@@ -345,13 +358,13 @@
                     </div>
 
                     <figcaption class="mt-2.5 text-xs text-slate-500 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 px-1">
-                        <span>Запись с камеры «Безопасный курорт» в районе Джемете: момент бегства подозреваемого от пенсионерки с термосом.</span>
-                        <span class="italic text-slate-400 shrink-0">Фото: Оперативный архив ОМВД по г. Анапа / Вестник России</span>
+                        <span id="article-caption-text" data-editable="true">Запись с камеры «Безопасный курорт» в районе Джемете: момент бегства подозреваемого от пенсионерки с термосом.</span>
+                        <span id="article-caption-source" data-editable="true" class="italic text-slate-400 shrink-0">Фото: Оперативный архив ОМВД по г. Анапа / Вестник России</span>
                     </figcaption>
                 </figure>
 
                 <!-- ТЕКСТ ОСНОВНОЙ СТАТЬИ (ДОСЛОВНО) -->
-                <div id="article-body" class="article-content font-serif text-slate-800">
+                <div id="article-body" data-editable="true" class="article-content font-serif text-slate-800">
                     <p>
                         Следственный отдел по городу-курорту Анапа проводит проверку по серии необычных инцидентов в районе Пионерского проспекта и Джемете. По данным правоохранительных органов, на побережье объявился злоумышленник, примеряющий на себя образ классического маньяка-потрошителя, однако ни одно из его нападений так и не увенчалось успехом из-за тотальной нерасторопности нападавшего и активного сопротивления местных жительниц.
                     </p>
@@ -361,7 +374,7 @@
                     </p>
 
                     <!-- ВРЕЗКА «ПО ТЕМЕ» ВНУТРИ СТАТЬИ (Связь с Таганрогом и Башкортостаном) -->
-                    <div class="my-7 p-4 sm:p-5 bg-slate-50 border border-slate-200 border-l-4 border-l-brand-red rounded-r-xl font-sans shadow-2xs">
+                    <div id="related-box" contenteditable="false" class="my-7 p-4 sm:p-5 bg-slate-50 border border-slate-200 border-l-4 border-l-brand-red rounded-r-xl font-sans shadow-2xs">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-[10px] font-extrabold uppercase tracking-widest text-brand-red">По теме: Аномальная миграция и правопорядок</span>
                             <span class="text-[11px] text-slate-400">Досье «Вестника России»</span>
@@ -850,6 +863,187 @@
         </div>
     </div>
 
+    <!-- СЕКРЕТНАЯ ПЛАВАЮЩАЯ ПАНЕЛЬ РЕДАКТОРА (ПОЯВЛЯЕТСЯ ПОСЛЕ 5 КЛИКОВ НА «МОЛНИЯ») -->
+    <div id="cms-floating-bar" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 bg-slate-950/95 text-white px-4 py-2.5 rounded-2xl shadow-2xl border border-red-500/40 flex flex-wrap items-center gap-2 sm:gap-3 text-xs backdrop-blur-md max-w-[95vw]">
+        <div class="flex items-center gap-2 pr-2 border-r border-slate-800">
+            <span class="w-2.5 h-2.5 rounded-full bg-brand-red animate-ping"></span>
+            <span class="font-bold tracking-wider uppercase text-[11px] text-red-400">ВЕСТНИК-CMS</span>
+        </div>
+        <button onclick="openCmsModal()" class="bg-brand-red hover:bg-brand-darkred text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+            <i class="fa-solid fa-pen-to-square"></i> Редактор статьи
+        </button>
+        <button id="inline-mode-btn" onclick="toggleInlineEditMode()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-i-cursor text-amber-400"></i> <span id="inline-mode-label">Пря правка на странице: ВЫКЛ</span>
+        </button>
+        <button onclick="document.getElementById('photo-upload-input').click()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-3 py-1.5 rounded-lg border border-slate-700 transition hidden sm:flex items-center gap-1.5">
+            <i class="fa-solid fa-image text-emerald-400"></i> Сменить фото
+        </button>
+        <button onclick="hideCmsBarForScreenshot()" class="bg-emerald-700 hover:bg-emerald-600 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5" title="Скрыть панель для чистого скриншота (5 кликов по «МОЛНИЯ» вернут её)">
+            <i class="fa-solid fa-camera"></i> Чистый вид
+        </button>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО «ПАНЕЛЬ ГЛАВНОГО РЕДАКТОРА ВЕСТНИК-CMS» -->
+    <div id="cms-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+            
+            <!-- Шапка редактора -->
+            <div class="bg-brand-navy text-white px-5 py-4 flex items-center justify-between border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <span class="bg-brand-red text-white text-[10px] font-black px-2.5 py-1 rounded uppercase tracking-wider">CMS v2.6</span>
+                    <div>
+                        <h3 class="font-bold text-sm sm:text-base leading-tight">Панель главного редактора ИА «Вестник России»</h3>
+                        <p class="text-[11px] text-slate-400">Редактирование заголовка, текста статьи, бегущей строки и иллюстраций</p>
+                    </div>
+                </div>
+                <button onclick="closeCmsModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-brand-red text-slate-300 hover:text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Тело модального окна со скроллом -->
+            <div class="p-5 sm:p-6 overflow-y-auto space-y-5 text-xs sm:text-sm flex-grow">
+                
+                <!-- Быстрые шаблоны (Пресеты) -->
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                            <i class="fa-solid fa-bolt text-brand-red mr-1"></i> Быстрая загрузка шаблона в главную статью:
+                        </span>
+                        <button onclick="resetToDefaultArticle()" class="text-[11px] text-rose-600 hover:underline font-semibold">
+                            <i class="fa-solid fa-rotate-left mr-1"></i>Сбросить все правки по умолчанию
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                        <button onclick="loadPresetArticle('anapa')" class="text-left p-2.5 rounded-lg border border-slate-200 bg-white hover:border-brand-red transition">
+                            <div class="font-bold text-xs text-slate-900">🍣 1. Анапа (Сушист)</div>
+                            <div class="text-[10px] text-slate-500 truncate">Маньяк из Гостагаевской 0:7</div>
+                        </button>
+                        <button onclick="loadPresetArticle('taganrog')" class="text-left p-2.5 rounded-lg border border-slate-200 bg-white hover:border-brand-red transition">
+                            <div class="font-bold text-xs text-slate-900">📉 2. Таганрог (−142%)</div>
+                            <div class="text-[10px] text-slate-500 truncate">Приезд Мирослава К.</div>
+                        </button>
+                        <button onclick="loadPresetArticle('bashkortostan')" class="text-left p-2.5 rounded-lg border border-slate-200 bg-white hover:border-brand-red transition">
+                            <div class="font-bold text-xs text-slate-900">🚢 3. Башкортостан</div>
+                            <div class="text-[10px] text-slate-500 truncate">Отпиливание в океан</div>
+                        </button>
+                        <button onclick="loadPresetArticle('custom')" class="text-left p-2.5 rounded-lg border border-dashed border-brand-red/60 bg-red-50/30 hover:bg-red-50 transition">
+                            <div class="font-bold text-xs text-brand-red">✨ 4. Чистый шаблон</div>
+                            <div class="text-[10px] text-slate-500 truncate">Написать свою новость с нуля</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Мета-данные: Дата, Рубрики, Город -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Дата и время</label>
+                        <input id="cms-date" type="text" class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-brand-red">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Рубрика 1</label>
+                        <input id="cms-rubric-1" type="text" class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-brand-red">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Рубрика 2</label>
+                        <input id="cms-rubric-2" type="text" class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-brand-red">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Гео-метка / Город</label>
+                        <input id="cms-location" type="text" class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-brand-red">
+                    </div>
+                </div>
+
+                <!-- Заголовок новости (H1) -->
+                <div>
+                    <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Заголовок новости (H1)</label>
+                    <textarea id="cms-title" rows="2" class="w-full p-3 bg-white border border-slate-300 rounded-lg font-headline font-bold text-base sm:text-lg text-slate-900 focus:outline-none focus:border-brand-red resize-y"></textarea>
+                </div>
+
+                <!-- Лид-абзац (подзаголовок) -->
+                <div>
+                    <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Лид-абзац (краткая суть под заголовком)</label>
+                    <textarea id="cms-lead" rows="2" class="w-full p-3 bg-slate-50 border border-slate-300 rounded-lg font-serif text-sm text-slate-800 focus:outline-none focus:border-brand-red resize-y"></textarea>
+                </div>
+
+                <!-- Основной текст статьи (с быстрыми кнопками вставки элементов) -->
+                <div>
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                        <label class="block text-[11px] font-bold uppercase text-slate-500">
+                            Текст новости (каждый абзац с новой строки или HTML-блоки)
+                        </label>
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <button type="button" onclick="insertCmsSnippet('p')" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-800 px-2.5 py-1 rounded font-medium transition">
+                                + Абзац
+                            </button>
+                            <button type="button" onclick="insertCmsSnippet('h2')" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-800 px-2.5 py-1 rounded font-medium transition">
+                                + Подзаголовок
+                            </button>
+                            <button type="button" onclick="insertCmsSnippet('quote')" class="text-[11px] bg-red-50 hover:bg-red-100 text-brand-red px-2.5 py-1 rounded font-medium transition">
+                                + Цитата источника
+                            </button>
+                            <button type="button" onclick="insertCmsSnippet('list')" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-800 px-2.5 py-1 rounded font-medium transition">
+                                + Список фактов
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="cms-body" rows="10" class="w-full p-3.5 bg-white border border-slate-300 rounded-xl font-serif text-sm leading-relaxed text-slate-800 focus:outline-none focus:border-brand-red resize-y"></textarea>
+                    <p class="text-[11px] text-slate-400 mt-1">
+                        Совет: вы можете просто писать обычный текст, разделяя абзацы пустой строкой — редактор сам красиво оформит их в газетную верстку.
+                    </p>
+                </div>
+
+                <!-- Настройки дополнительных блоков и подписи к фото -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Подпись под главным фото</label>
+                            <input id="cms-caption" type="text" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-brand-red">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Бегущая строка «МОЛНИЯ» (через •)</label>
+                            <input id="cms-ticker" type="text" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-brand-red">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5 flex flex-col justify-center">
+                        <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                            <input id="cms-toggle-dossier" type="checkbox" checked class="w-4 h-4 accent-brand-red rounded">
+                            <span class="text-xs font-medium text-slate-800">Показывать таблицу «Статистика 0 : 7» внутри статьи</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                            <input id="cms-toggle-related" type="checkbox" checked class="w-4 h-4 accent-brand-red rounded">
+                            <span class="text-xs font-medium text-slate-800">Показывать врезку «По теме (Таганрог / Башкортостан)»</span>
+                        </label>
+                        <div class="pt-1">
+                            <button type="button" onclick="document.getElementById('photo-upload-input').click()" class="text-xs bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-semibold px-3 py-1.5 rounded-lg transition inline-flex items-center gap-1.5">
+                                <i class="fa-solid fa-upload text-brand-red"></i> Загрузить своё изображение со смартфона/ПК
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Подвал модального окна -->
+            <div class="bg-slate-100 px-5 py-3.5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                <div class="text-[11px] text-slate-500 flex items-center gap-2">
+                    <i class="fa-solid fa-floppy-disk text-emerald-600"></i>
+                    <span>Все изменения автоматически сохраняются в вашем браузере</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <button onclick="closeCmsModal()" class="px-4 py-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition">
+                        Отмена
+                    </button>
+                    <button onclick="saveCmsChanges()" class="px-5 py-2 rounded-lg bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold shadow-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-check"></i> Сохранить и опубликовать
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <!-- 5. ПОДВАЛ САЙТА (FOOTER) -->
     <footer class="bg-brand-navy text-slate-400 text-xs border-t border-slate-800 mt-12 pt-10 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1161,6 +1355,333 @@
                 viewsEl.innerText = current.toLocaleString('ru-RU');
             }
         }, 3200);
+
+        // =========================================================================
+        // 9. СЕКРЕТНАЯ ПАНЕЛЬ РЕДАКТОРА «ВЕСТНИК-CMS» (ПО 5 КЛИКАМ НА «МОЛНИЯ»)
+        // =========================================================================
+        let molniyaClicks = 0;
+        let molniyaTimer = null;
+        let inlineEditEnabled = false;
+
+        // Хранилище чистых абзацев статьи (чтобы не затирать внутренние виджеты #related-box и #dossier-table)
+        const PRESET_ARTICLES = {
+            anapa: {
+                date: '14 октября 2026, 19:15',
+                rubric1: 'Происшествия',
+                rubric2: 'Курьёзы',
+                location: 'Анапа',
+                title: '«Кошмар Пионерского проспекта»: полиция Анапы разыскивает серийного маньяка, получившего отпор от всех семи потенциальных жертв',
+                lead: 'Злоумышленник, прибывший из станицы Гостагаевской и подрабатывающий сушистом, пытался пугать прохожих палочкой для роллов, но регулярно оказывается избит пенсионерками и туристами. В отделе полиции протоколы читают со слезами от смеха.',
+                caption: 'Запись с камеры «Безопасный курорт» в районе Джемете: момент бегства подозреваемого от пенсионерки с термосом.',
+                ticker: '⚡ В Анапе пенсионерка с термосом шиповника обезвредила «Гостагаевского потрошителя» на Пионерском проспекте • ⚡ Счетная палата: индекс правопорядка в Таганроге остаётся на отметке −142% из-за беженца Мирослава К. • ⚡ Росморречфлот: гидроабразивный распил границ Башкортостана выполнен на 74%',
+                showDossier: true,
+                showRelated: true,
+                bodyHtml: `<p>Следственный отдел по городу-курорту Анапа проводит проверку по серии необычных инцидентов в районе Пионерского проспекта и Джемете. По данным правоохранительных органов, на побережье объявился злоумышленник, примеряющий на себя образ классического маньяка-потрошителя, однако ни одно из его нападений так и не увенчалось успехом из-за тотальной нерасторопности нападавшего и активного сопротивления местных жительниц.</p>
+<p>Как стало известно следствию, подозреваемый — 28-летний сушист местного заведения паназиатской кухни, прибывший в Анапу в статусе вынужденного переселенца из станицы Гостагаевской после серии локальных бытовых неурядиц.</p>
+<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Семь эпизодов — семь поражений</h2>
+<p>Согласно протоколам опроса очевидцев, мужчина выслеживал прохожих в вечернее время, выпрыгивал из кустов можжевельника в черном плаще и с деревянной палочкой для суши в руке, пытаясь изобразить грозного душегуба. Однако курортная аудитория энтузиазма не оценила:</p>
+<ul class="my-6 space-y-3.5 font-sans text-base text-slate-800 bg-slate-50 p-5 sm:p-6 rounded-xl border border-slate-200">
+    <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span><span>В первом случае 64-летняя пенсионерка, направлявшаяся на вечерний заплыв, нанесла нападавшему серию сокрушительных ударов термосом с шиповниковым чаем, после чего скрылась, попутно отругав злоумышленника за помятый газон.</span></li>
+    <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span><span>Во втором эпизоде две туристки из Норильска приняли появление гражданина за дешевую промо-акцию бара, отобрали у него бандану, скрутили и заставили крутить роллы на спор, после чего тот с позором сбежал.</span></li>
+    <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span><span>Еще три попытки закончились тем, что нападавший банально споткнулся о бордюрный камень на набережной, уронил пластиковый макет кинжала и был избит зонтиком для пляжного шезлонга.</span></li>
+</ul>
+<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif relative z-10">«За последние две недели в дежурную часть поступило семь заявлений, но ни одного — с травмами со стороны потерпевших. Все телесные повреждения зафиксированы исключительно у самого подозреваемого: ушибы переносицы, синяки от дамских сумок и следы от роликовых коньков на предплечье. Честно говоря, протоколы допросов читаем всем отделом до слез. Жертвы даже не испугались — одна из заявительниц принесла на опознание оторванную пуговицу маньяка и потребовала возместить ей моральный ущерб за испорченную тушь от смеха», — прокомментировал ситуацию источник в городском ОМВД.</p>
+</blockquote>
+<p>Коллеги мужчины по суши-бару охарактеризовали его как тихого работника, который «плохо заворачивал "Филадельфию" и постоянно ронял нори на пол».</p>
+<p>В настоящее время полиция решает вопрос о квалификации действий гражданина: состав преступления по тяжким статьям собрать затруднительно, поскольку потерпевшие отказываются признавать себя пострадавшими и просят правоохранителей «просто отправить парня на курсы самообороны или вернуть обратно в Гостагаевскую». Проводится доследственная проверка.</p>`
+            },
+            taganrog: {
+                date: '14 октября 2026, 17:45',
+                rubric1: 'Происшествия',
+                rubric2: 'Статистика',
+                location: 'Таганрог',
+                title: 'Счетная палата зафиксировала отрицательный индекс правопорядка в Таганроге после прибытия беженца из Башкортостана',
+                lead: 'Совокупный показатель законопослушности населения рухнул до отметки −142% в первые сорок минут пребывания уроженца отделяемой республики Мирослава К. на территории приморского города.',
+                caption: 'Камера системы «Безопасный город» на Привокзальной площади Таганрога в момент фиксации диагонального перехода спиной вперёд.',
+                ticker: '⚡ Индекс правопорядка в Таганроге упал до −142% после прибытия поезда с беженцем Мирославом К. • ⚡ Серверы комплекса «Безопасный город» попытались выписать административные штрафы самим себе',
+                showDossier: false,
+                showRelated: true,
+                bodyHtml: `<p>Город Таганрог Ростовской области стал первым населенным пунктом в новейшей истории РФ, где официально зафиксирован отрицательный показатель законопослушности населения. Согласно экстренному докладу аналитического центра правовой статистики, совокупный индекс правопорядка в муниципалитете рухнул до отметки <strong>−142%</strong>.</p>
+<p>Причиной резкого статистического коллапса стало прибытие в приморский город уроженца Башкортостана Мирослава К. Мужчина покинул республику за несколько недель до начала инженерных работ по ее отпиливанию от материка, воспользовавшись правом на беспрепятственный выезд до вступления в силу закона о полной пространственно-географической блокаде региона.</p>
+<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Эффект одного гражданина</h2>
+<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif relative z-10">«После того как гражданин Мирослав К. сошел на перрон вокзала Таганрог-1, кривая совершаемых правонарушений приобрела вертикальный характер. Его личная криминогенная плотность оказалась столь высокой, что полностью обнулила положительные показатели всех остальных 240 тысяч жителей города и утянула всю муниципальную статистику в глубокий минус», — сообщил на брифинге представитель надзорного ведомства.</p>
+</blockquote>
+<p>По данным правоохранительных органов, уже в первые сорок минут пребывания в городе гражданин перешел Привокзальную площадь по диагонали спиной вперед вне зоны пешеходного перехода, прослушивал музыку в наушниках свыше санитарных норм и накормил привокзальных голубей семечками из пакета без маркировки «Честный знак».</p>
+<p>В Совете Федерации уже рассматривают экстренную поправку о создании мобильного конвойного коридора, чтобы вернуть Мирослава К. обратно в пределы башкирского геологического плато до его буксировки в Мировой океан.</p>`
+            },
+            bashkortostan: {
+                date: '14 октября 2026, 11:30',
+                rubric1: 'Политика',
+                rubric2: 'Геотектоника',
+                location: 'Уфа / Мировой океан',
+                title: 'Госдума одобрила проект о выводе Башкортостана в нейтральные воды из-за аномальной криминогенной обстановки',
+                lead: 'С 1 января 2027 года территорию республики отделят от Евразийской континентальной плиты алмазными бурами и отбуксируют через Каспийское море и Волго-Донской канал в свободное плавание.',
+                caption: 'Гидроабразивные установки и роторные комплексы на восточном участке административной границы Башкортостана.',
+                ticker: '⚡ Госдума приняла в третьем чтении закон о выводе Башкортостана в нейтральные воды Мирового океана • ⚡ На южной оконечности республики начался монтаж промышленных водометных движителей',
+                showDossier: false,
+                showRelated: false,
+                bodyHtml: `<p>Государственная дума РФ приняла в третьем, окончательном чтении законопроект «О пространственно-географической изоляции Республики Башкортостан». Согласно документу, с 1 января 2027 года регион официально выводится из состава Российской Федерации, после чего его территорию отделят от Евразийской континентальной плиты и отбуксируют в международные воды Мирового океана.</p>
+<p>Поводом для беспрецедентного инфраструктурно-геологического решения стали обновленные отчеты межведомственной комиссии по правопорядку. Согласно представленным данным, статистический уровень законопослушности в субъекте упал до нуля: на территории республики не осталось граждан, не имеющих активных штрафов за переход дороги в неположенном месте или несанкционированный выпас гусей.</p>
+<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif relative z-10">«Ситуация достигла критической отметки. Профилактические беседы исчерпали свой потенциал. Принято единственно верное инженерно-правовое решение: принудительная географическая автономия с предоставлением республике статуса плавучего острова строгого режима», — заявил зампредседателя профильного комитета по территориальной санации.</p>
+</blockquote>
+<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Техническая сторона вопроса</h2>
+<p>По периметру административных границ Башкортостана протяженностью свыше 4000 километров будут установлены роторные буры для пропила земной коры. После отделения плиты на южной оконечности региона включат водометные движители и выведут массив в открытый океан.</p>`
+            },
+            custom: {
+                date: '14 октября 2026, 20:00',
+                rubric1: 'Эксклюзив',
+                rubric2: 'Главное',
+                location: 'Москва',
+                title: 'Введите ваш собственный заголовок сенсационной новости',
+                lead: 'Краткое описание сути происходящего (лид-абзац), которое выделяется крупным шрифтом перед основным текстом репортажа.',
+                caption: 'Оперативный снимок с места событий / ИА «Вестник России»',
+                ticker: '⚡ Экстренное сообщение: здесь отображается текст вашей бегущей строки «МОЛНИЯ»',
+                showDossier: false,
+                showRelated: false,
+                bodyHtml: `<p>Первый абзац вашей новости. Опишите, где и когда произошло событие, какие ведомства или очевидцы сообщили подробности.</p>
+<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif relative z-10">«Здесь можно разместить официальную цитату эксперта, очевидца или представителя ведомства для придания максимальной достоверности», — сообщил источник агентства.</p>
+</blockquote>
+<p>Заключительный абзац репортажа с выводами и дальнейшими мерами.</p>`
+            }
+        };
+
+        // Обработчик 5 кликов по плашке «МОЛНИЯ»
+        function handleMolniyaClick() {
+            molniyaClicks++;
+            clearTimeout(molniyaTimer);
+
+            if (molniyaClicks >= 5) {
+                molniyaClicks = 0;
+                const bar = document.getElementById('cms-floating-bar');
+                bar.classList.remove('hidden');
+                openCmsModal();
+                showToast('🔓 Режим главного редактора «ВЕСТНИК-CMS» активирован!');
+                return;
+            }
+
+            if (molniyaClicks >= 3) {
+                showToast(`До входа в панель редактора осталось нажатий: ${5 - molniyaClicks}`);
+            }
+
+            molniyaTimer = setTimeout(() => {
+                molniyaClicks = 0;
+            }, 2200);
+        }
+
+        // Извлечение только текстовых/контентных узлов из #article-body (без технических блоков #related-box и #dossier-table)
+        function getCleanArticleBodyHtml() {
+            const clone = document.getElementById('article-body').cloneNode(true);
+            const rel = clone.querySelector('#related-box');
+            const dos = clone.querySelector('#dossier-table');
+            if (rel) rel.remove();
+            if (dos) dos.remove();
+            return clone.innerHTML.trim();
+        }
+
+        // Установка нового контента в #article-body с сохранением вложенных блоков (#related-box и #dossier-table)
+        function setCleanArticleBodyHtml(rawInput, showDossier, showRelated) {
+            const container = document.getElementById('article-body');
+            const relBox = document.getElementById('related-box');
+            const dosTable = document.getElementById('dossier-table');
+
+            // Если пользователь ввел обычный текст без тегов <p>, обернем строки в <p>
+            let formattedHtml = rawInput.trim();
+            if (!formattedHtml.includes('<p') && !formattedHtml.includes('<h2') && !formattedHtml.includes('<blockquote')) {
+                formattedHtml = formattedHtml
+                    .split(/\n\s*\n|\n/)
+                    .map(line => line.trim())
+                    .filter(Boolean)
+                    .map(line => `<p>${line}</p>`)
+                    .join('\n');
+            }
+
+            container.innerHTML = formattedHtml;
+
+            // Возвращаем виджеты обратно в структуру статьи и управляем их видимостью
+            if (relBox) {
+                relBox.classList.toggle('hidden', !showRelated);
+                const paragraphs = container.querySelectorAll('p');
+                if (paragraphs.length >= 2) {
+                    paragraphs[1].after(relBox);
+                } else {
+                    container.appendChild(relBox);
+                }
+            }
+
+            if (dosTable) {
+                dosTable.classList.toggle('hidden', !showDossier);
+                container.appendChild(dosTable);
+            }
+        }
+
+        // Открытие модального окна CMS и заполнение текущими данными страницы
+        function openCmsModal() {
+            document.getElementById('cms-date').value = document.getElementById('article-date').innerText.trim();
+            document.getElementById('cms-rubric-1').value = document.getElementById('article-rubric-1').innerText.trim();
+            document.getElementById('cms-rubric-2').value = document.getElementById('article-rubric-2').innerText.trim();
+            document.getElementById('cms-location').value = document.getElementById('article-location').innerText.trim();
+            document.getElementById('cms-title').value = document.getElementById('article-title').innerText.trim();
+            document.getElementById('cms-lead').value = document.getElementById('article-lead').innerText.trim();
+            document.getElementById('cms-caption').value = document.getElementById('article-caption-text').innerText.trim();
+            document.getElementById('cms-body').value = getCleanArticleBodyHtml();
+
+            const dosTable = document.getElementById('dossier-table');
+            const relBox = document.getElementById('related-box');
+            document.getElementById('cms-toggle-dossier').checked = dosTable ? !dosTable.classList.contains('hidden') : false;
+            document.getElementById('cms-toggle-related').checked = relBox ? !relBox.classList.contains('hidden') : false;
+
+            const tickerSpans = Array.from(document.querySelectorAll('#ticker-track-content > span:not(.text-brand-red)')).map(s => s.innerText.trim());
+            const uniqueTicker = [...new Set(tickerSpans)].join(' • ');
+            document.getElementById('cms-ticker').value = uniqueTicker;
+
+            document.getElementById('cms-modal').classList.remove('hidden');
+        }
+
+        function closeCmsModal() {
+            document.getElementById('cms-modal').classList.add('hidden');
+        }
+
+        // Вставка готовых сниппетов (абзац, подзаголовок, цитата, список) в поле текста CMS
+        function insertCmsSnippet(type) {
+            const textarea = document.getElementById('cms-body');
+            let snippet = '';
+            if (type === 'p') {
+                snippet = '\n<p>Новый абзац текста новости...</p>';
+            } else if (type === 'h2') {
+                snippet = '\n<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Новый подзаголовок раздела</h2>';
+            } else if (type === 'quote') {
+                snippet = '\n<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">\n    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif relative z-10">«Текст официального комментария источника или ведомства», — заявили в пресс-службе.</p>\n</blockquote>';
+            } else if (type === 'list') {
+                snippet = '\n<ul class="my-6 space-y-3 font-sans text-base text-slate-800 bg-slate-50 p-5 rounded-xl border border-slate-200 list-disc pl-8">\n    <li>Первый зафиксированный факт;</li>\n    <li>Второй зафиксированный факт;</li>\n</ul>';
+            }
+            textarea.value += snippet;
+            textarea.focus();
+            textarea.scrollTop = textarea.scrollHeight;
+        }
+
+        // Обновление бегущей строки «МОЛНИЯ»
+        function updateTickerText(tickerRaw) {
+            if (!tickerRaw) return;
+            const items = tickerRaw.split('•').map(i => i.trim()).filter(Boolean);
+            if (!items.length) return;
+            const doubled = [...items, ...items];
+            const track = document.getElementById('ticker-track-content');
+            track.innerHTML = doubled
+                .map(text => `<span>${escapeHtml(text)}</span>`)
+                .join('<span class="text-brand-red">•</span>');
+        }
+
+        // Сохранение изменений из модального окна CMS
+        function saveCmsChanges() {
+            const data = {
+                date: document.getElementById('cms-date').value.trim(),
+                rubric1: document.getElementById('cms-rubric-1').value.trim(),
+                rubric2: document.getElementById('cms-rubric-2').value.trim(),
+                location: document.getElementById('cms-location').value.trim(),
+                title: document.getElementById('cms-title').value.trim(),
+                lead: document.getElementById('cms-lead').value.trim(),
+                caption: document.getElementById('cms-caption').value.trim(),
+                ticker: document.getElementById('cms-ticker').value.trim(),
+                bodyHtml: document.getElementById('cms-body').value,
+                showDossier: document.getElementById('cms-toggle-dossier').checked,
+                showRelated: document.getElementById('cms-toggle-related').checked
+            };
+
+            applyArticleData(data);
+            localStorage.setItem('vestnik_custom_article_v1', JSON.stringify(data));
+            closeCmsModal();
+            showToast('✓ Статья успешно обновлена и сохранена!');
+        }
+
+        // Применение объекта данных к DOM-элементам страницы
+        function applyArticleData(data) {
+            if (data.date) document.getElementById('article-date').innerText = data.date;
+            if (data.rubric1) document.getElementById('article-rubric-1').innerText = data.rubric1;
+            if (data.rubric2) document.getElementById('article-rubric-2').innerText = data.rubric2;
+            if (data.location) document.getElementById('article-location').innerText = data.location;
+            if (data.title) {
+                document.getElementById('article-title').innerText = data.title;
+                document.title = `${data.title} — Вестник России`;
+            }
+            if (data.lead) document.getElementById('article-lead').innerText = data.lead;
+            if (data.caption) document.getElementById('article-caption-text').innerText = data.caption;
+            if (data.ticker) updateTickerText(data.ticker);
+            if (typeof data.bodyHtml === 'string') {
+                setCleanArticleBodyHtml(data.bodyHtml, data.showDossier !== false, data.showRelated !== false);
+            }
+        }
+
+        // Загрузка одного из 4 шаблонов в окно редактора
+        function loadPresetArticle(presetKey) {
+            const p = PRESET_ARTICLES[presetKey];
+            if (!p) return;
+            document.getElementById('cms-date').value = p.date;
+            document.getElementById('cms-rubric-1').value = p.rubric1;
+            document.getElementById('cms-rubric-2').value = p.rubric2;
+            document.getElementById('cms-location').value = p.location;
+            document.getElementById('cms-title').value = p.title;
+            document.getElementById('cms-lead').value = p.lead;
+            document.getElementById('cms-caption').value = p.caption;
+            document.getElementById('cms-ticker').value = p.ticker;
+            document.getElementById('cms-body').value = p.bodyHtml;
+            document.getElementById('cms-toggle-dossier').checked = p.showDossier;
+            document.getElementById('cms-toggle-related').checked = p.showRelated;
+            showToast('Шаблон загружен в поля редактора — нажмите «Сохранить и опубликовать»');
+        }
+
+        // Сброс к исходной новости про Анапу
+        function resetToDefaultArticle() {
+            localStorage.removeItem('vestnik_custom_article_v1');
+            loadPresetArticle('anapa');
+            applyArticleData(PRESET_ARTICLES.anapa);
+            showToast('Исходный текст новости восстановлен');
+        }
+
+        // Включение/выключение прямого редактирования прямо на странице (Inline contenteditable)
+        function toggleInlineEditMode() {
+            inlineEditEnabled = !inlineEditEnabled;
+            const editables = document.querySelectorAll('[data-editable="true"]');
+            const label = document.getElementById('inline-mode-label');
+            const btn = document.getElementById('inline-mode-btn');
+
+            if (inlineEditEnabled) {
+                document.body.classList.add('inline-edit-active');
+                editables.forEach(el => el.setAttribute('contenteditable', 'true'));
+                label.innerText = 'Прямая правка: ВКЛ';
+                btn.classList.replace('bg-slate-800', 'bg-amber-600');
+                showToast('✏️ Нажмите на любой заголовок или абзац на странице, чтобы править текст напрямую');
+            } else {
+                document.body.classList.remove('inline-edit-active');
+                editables.forEach(el => el.removeAttribute('contenteditable'));
+                label.innerText = 'Прямая правка: ВЫКЛ';
+                btn.classList.replace('bg-amber-600', 'bg-slate-800');
+                showToast('✓ Прямая правка отключена');
+            }
+        }
+
+        // Скрытие плавающей панели для чистого скриншота
+        function hideCmsBarForScreenshot() {
+            if (inlineEditEnabled) toggleInlineEditMode();
+            document.getElementById('cms-floating-bar').classList.add('hidden');
+            showToast('Панель скрыта для чистого скриншота (5 кликов по «МОЛНИЯ» вернут её)');
+        }
+
+        // Автозагрузка сохранённой статьи при открытии страницы
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('vestnik_custom_article_v1');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    applyArticleData(parsed);
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        });
     </script>
 </body>
 </html>
