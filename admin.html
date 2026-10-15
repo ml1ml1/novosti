@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ВЕСТНИК-CMS 3</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script>
@@ -56,41 +53,39 @@
         .ai-loading {
             animation: spin-slow 2s linear infinite;
         }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
-    <!-- ВЕРХНЯЯ ПАНЕЛЬ АДМИНКИ -->
     <header class="bg-slate-950 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <a href="index.html" class="w-9 h-9 bg-brand-red flex items-center justify-center font-headline font-extrabold text-lg rounded hover:bg-brand-darkred transition" title="На главную сайта">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-0 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <a href="index.html" class="w-8 h-8 sm:w-9 sm:h-9 bg-brand-red flex items-center justify-center font-headline font-extrabold text-base sm:text-lg rounded hover:bg-brand-darkred transition shrink-0" title="На главную сайта">
                     ВР
                 </a>
-                <div>
-                    <div class="font-bold text-sm sm:text-base tracking-tight flex items-center gap-2">
-                        <span>ВЕСТНИК-CMS</span>
-                        <span class="text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-2 py-0.5 rounded uppercase">AI v3.8 PRO</span>
+                <div class="min-w-0">
+                    <div class="font-bold text-xs sm:text-base tracking-tight flex items-center gap-1.5 sm:gap-2">
+                        <span class="truncate">ВЕСТНИК-CMS</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v3.8 PRO</span>
                     </div>
-                    <div id="sync-status-line" class="text-[11px] text-slate-400 font-mono">
+                    <div id="sync-status-line" class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">
                         База db.json и Лор загружены • Готово к работе
                     </div>
                 </div>
             </div>
 
-            <!-- Быстрые действия справа -->
-            <div class="flex items-center gap-2 sm:gap-2.5">
-                <button
-                    onclick="switchTab('ai')"
-                    class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition cursor-pointer"
-                >
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    <span class="hidden md:inline">ИИ-Генератор</span>
-                </button>
+            <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
                 <button
                     onclick="pushToGitHub()"
                     id="top-push-btn"
-                    class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+                    class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-2.5 sm:px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition cursor-pointer"
                     title="Отправить db.json и universe_lore.json в GitHub репозиторий"
                 >
                     <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -99,7 +94,7 @@
                 </button>
                 <button
                     onclick="downloadDbJson()"
-                    class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition cursor-pointer"
+                    class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg flex items-center gap-1.5 transition cursor-pointer"
                     title="Скачать файл db.json"
                 >
                     <i class="fa-solid fa-download text-sky-400"></i>
@@ -107,7 +102,7 @@
                 </button>
                 <a
                     href="index.html"
-                    class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition"
+                    class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg flex items-center gap-1.5 transition"
                 >
                     <i class="fa-solid fa-arrow-up-right-from-square text-brand-red"></i>
                     <span class="hidden sm:inline">Сайт</span>
@@ -115,30 +110,29 @@
             </div>
         </div>
 
-        <!-- НАВИГАЦИОННЫЕ ВКЛАДКИ АДМИНКИ -->
         <div class="bg-slate-900 border-t border-slate-800">
-            <div class="max-w-7xl mx-auto px-4 flex items-center space-x-1 overflow-x-auto text-xs sm:text-sm font-semibold">
-                <button onclick="switchTab('list')" id="tab-btn-list" class="px-4 py-3 border-b-2 border-brand-red text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+            <div class="max-w-7xl mx-auto px-2 sm:px-4 flex items-center space-x-1 overflow-x-auto no-scrollbar text-xs sm:text-sm font-semibold">
+                <button onclick="switchTab('list')" id="tab-btn-list" class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 border-brand-red text-white flex items-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-newspaper text-brand-red"></i>
                     <span>1. Все новости (<span id="nav-articles-count">0</span>)</span>
                 </button>
-                <button onclick="switchTab('editor')" id="tab-btn-editor" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                <button onclick="switchTab('editor')" id="tab-btn-editor" class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-pen-nib"></i>
                     <span>2. Редактор статьи</span>
                 </button>
-                <button onclick="switchTab('ai')" id="tab-btn-ai" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                <button onclick="switchTab('ai')" id="tab-btn-ai" class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-robot text-indigo-400"></i>
                     <span>3. 🤖 ИИ-Ньюсрум Gemini</span>
                 </button>
-                <button onclick="switchTab('lore')" id="tab-btn-lore" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                <button onclick="switchTab('lore')" id="tab-btn-lore" class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-book-atlas text-amber-400"></i>
                     <span>4. 📚 Лор Вселенной (<span id="nav-lore-count">0</span>)</span>
                 </button>
-                <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-sliders"></i>
-                    <span>5. Шапка и Опрос (db.json)</span>
+                    <span>5. Шапка и Опрос</span>
                 </button>
-                <button onclick="switchTab('github')" id="tab-btn-github" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                <button onclick="switchTab('github')" id="tab-btn-github" class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-brands fa-github text-emerald-400"></i>
                     <span>6. GitHub Pages API</span>
                 </button>
@@ -146,35 +140,23 @@
         </div>
     </header>
 
-    <!-- УВЕДОМЛЕНИЯ (TOAST) -->
-    <div id="toast-box" class="hidden fixed bottom-5 right-5 max-w-md bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700 z-50 flex items-center gap-3 text-xs sm:text-sm">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
-        <span id="toast-message">Изменения сохранены</span>
+    <div id="toast-box" class="hidden fixed bottom-4 inset-x-3 sm:inset-x-auto sm:right-5 max-w-md bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700 z-50 flex items-center gap-3 text-xs sm:text-sm">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg shrink-0"></i>
+        <span id="toast-message" class="leading-snug">Изменения сохранены</span>
     </div>
 
-    <!-- ОСНОВНАЯ РАБОЧАЯ ОБЛАСТЬ -->
-    <main class="max-w-7xl mx-auto px-4 py-6 sm:py-8 flex-1 w-full">
+    <main class="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8 flex-1 w-full">
 
-        <!-- ========================================================= -->
-        <!-- ВКЛАДКА 1: СПИСОК ВСЕХ НОВОСТЕЙ                           -->
-        <!-- ========================================================= -->
-        <section id="tab-list" class="space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+        <section id="tab-list" class="space-y-4 sm:space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
-                    <h1 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Управление материалами агентства</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">Создавайте статьи вручную или генерируйте связанные репортажи через ИИ-агента Gemini с полным чтением и обновлением <code>db.json</code> и <code>universe_lore.json</code>.</p>
+                    <h1 class="font-headline font-bold text-lg sm:text-2xl text-slate-900">Управление материалами агентства</h1>
+                    <p class="text-xs text-slate-500 mt-0.5">Создавайте статьи вручную или генерируйте связанные репортажи через вкладку «ИИ-Ньюсрум Gemini».</p>
                 </div>
-                <div class="flex flex-wrap items-center gap-2.5">
-                    <button
-                        onclick="switchTab('ai')"
-                        class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer"
-                    >
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Создать через ИИ Gemini</span>
-                    </button>
+                <div class="flex items-center">
                     <button
                         onclick="startNewArticle()"
-                        class="bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer"
+                        class="w-full sm:w-auto justify-center bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer"
                     >
                         <i class="fa-solid fa-plus"></i>
                         <span>Создать вручную</span>
@@ -182,10 +164,9 @@
                 </div>
             </div>
 
-            <!-- Фильтр и поиск по списку статей -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-wrap items-center justify-between gap-3">
-                <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[240px]">
-                    <div class="relative flex-1 max-w-md">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3.5 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 flex-1">
+                    <div class="relative flex-1">
                         <input
                             type="text"
                             id="admin-search-input"
@@ -205,19 +186,20 @@
                 </div>
 
                 <div class="flex items-center gap-2 text-xs">
-                    <label class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-semibold cursor-pointer transition">
+                    <label class="flex-1 sm:flex-initial text-center px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-semibold cursor-pointer transition">
                         <i class="fa-solid fa-file-import mr-1 text-brand-red"></i> Импорт db.json
                         <input type="file" accept=".json" class="hidden" onchange="importDbJsonFile(event)">
                     </label>
-                    <button onclick="resetToDefaultDB()" class="px-3 py-2 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-brand-red rounded-lg font-semibold transition cursor-pointer" title="Восстановить 6 исходных новостей">
-                        <i class="fa-solid fa-rotate-left mr-1"></i> Сброс к исходным (6)
+                    <button onclick="resetToDefaultDB()" class="flex-1 sm:flex-initial px-3 py-2 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-brand-red rounded-lg font-semibold transition cursor-pointer" title="Восстановить 6 исходных новостей">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Сброс (6)
                     </button>
                 </div>
             </div>
 
-            <!-- Таблица статей -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="overflow-x-auto">
+                <div id="admin-articles-mobile" class="md:hidden divide-y divide-slate-200"></div>
+
+                <div class="hidden md:block overflow-x-auto">
                     <table class="w-full text-left border-collapse text-xs sm:text-sm">
                         <thead>
                             <tr class="bg-slate-900 text-slate-200 uppercase text-[11px] tracking-wider">
@@ -234,16 +216,13 @@
             </div>
         </section>
 
-        <!-- ========================================================= -->
-        <!-- ВКЛАДКА 2: РЕДАКТОР СТАТЬИ (СОЗДАНИЕ / ПРАВКА + ПРЕВЬЮ)   -->
-        <!-- ========================================================= -->
-        <section id="tab-editor" class="hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
-                <div>
+        <section id="tab-editor" class="hidden space-y-4 sm:space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                <div class="min-w-0">
                     <div class="text-xs font-mono uppercase text-brand-red font-bold" id="editor-mode-badge">РЕЖИМ: СОЗДАНИЕ НОВОГО МАТЕРИАЛА</div>
-                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900" id="editor-heading-title">Конструктор публикации</h2>
+                    <h2 class="font-headline font-bold text-lg sm:text-2xl text-slate-900 truncate" id="editor-heading-title">Конструктор публикации</h2>
                 </div>
-                <div class="flex flex-wrap items-center gap-2.5">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     <button onclick="switchTab('list')" class="px-3.5 py-2 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition cursor-pointer">
                         ← К списку статей
                     </button>
@@ -256,11 +235,10 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Левая часть: поля ввода (7 колонок) -->
-                <div class="lg:col-span-7 bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
+                <div class="lg:col-span-7 bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 space-y-4">
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-bold text-slate-700 mb-1">Уникальный ID статьи (в ссылке `?id=...`):</label>
                             <div class="flex gap-2">
@@ -307,25 +285,24 @@
                         <textarea id="ed-lead" rows="3" oninput="updateLivePreview()" placeholder="Краткая суть чрезвычайного происшествия или законопроекта..." class="w-full px-3.5 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red leading-relaxed"></textarea>
                     </div>
 
-                    <!-- Настройки Изображения или Экрана Спецконтроля -->
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="p-3.5 sm:p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-700">
                                 <i class="fa-solid fa-image text-brand-red mr-1"></i> Иллюстрация материала
                             </span>
-                            <div class="flex items-center gap-2">
-                                <label class="px-2.5 py-1 bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold rounded cursor-pointer transition">
-                                    <i class="fa-solid fa-upload mr-1"></i> Загрузить фото (Авто-сжатие)
+                            <div class="flex flex-wrap items-center gap-2">
+                                <label class="flex-1 sm:flex-initial text-center px-2.5 py-1.5 bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold rounded cursor-pointer transition">
+                                    <i class="fa-solid fa-upload mr-1"></i> Загрузить фото
                                     <input type="file" accept="image/*" class="hidden" onchange="handleEditorImageUpload(event)">
                                 </label>
-                                <button type="button" onclick="clearEditorImage()" class="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded cursor-pointer">
+                                <button type="button" onclick="clearEditorImage()" class="flex-1 sm:flex-initial px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded cursor-pointer">
                                     Включить Радар
                                 </button>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">URL картинки или Base64-код (оставьте пустым для репортажного экрана Радара/Камеры):</label>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">URL картинки или Base64-код (оставьте пустым для экрана Радара):</label>
                             <input type="text" id="ed-image" oninput="updateLivePreview()" placeholder="https://... или загрузите файл кнопкой выше" class="w-full px-3 py-1.5 text-xs font-mono bg-white border border-slate-300 rounded-lg">
                         </div>
 
@@ -346,25 +323,24 @@
                         </div>
                     </div>
 
-                    <!-- Конструктор основного текста статьи (HTML) -->
                     <div>
                         <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
                             <label class="text-xs font-bold text-slate-700">Основной текст новости (HTML-блоки):</label>
-                            <span class="text-[11px] text-slate-400">Кнопки быстрой вставки фирменных тегов</span>
+                            <span class="text-[11px] text-slate-400">Быстрая вставка тегов</span>
                         </div>
 
                         <div class="flex flex-wrap gap-1.5 mb-2 p-2 bg-slate-100 rounded-lg border border-slate-200">
                             <button type="button" onclick="insertTemplateBlock('p')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-slate-800 cursor-pointer">+ Абзац &lt;p&gt;</button>
                             <button type="button" onclick="insertTemplateBlock('h2')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-slate-800 cursor-pointer">+ Подзаголовок H2</button>
-                            <button type="button" onclick="insertTemplateBlock('quote')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-brand-red cursor-pointer">+ Цитата с полосой</button>
-                            <button type="button" onclick="insertTemplateBlock('list')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-slate-800 cursor-pointer">+ Нумерованный список</button>
-                            <button type="button" onclick="insertTemplateBlock('dossier')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-amber-800 cursor-pointer">+ Таблица-досье</button>
-                            <button type="button" onclick="insertTemplateBlock('max')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-blue-700 cursor-pointer">+ Плашка мессенджера МАКС</button>
+                            <button type="button" onclick="insertTemplateBlock('quote')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-brand-red cursor-pointer">+ Цитата</button>
+                            <button type="button" onclick="insertTemplateBlock('list')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-slate-800 cursor-pointer">+ Список</button>
+                            <button type="button" onclick="insertTemplateBlock('dossier')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-amber-800 cursor-pointer">+ Досье</button>
+                            <button type="button" onclick="insertTemplateBlock('max')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-blue-700 cursor-pointer">+ Плашка МАКС</button>
                         </div>
 
                         <textarea
                             id="ed-body"
-                            rows="14"
+                            rows="12"
                             oninput="updateLivePreview()"
                             placeholder="<p>Текст первого абзаца...</p>"
                             class="w-full px-3.5 py-2.5 text-xs font-mono bg-slate-950 text-emerald-300 border border-slate-800 rounded-xl focus:outline-none focus:border-brand-red leading-relaxed"
@@ -378,15 +354,15 @@
                         </div>
                         <div class="grid grid-cols-3 gap-2">
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-600 mb-1">🔥 Реакции 1:</label>
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">🔥 Реакц. 1:</label>
                                 <input type="number" id="ed-r-fire" value="4200" class="w-full px-2 py-2 text-xs font-mono border border-slate-300 rounded-lg">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-600 mb-1">🧀 Реакции 2:</label>
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">🧀 Реакц. 2:</label>
                                 <input type="number" id="ed-r-cheese" value="3100" class="w-full px-2 py-2 text-xs font-mono border border-slate-300 rounded-lg">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-600 mb-1">⚡ Реакции 3:</label>
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">⚡ Реакц. 3:</label>
                                 <input type="number" id="ed-r-shock" value="1950" class="w-full px-2 py-2 text-xs font-mono border border-slate-300 rounded-lg">
                             </div>
                         </div>
@@ -394,9 +370,8 @@
 
                 </div>
 
-                <!-- Правая часть: ЖИВОЕ ПРЕВЬЮ СТАТЬИ (5 колонок) -->
                 <div class="lg:col-span-5">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 sticky top-28 max-h-[82vh] overflow-y-auto">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 lg:sticky lg:top-28 lg:max-h-[82vh] overflow-y-auto">
                         <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
                                 <i class="fa-solid fa-eye text-brand-red mr-1"></i> Живое превью статьи
@@ -412,7 +387,7 @@
                             <span id="prev-geo" class="bg-slate-100 px-1.5 py-0.5 rounded font-medium">Город</span>
                         </div>
 
-                        <h3 id="prev-title" class="font-headline font-extrabold text-xl text-slate-950 leading-snug mb-3">
+                        <h3 id="prev-title" class="font-headline font-extrabold text-lg sm:text-xl text-slate-950 leading-snug mb-3">
                             Заголовок статьи...
                         </h3>
 
@@ -428,33 +403,29 @@
             </div>
         </section>
 
-        <!-- ========================================================= -->
-        <!-- ВКЛАДКА 3: 🤖 ИИ-НЬЮСРУМ GEMINI (INTERACTIONS API + DB)   -->
-        <!-- ========================================================= -->
-        <section id="tab-ai" class="hidden space-y-6">
-            <div class="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 text-white rounded-2xl p-6 shadow-md border border-indigo-500/30 flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-2xl shrink-0 shadow-inner">
+        <section id="tab-ai" class="hidden space-y-4 sm:space-y-6">
+            <div class="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 text-white rounded-2xl p-4 sm:p-6 shadow-md border border-indigo-500/30 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-xl sm:text-2xl shrink-0 shadow-inner">
                         <i class="fa-solid fa-robot"></i>
                     </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h2 class="font-headline font-extrabold text-xl sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» (Полная синхронизация db.json + Лор)</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Auto-Retry & JSON Repair</span>
+                            <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум»</h2>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Auto-Sync db.json + Лор</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Агент читает полные тексты всех статей и настроек из <code>db.json</code>, сверяется с досье персонажей в <code>universe_lore.json</code>, пишет новую статью с комментариями, а затем <strong>автоматически обновляет информеры городов, котировки, опрос дня, старые статьи и базу лора</strong>.
+                            Агент читает полные тексты всех статей и настроек из <code>db.json</code>, сверяется с досье персонажей в <code>universe_lore.json</code>, сразу добавляет новую статью в общий список и обновляет информеры, котировки, опрос дня и базу лора.
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Левая колонка: Генератор статьи (8 колонок) -->
-                <div class="lg:col-span-8 bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-5">
-                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                        <h3 class="font-headline font-bold text-lg text-slate-900">Задание для ИИ-корреспондента</h3>
-                        <span class="text-xs font-mono text-indigo-600 font-semibold">Стиль: ТАСС / РБК / Коммерсантъ</span>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
+                <div class="lg:col-span-8 bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 space-y-4 sm:space-y-5">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                        <h3 class="font-headline font-bold text-base sm:text-lg text-slate-900">Задание для ИИ-корреспондента</h3>
+                        <span class="text-[11px] sm:text-xs font-mono text-indigo-600 font-semibold">Стиль: ТАСС / РБК / Коммерсантъ</span>
                     </div>
 
                     <div>
@@ -463,28 +434,26 @@
                             id="ai-prompt-input"
                             rows="4"
                             placeholder="Например: Станислав Д. отправил Андрея Б. в творожном бронежилете на переговоры в Магас, но по дороге они встретили инспекторов из Санкт-Петербурга с лазерными дальномерами для носов, а Герман Ф. взломал им табло через мессенджер МАКС..."
-                            class="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"
+                            class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"
                         ></textarea>
                     </div>
 
-                    <!-- Быстрые пресеты идей для генерации -->
                     <div>
-                        <div class="text-[11px] font-bold uppercase text-slate-400 mb-2">Быстрые сюжетные задания (нажмите для подстановки):</div>
+                        <div class="text-[11px] font-bold uppercase text-slate-400 mb-2">Быстрые сюжетные задания:</div>
                         <div class="flex flex-wrap gap-2">
-                            <button type="button" onclick="setAiQuickPrompt('Станислав Д. ввел собственную криптовалюту «Крипто-Уалибах», обеспеченную рассольным сыром, а Мирослав К. обрушил курс биткоина в Таганроге до отрицательных величин.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer">
+                            <button type="button" onclick="setAiQuickPrompt('Станислав Д. ввел собственную криптовалюту «Крипто-Уалибах», обеспеченную рассольным сыром, а Мирослав К. обрушил курс биткоина в Таганроге до отрицательных величин.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer text-left">
                                 🧀 Крипто-Уалибах Станислава Д.
                             </button>
-                            <button type="button" onclick="setAiQuickPrompt('Андрей Б. открыл во Владикавказе тренировочный лагерь спецназа ОСС по защите от пенсионерок с термосами шиповника, а Герман Ф. написал симулятор уклонения от пляжных шезлонгов.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer">
+                            <button type="button" onclick="setAiQuickPrompt('Андрей Б. открыл во Владикавказе тренировочный лагерь спецназа ОСС по защите от пенсионерок с термосами шиповника, а Герман Ф. написал симулятор уклонения от пляжных шезлонгов.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer text-left">
                                 🥋 Полигон Андрея Б. против термосов
                             </button>
-                            <button type="button" onclick="setAiQuickPrompt('Отпиливаемый Башкортостан случайно дал задний ход на водометах и пришвартовался к набережной Санкт-Петербурга, где у всех жителей проверили длину носа по постановлению № 412-п.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer">
+                            <button type="button" onclick="setAiQuickPrompt('Отпиливаемый Башкортостан случайно дал задний ход на водометах и пришвартовался к набережной Санкт-Петербурга, где у всех жителей проверили длину носа по постановлению № 412-п.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer text-left">
                                 🚢 Швартовка Башкортостана в Петербурге
                             </button>
                         </div>
                     </div>
 
-                    <!-- Параметры генерации -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-1">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Желаемая рубрика:</label>
                             <select id="ai-target-category" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-medium">
@@ -501,7 +470,7 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Обязательные спецблоки в HTML:</label>
                             <select id="ai-special-blocks" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-medium">
-                                <option value="ALL">Цитата + Таблица-досье + Плашка МАКС (Полный фарш)</option>
+                                <option value="ALL">Цитата + Досье + Плашка МАКС (Все)</option>
                                 <option value="QUOTE_DOSSIER">Цитата + Таблица-досье</option>
                                 <option value="QUOTE_MAX">Цитата + Плашка мессенджера МАКС</option>
                                 <option value="QUOTE_ONLY">Только официальные цитаты и списки</option>
@@ -509,37 +478,35 @@
                         </div>
                     </div>
 
-                    <!-- Чекбоксы контекста и автообновления -->
-                    <div class="p-4 bg-indigo-50/60 border border-indigo-200/80 rounded-xl space-y-2.5 text-xs">
-                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
-                            <input type="checkbox" id="ai-use-lore" checked class="w-4 h-4 accent-indigo-600">
+                    <div class="p-3.5 sm:p-4 bg-indigo-50/60 border border-indigo-200/80 rounded-xl space-y-2.5 text-xs">
+                        <label class="flex items-start sm:items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
+                            <input type="checkbox" id="ai-use-lore" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-indigo-600 shrink-0">
                             <span>Читать и учитывать базу персонажей и правил мира (<code>universe_lore.json</code>)</span>
                         </label>
-                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
-                            <input type="checkbox" id="ai-use-articles" checked class="w-4 h-4 accent-indigo-600">
+                        <label class="flex items-start sm:items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
+                            <input type="checkbox" id="ai-use-articles" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-indigo-600 shrink-0">
                             <span>Читать полные тексты всех существующих статей и настроек из <code>db.json</code></span>
                         </label>
-                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-indigo-950">
-                            <input type="checkbox" id="ai-auto-update-db" checked class="w-4 h-4 accent-indigo-600">
-                            <span>🏙️ <strong>Авто-обновление db.json:</strong> обновлять информеры городов, котировки, «Опрос дня» и добавлять ссылки на продолжение в старые статьи</span>
+                        <label class="flex items-start sm:items-center gap-2.5 cursor-pointer font-semibold text-indigo-950">
+                            <input type="checkbox" id="ai-auto-update-db" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-indigo-600 shrink-0">
+                            <span>🏙️ <strong>Авто-обновление db.json:</strong> обновлять информеры городов, котировки, «Опрос дня» и добавлять ссылки в старые статьи</span>
                         </label>
-                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-indigo-950">
-                            <input type="checkbox" id="ai-auto-update-lore" checked class="w-4 h-4 accent-indigo-600">
+                        <label class="flex items-start sm:items-center gap-2.5 cursor-pointer font-semibold text-indigo-950">
+                            <input type="checkbox" id="ai-auto-update-lore" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-indigo-600 shrink-0">
                             <span>🔄 <strong>Авто-обновление Лора:</strong> дополнять биографии героев и хронологию в <code>universe_lore.json</code></span>
                         </label>
-                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-brand-red">
-                            <input type="checkbox" id="ai-make-hero" checked class="w-4 h-4 accent-brand-red">
+                        <label class="flex items-start sm:items-center gap-2.5 cursor-pointer font-semibold text-brand-red">
+                            <input type="checkbox" id="ai-make-hero" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-brand-red shrink-0">
                             <span>★ Сделать сгенерированную статью «Главной новостью дня» и обновить строку «МОЛНИЯ»</span>
                         </label>
                     </div>
 
-                    <!-- Кнопки запуска ИИ -->
-                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 pt-2">
                         <button
                             type="button"
                             id="btn-ai-generate-edit"
                             onclick="runGeminiGenerator(false)"
-                            class="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer"
+                            class="w-full sm:w-auto justify-center px-4 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer"
                         >
                             <i class="fa-solid fa-wand-magic-sparkles"></i>
                             <span>Сгенерировать и открыть в редакторе</span>
@@ -549,20 +516,18 @@
                             type="button"
                             id="btn-ai-generate-push"
                             onclick="runGeminiGenerator(true)"
-                            class="px-5 py-3 bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer"
+                            class="w-full sm:w-auto justify-center px-4 py-3 bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer"
                         >
                             <i class="fa-solid fa-bolt"></i>
-                            <span>Автопилот: Сгенерировать + Обновить db.json и Лор + Push в GitHub</span>
+                            <span>Автопилот: Сгенерировать + Push в GitHub</span>
                         </button>
                     </div>
 
-                    <!-- Лог работы ИИ -->
-                    <div id="ai-status-box" class="hidden p-4 rounded-xl bg-slate-950 text-slate-200 font-mono text-xs space-y-1.5 border border-slate-800"></div>
+                    <div id="ai-status-box" class="hidden p-3.5 sm:p-4 rounded-xl bg-slate-950 text-slate-200 font-mono text-xs space-y-1.5 border border-slate-800 break-words"></div>
                 </div>
 
-                <!-- Правая колонка: Настройки Gemini API и сводка контекста (4 колонки) -->
-                <div class="lg:col-span-4 space-y-6">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
+                <div class="lg:col-span-4 space-y-5 sm:space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
                             <h3 class="font-headline font-bold text-base text-slate-900 flex items-center gap-2">
                                 <i class="fa-solid fa-key text-indigo-600"></i>
@@ -584,7 +549,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Основная модель Gemini (при перегрузке сработает авто-резерв):</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Основная модель Gemini:</label>
                             <input
                                 type="text"
                                 id="gemini-model"
@@ -616,11 +581,10 @@
                         </button>
                     </div>
 
-                    <!-- Индикатор памяти ИИ -->
-                    <div class="bg-slate-900 text-slate-200 rounded-xl p-5 border border-slate-800 space-y-3 text-xs">
+                    <div class="bg-slate-900 text-slate-200 rounded-xl p-4 sm:p-5 border border-slate-800 space-y-3 text-xs">
                         <div class="font-bold text-amber-400 uppercase tracking-wider flex items-center justify-between">
                             <span><i class="fa-solid fa-brain mr-1.5"></i> Контекст ИИ-Агента</span>
-                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-emerald-400">SINCHRONIZED</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-emerald-400">SYNCHRONIZED</span>
                         </div>
                         <div class="space-y-1.5 text-slate-300 font-mono text-[11px]">
                             <div>• Персонажей в лоре: <strong id="ai-stat-chars" class="text-white">0</strong></div>
@@ -636,44 +600,40 @@
             </div>
         </section>
 
-        <!-- ========================================================= -->
-        <!-- ВКЛАДКА 4: 📚 ЛОР ВСЕЛЕННОЙ (UNIVERSE_LORE.JSON)          -->
-        <!-- ========================================================= -->
-        <section id="tab-lore" class="hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+        <section id="tab-lore" class="hidden space-y-4 sm:space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
-                    <div class="flex items-center gap-2">
-                        <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Хранилище Лора Вселенной (<code>universe_lore.json</code>)</h2>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h2 class="font-headline font-bold text-lg sm:text-2xl text-slate-900">Хранилище Лора (<code>universe_lore.json</code>)</h2>
                         <span class="bg-amber-100 text-amber-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full">Память ИИ-Агента</span>
                     </div>
                     <p class="text-xs text-slate-500 mt-1">
-                        Здесь хранятся досье всех персонажей, локаций и хронология событий. ИИ опирается на эти данные при генерации статей и автоматически дополняет их.
+                        Здесь хранятся досье всех персонажей, локаций и хронология событий. ИИ опирается на эти данные и автоматически дополняет их.
                     </p>
                 </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="syncLoreFromArticlesWithAI()" id="btn-ai-lore-audit" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition cursor-pointer" title="ИИ перечитает все статьи и обновит статусы персонажей">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <button onclick="syncLoreFromArticlesWithAI()" id="btn-ai-lore-audit" class="justify-center px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Актуализировать Лор по db.json через ИИ</span>
+                        <span>Актуализировать Лор через ИИ</span>
                     </button>
-                    <button onclick="downloadLoreJson()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition cursor-pointer">
+                    <button onclick="downloadLoreJson()" class="justify-center px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition cursor-pointer">
                         <i class="fa-solid fa-download text-amber-400"></i>
                         <span>Скачать universe_lore.json</span>
                     </button>
-                    <button onclick="pushToGitHub()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition cursor-pointer">
+                    <button onclick="pushToGitHub()" class="justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition cursor-pointer">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span>Сохранить и Push в GitHub</span>
+                        <span>Сохранить и Push</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Секция 1: Персонажи Вселенной -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
-                <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-200">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200">
                     <div>
-                        <h3 class="font-headline font-bold text-lg text-slate-900">1. Досье ключевых персонажей</h3>
-                        <p class="text-xs text-slate-500">Вы можете редактировать любое поле прямо в карточке или добавить нового героя.</p>
+                        <h3 class="font-headline font-bold text-base sm:text-lg text-slate-900">1. Досье ключевых персонажей</h3>
+                        <p class="text-xs text-slate-500">Редактируйте любое поле прямо в карточке или добавьте нового героя.</p>
                     </div>
-                    <button onclick="addNewCharacterCard()" class="px-3.5 py-2 bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold rounded-lg flex items-center gap-1.5 cursor-pointer">
+                    <button onclick="addNewCharacterCard()" class="w-full sm:w-auto justify-center px-3.5 py-2 bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold rounded-lg flex items-center gap-1.5 cursor-pointer">
                         <i class="fa-solid fa-user-plus"></i> Добавить персонажа
                     </button>
                 </div>
@@ -681,31 +641,28 @@
                 <div id="lore-characters-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- Секция 2: География, Регионы и Правила Вселенной -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
                     <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                        <h3 class="font-headline font-bold text-lg text-slate-900">2. Регионы, Фракции и Законы</h3>
+                        <h3 class="font-headline font-bold text-base sm:text-lg text-slate-900">2. Регионы, Фракции и Законы</h3>
                         <button onclick="addNewLocationItem()" class="text-xs font-bold text-brand-red hover:underline cursor-pointer">+ Добавить локацию</button>
                     </div>
                     <div id="lore-locations-list" class="space-y-3"></div>
                 </div>
 
-                <!-- Секция 3: Хронология событий (Timeline) -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
                     <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                        <h3 class="font-headline font-bold text-lg text-slate-900">3. Хронология событий (Память сюжета)</h3>
+                        <h3 class="font-headline font-bold text-base sm:text-lg text-slate-900">3. Хронология событий</h3>
                         <button onclick="addNewTimelineEvent()" class="text-xs font-bold text-brand-red hover:underline cursor-pointer">+ Добавить событие</button>
                     </div>
                     <div id="lore-timeline-list" class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1"></div>
                 </div>
             </div>
 
-            <!-- Секция 4: Директивы стиля для ИИ -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
-                <div class="flex items-center justify-between">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <label class="text-xs font-bold uppercase tracking-wider text-slate-700">4. Глобальные правила стиля и канона для ИИ-агента:</label>
-                    <button onclick="saveLoreFromUI()" class="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg cursor-pointer">
+                    <button onclick="saveLoreFromUI()" class="w-full sm:w-auto px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg cursor-pointer">
                         Сохранить изменения Лора
                     </button>
                 </div>
@@ -713,16 +670,13 @@
             </div>
         </section>
 
-        <!-- ========================================================= -->
-        <!-- ВКЛАДКА 5: НАСТРОЙКИ САЙТА, РУБРИКИ, ИНФОРМЕРЫ И ОПРОС    -->
-        <!-- ========================================================= -->
-        <section id="tab-settings" class="hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+        <section id="tab-settings" class="hidden space-y-4 sm:space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
-                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Глобальные настройки портала в <code>db.json</code></h2>
-                    <p class="text-xs text-slate-500">Все изменения здесь (и автообновления от ИИ) меняют шапку, бегущую строку «МОЛНИЯ», информеры, котировки и опрос на всех страницах сайта.</p>
+                    <h2 class="font-headline font-bold text-lg sm:text-2xl text-slate-900">Глобальные настройки портала в <code>db.json</code></h2>
+                    <p class="text-xs text-slate-500">Все изменения здесь меняют шапку, бегущую строку «МОЛНИЯ», информеры, котировки и опрос на всех страницах сайта.</p>
                 </div>
-                <div class="flex items-center gap-2.5">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     <button onclick="saveSiteSettings(false)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg cursor-pointer">
                         Сохранить настройки
                     </button>
@@ -732,9 +686,9 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
-                    <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">1. Шапка и бегущая строка «МОЛНИЯ»</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
+                    <h3 class="font-headline font-bold text-base sm:text-lg text-slate-900 border-b border-slate-100 pb-2">1. Шапка и бегущая строка «МОЛНИЯ»</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Название издания:</label>
@@ -759,8 +713,8 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
-                    <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">2. Виджет «Опрос дня»</h3>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
+                    <h3 class="font-headline font-bold text-base sm:text-lg text-slate-900 border-b border-slate-100 pb-2">2. Виджет «Опрос дня»</h3>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Вопрос опроса:</label>
                         <input type="text" id="set-poll-question" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg font-semibold">
@@ -771,9 +725,9 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4 lg:col-span-2">
-                    <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">3. Информеры городов и Биржевые котировки</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4 lg:col-span-2">
+                    <h3 class="font-headline font-bold text-base sm:text-lg text-slate-900 border-b border-slate-100 pb-2">3. Информеры городов и Биржевые котировки</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Городские информеры (JSON):</label>
                             <textarea id="set-informers-json" rows="7" class="w-full px-3 py-2 text-xs font-mono bg-slate-950 text-sky-300 rounded-lg"></textarea>
@@ -787,24 +741,21 @@
             </div>
         </section>
 
-        <!-- ========================================================= -->
-        <!-- ВКЛАДКА 6: ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ С GITHUB PAGES          -->
-        <!-- ========================================================= -->
-        <section id="tab-github" class="hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-3xl mx-auto space-y-5">
-                <div class="flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center text-2xl shrink-0">
+        <section id="tab-github" class="hidden space-y-4 sm:space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 max-w-3xl mx-auto space-y-5">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xl sm:text-2xl shrink-0">
                         <i class="fa-brands fa-github"></i>
                     </div>
                     <div>
-                        <h2 class="font-headline font-bold text-xl text-slate-900">Прямая публикация в GitHub Pages (Двойная синхронизация)</h2>
+                        <h2 class="font-headline font-bold text-lg sm:text-xl text-slate-900">Прямая публикация в GitHub Pages</h2>
                         <p class="text-xs text-slate-600 mt-1 leading-relaxed">
                             При нажатии <strong>«Опубликовать в GitHub»</strong> админка автоматически коммитит в ваш репозиторий сразу оба файла: базу статей и настроек <code>db.json</code> и обновленную память ИИ-агента <code>universe_lore.json</code>.
                         </p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-2">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Ваш логин GitHub (Owner):</label>
                         <input type="text" id="gh-owner" placeholder="maksim-dev" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
@@ -824,23 +775,22 @@
                     <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
                 </div>
 
-                <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-200">
-                    <button onclick="saveGitHubConfig()" class="px-4 py-2.5 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg cursor-pointer">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 pt-4 border-t border-slate-200">
+                    <button onclick="saveGitHubConfig(); showToast('Настройки GitHub сохранены!');" class="w-full sm:w-auto px-4 py-2.5 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg cursor-pointer">
                         Сохранить настройки GitHub
                     </button>
-                    <button onclick="pushToGitHub()" class="px-5 py-2.5 text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg shadow-sm flex items-center gap-2 cursor-pointer">
+                    <button onclick="pushToGitHub()" class="w-full sm:w-auto justify-center px-5 py-2.5 text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg shadow-sm flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
                         <span>Отправить db.json + universe_lore.json в GitHub</span>
                     </button>
                 </div>
 
-                <div id="gh-log-box" class="hidden p-4 rounded-xl bg-slate-950 text-slate-200 font-mono text-xs space-y-1"></div>
+                <div id="gh-log-box" class="hidden p-3.5 sm:p-4 rounded-xl bg-slate-950 text-slate-200 font-mono text-xs space-y-1 break-words"></div>
             </div>
         </section>
 
     </main>
 
-    <!-- JAVASCRIPT: БАЗА НОВОСТЕЙ, БАЗА ЛОРА, РЕМОНТ JSON И INTERACTIONS API -->
     <script>
         const DEFAULT_LORE = {
             universeName: "Хроники Вестника России (2026–2027)",
@@ -1089,18 +1039,29 @@
             }
             localStorage.setItem('vestnik_gemini_config', JSON.stringify(geminiConf));
 
+            let loadedFromLocal = false;
             const localBackup = localStorage.getItem('vestnik_db_backup');
             if (localBackup) {
-                try { appDB = JSON.parse(localBackup); } catch (e) {}
-            } else {
                 try {
-                    const res = await fetch('./db.json?t=' + Date.now(), { cache: 'no-store' });
-                    if (res.ok) {
-                        const remote = await res.json();
-                        if (remote && Array.isArray(remote.articles)) appDB = remote;
+                    const parsedLocal = JSON.parse(localBackup);
+                    if (parsedLocal && Array.isArray(parsedLocal.articles)) {
+                        appDB = parsedLocal;
+                        loadedFromLocal = true;
                     }
-                } catch (err) {}
+                } catch (e) {}
             }
+
+            try {
+                const res = await fetch('./db.json?t=' + Date.now(), { cache: 'no-store' });
+                if (res.ok) {
+                    const remote = await res.json();
+                    if (remote && Array.isArray(remote.articles)) {
+                        if (!loadedFromLocal || remote.articles.length > appDB.articles.length) {
+                            appDB = remote;
+                        }
+                    }
+                }
+            } catch (err) {}
 
             const localLore = localStorage.getItem('vestnik_lore_backup');
             if (localLore) {
@@ -1132,14 +1093,16 @@
             const box = document.getElementById('toast-box');
             const icon = document.getElementById('toast-icon');
             document.getElementById('toast-message').textContent = msg;
-            icon.className = isError ? 'fa-solid fa-triangle-exclamation text-rose-400 text-lg' : 'fa-solid fa-circle-check text-emerald-400 text-lg';
+            icon.className = isError ? 'fa-solid fa-triangle-exclamation text-rose-400 text-lg shrink-0' : 'fa-solid fa-circle-check text-emerald-400 text-lg shrink-0';
             box.classList.remove('hidden');
             setTimeout(() => box.classList.add('hidden'), 3800);
         }
 
         function persistLocalBackup() {
-            localStorage.setItem('vestnik_db_backup', JSON.stringify(appDB));
-            localStorage.setItem('vestnik_lore_backup', JSON.stringify(appLore));
+            try {
+                localStorage.setItem('vestnik_db_backup', JSON.stringify(appDB));
+                localStorage.setItem('vestnik_lore_backup', JSON.stringify(appLore));
+            } catch (e) {}
             document.getElementById('nav-articles-count').textContent = (appDB.articles || []).length;
             document.getElementById('nav-lore-count').textContent = (appLore.characters || []).length;
             updateAiMemoryStats();
@@ -1150,6 +1113,7 @@
             document.getElementById('ai-stat-locs').textContent = (appLore.locations || []).length;
             document.getElementById('ai-stat-events').textContent = (appLore.timeline || []).length;
             document.getElementById('ai-stat-arts').textContent = (appDB.articles || []).length;
+            document.getElementById('nav-articles-count').textContent = (appDB.articles || []).length;
             document.getElementById('nav-lore-count').textContent = (appLore.characters || []).length;
         }
 
@@ -1158,25 +1122,27 @@
                 document.getElementById('tab-' + t).classList.toggle('hidden', t !== tabName);
                 const btn = document.getElementById('tab-btn-' + t);
                 if (t === tabName) {
-                    btn.className = "px-4 py-3 border-b-2 border-brand-red text-white flex items-center gap-2 whitespace-nowrap cursor-pointer";
+                    btn.className = "px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 border-brand-red text-white flex items-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer";
                 } else {
-                    btn.className = "px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer";
+                    btn.className = "px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 sm:gap-2 whitespace-nowrap cursor-pointer";
                 }
             });
+
+            if (tabName === 'list') {
+                populateCategoryFilters();
+                renderAdminArticlesList();
+            }
         }
 
-        // =========================================================
-        // ЛОР ВСЕЛЕННОЙ (UNIVERSE_LORE.JSON) — УПРАВЛЕНИЕ В UI
-        // =========================================================
         function renderLoreUI() {
             document.getElementById('lore-directives-input').value = appLore.styleDirectives || "";
 
             const charsGrid = document.getElementById('lore-characters-grid');
             charsGrid.innerHTML = (appLore.characters || []).map((ch, idx) => `
-                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2.5 relative">
+                <div class="p-3.5 sm:p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2.5 relative">
                     <div class="flex items-center justify-between gap-2">
-                        <input type="text" value="${escapeAttr(ch.name)}" onchange="updateLoreChar(${idx}, 'name', this.value)" placeholder="Имя персонажа" class="font-bold text-sm bg-white px-2.5 py-1 border border-slate-300 rounded-lg w-1/2">
-                        <div class="flex items-center gap-1.5">
+                        <input type="text" value="${escapeAttr(ch.name)}" onchange="updateLoreChar(${idx}, 'name', this.value)" placeholder="Имя персонажа" class="font-bold text-sm bg-white px-2.5 py-1 border border-slate-300 rounded-lg flex-1 min-w-0">
+                        <div class="flex items-center gap-1.5 shrink-0">
                             <span class="text-[11px] text-slate-500">Возраст:</span>
                             <input type="number" value="${ch.age || 22}" onchange="updateLoreChar(${idx}, 'age', parseInt(this.value,10))" class="w-14 text-xs font-mono bg-white px-2 py-1 border border-slate-300 rounded-lg">
                             <button onclick="removeLoreChar(${idx})" class="text-rose-500 hover:text-rose-700 px-1.5 py-1 cursor-pointer" title="Удалить персонажа">
@@ -1308,9 +1274,6 @@
             showToast("Файл universe_lore.json скачан!");
         }
 
-        // =========================================================================
-        // 🤖 GOOGLE GEMINI INTERACTIONS API + AUTO-RETRY + АВТО-РЕМОНТ JSON
-        // =========================================================================
         function saveGeminiConfig() {
             let modelName = (document.getElementById('gemini-model').value || 'gemini-3.8-flash').trim();
             modelName = modelName.replace(/^models\//, '');
@@ -1364,18 +1327,14 @@
             return null;
         }
 
-        // Интеллектуальный авто-ремонт поврежденного JSON (исправляет неэкранированные кавычки в HTML, переносы строк и обрывы)
         function repairBrokenJsonString(str) {
-            // 1. Заменяем неэкранированные двойные кавычки внутри HTML-тегов <tag class="..."> на одинарные <tag class='...'>
             let fixed = str.replace(/<([a-zA-Z0-9]+)\s+([^>]*?)>/g, (fullMatch, tag, attrs) => {
                 const fixedAttrs = attrs.replace(/=\s*"([^"]*)"/g, "='$1'");
                 return `<${tag} ${fixedAttrs}>`;
             });
 
-            // 2. Убираем висячие запятые перед } или ]
             fixed = fixed.replace(/,(\s*[}\]])/g, '$1');
 
-            // 3. Экранируем сырые переносы строк и табуляции внутри JSON-строк
             let inString = false;
             let escaped = false;
             let result = '';
@@ -1404,7 +1363,6 @@
                 result += ch;
             }
 
-            // 4. Авто-закрытие оборванных скобок } и ], если ответ модели обрезался
             if (inString) result += '"';
             const stack = [];
             inString = false;
@@ -1446,17 +1404,14 @@
                 cleaned = cleaned.slice(firstBrace);
             }
 
-            // Попытка 1: штатный парсинг
             try {
                 return JSON.parse(cleaned);
             } catch (e1) {
-                // Попытка 2: авто-ремонт HTML-кавычек, переносов и скобок
                 const repaired = repairBrokenJsonString(cleaned);
                 return JSON.parse(repaired);
             }
         }
 
-        // Вызов Gemini с автоматическим повтором при перегрузке (High demand) и переключением на резервные модели
         async function callGeminiAPI(conf, systemInstruction, userInput) {
             const statusBox = document.getElementById('ai-status-box');
             const sleep = (ms) => new Promise(res => setTimeout(res, ms));
@@ -1612,9 +1567,8 @@
 
             const statusBox = document.getElementById('ai-status-box');
             statusBox.classList.remove('hidden');
-            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Отправка запроса в <strong>Gemini (${conf.model})</strong> • Чтение полной базы db.json (${appDB.articles.length} статей) и universe_lore.json (${appLore.characters.length} героев)...</div>`;
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Отправка запроса в <strong>Gemini (${conf.model})</strong> • Чтение базы db.json (${appDB.articles.length} статей) и universe_lore.json (${appLore.characters.length} героев)...</div>`;
 
-            // 1. Полное чтение всех статей и настроек из db.json для контекста ИИ
             const existingArticlesFull = useArticles
                 ? (appDB.articles || []).map((a, i) =>
                     `СТАТЬЯ #${i + 1} [ID: "${a.id}" | Дата: ${a.date} | Рубрика: ${a.category} | Город: ${a.geo}]\n` +
@@ -1656,7 +1610,7 @@
 Верни ответ СТРОГО в виде валидного JSON-объекта по следующей схеме:
 {
   "article": {
-    "id": "krotkiy-latin-slug-novosti",
+    "id": "unikalnyj-latin-slug-novosti",
     "title": "Громкий заголовок в стиле ТАСС/РБК",
     "lead": "Подробный жирный лид-абзац из 2-3 предложений",
     "category": "${targetCat === 'AUTO' ? 'Безопасность' : targetCat}",
@@ -1735,12 +1689,14 @@ ${userPrompt}`;
                     throw new Error("Не удалось распознать структуру статьи в ответе ИИ");
                 }
 
-                const newArticleId = genArt.id || ("ai-news-" + Date.now().toString().slice(-4));
+                let newArticleId = (genArt.id || "").trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+                if (!newArticleId || (appDB.articles || []).some(a => a.id === newArticleId)) {
+                    newArticleId = (newArticleId || "ai-news") + "-" + Date.now().toString().slice(-4);
+                }
                 genArt.id = newArticleId;
 
                 statusBox.innerHTML += `<div class="text-emerald-400">✅ Статья сгенерирована: «${genArt.title}»</div>`;
 
-                // 2. АВТООБНОВЛЕНИЕ DB.JSON (Информеры, Котировки, Опрос, МОЛНИЯ и старые статьи)
                 const dbUpd = parsed.dbUpdates || {};
 
                 if (makeHero && (dbUpd.updatedBreakingNews || parsed.updatedBreakingNews)) {
@@ -1749,7 +1705,6 @@ ${userPrompt}`;
                 }
 
                 if (autoUpdateDb) {
-                    // Информер города
                     if (dbUpd.updatedInformer && dbUpd.updatedInformer.city && dbUpd.updatedInformer.status) {
                         const inf = dbUpd.updatedInformer;
                         const existingInf = (appDB.siteSettings.informers || []).find(i =>
@@ -1773,7 +1728,6 @@ ${userPrompt}`;
                         statusBox.innerHTML += `<div class="text-sky-300">🏙️ Обновлен информер города «${inf.city}: ${inf.status}» в db.json</div>`;
                     }
 
-                    // Биржевой индекс
                     if (dbUpd.updatedTicker && dbUpd.updatedTicker.label && dbUpd.updatedTicker.value) {
                         const tick = dbUpd.updatedTicker;
                         const existingTick = (appDB.siteSettings.tickers || []).find(t =>
@@ -1790,14 +1744,12 @@ ${userPrompt}`;
                         }
                     }
 
-                    // Опрос дня
                     if (dbUpd.updatedPoll && dbUpd.updatedPoll.question && Array.isArray(dbUpd.updatedPoll.options) && dbUpd.updatedPoll.options.length > 1) {
                         appDB.siteSettings.poll = dbUpd.updatedPoll;
                         localStorage.removeItem('vestnik_poll_votes');
                         statusBox.innerHTML += `<div class="text-sky-300">📊 Обновлен виджет «Опрос дня» в db.json</div>`;
                     }
 
-                    // Перекрестная ссылка в старой статье внутри db.json
                     if (dbUpd.appendUpdateToOldArticle && dbUpd.appendUpdateToOldArticle.targetArticleId && dbUpd.appendUpdateToOldArticle.updateText) {
                         const oldArt = (appDB.articles || []).find(a => a.id === dbUpd.appendUpdateToOldArticle.targetArticleId);
                         if (oldArt && oldArt.body && !oldArt.body.includes(newArticleId)) {
@@ -1810,7 +1762,6 @@ ${userPrompt}`;
 
                 populateSiteSettingsForm();
 
-                // 3. АВТООБНОВЛЕНИЕ БАЗЫ ЛОРА (universe_lore.json)
                 if (autoUpdateLore && parsed.loreUpdates) {
                     if (parsed.loreUpdates.newTimelineEvent) {
                         appLore.timeline.push(parsed.loreUpdates.newTimelineEvent);
@@ -1845,8 +1796,6 @@ ${userPrompt}`;
                     statusBox.innerHTML += `<div class="text-amber-300">📚 Память Лора (universe_lore.json) автоматически обновлена новыми фактами!</div>`;
                 }
 
-                // 4. Заполняем поля редактора и сохраняем комментарии
-                editingOriginalId = null;
                 window._lastAiGeneratedComments = Array.isArray(genArt.comments) ? genArt.comments : [];
 
                 document.getElementById('ed-id').value = newArticleId;
@@ -1864,12 +1813,16 @@ ${userPrompt}`;
                 document.getElementById('ed-tags').value = (genArt.tags || []).join(', ');
                 updateLivePreview();
 
-                if (autoPublishAndPush) {
-                    saveArticleFromEditor(true);
-                } else {
-                    persistLocalBackup();
-                    showToast("Статья и обновления db.json готовы! Проверьте в редакторе.");
-                    setTimeout(() => switchTab('editor'), 900);
+                editingOriginalId = null;
+                document.getElementById('admin-search-input').value = "";
+                document.getElementById('admin-cat-filter').value = "ALL";
+
+                await saveArticleFromEditor(autoPublishAndPush, !autoPublishAndPush);
+
+                statusBox.innerHTML += `<div class="text-emerald-300 font-bold">📰 Статья добавлена в общий список (всего статей: ${appDB.articles.length}).</div>`;
+
+                if (!autoPublishAndPush) {
+                    setTimeout(() => switchTab('editor'), 700);
                 }
 
             } catch (err) {
@@ -1910,14 +1863,15 @@ ${userPrompt}`;
             }
         }
 
-        // =========================================================
-        // СТАНДАРТНЫЕ ФУНКЦИИ СПИСКА СТАТЕЙ И РЕДАКТОРА
-        // =========================================================
         function populateCategoryFilters() {
             const cats = (appDB.siteSettings && appDB.siteSettings.categories) || DEFAULT_DB.siteSettings.categories;
             const select = document.getElementById('admin-cat-filter');
+            const currentVal = select.value || "ALL";
             select.innerHTML = `<option value="ALL">Все рубрики (${cats.length})</option>` +
                 cats.map(c => `<option value="${c}">${c}</option>`).join('');
+            if (currentVal === "ALL" || cats.includes(currentVal)) {
+                select.value = currentVal;
+            }
 
             const datalist = document.getElementById('ed-category-datalist');
             datalist.innerHTML = cats.map(c => `<option value="${c}">`).join('');
@@ -1928,6 +1882,9 @@ ${userPrompt}`;
             const q = (document.getElementById('admin-search-input').value || "").trim().toLowerCase();
             const cat = document.getElementById('admin-cat-filter').value;
             const tbody = document.getElementById('admin-articles-tbody');
+            const mobileList = document.getElementById('admin-articles-mobile');
+
+            document.getElementById('nav-articles-count').textContent = (appDB.articles || []).length;
 
             const filtered = (appDB.articles || []).filter(art => {
                 const matchCat = cat === "ALL" || art.category === cat;
@@ -1970,6 +1927,40 @@ ${userPrompt}`;
                         </button>
                     </td>
                 </tr>
+            `).join('');
+
+            mobileList.innerHTML = filtered.map(art => `
+                <div class="p-4 space-y-2.5 ${art.isHero ? 'bg-red-50/40' : 'bg-white'}">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                            ${art.isHero
+                                ? `<span class="bg-brand-red text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded shrink-0">★ Главная</span>`
+                                : `<button onclick="makeArticleHero('${art.id}')" class="text-[11px] text-slate-500 bg-slate-100 hover:text-brand-red px-2 py-0.5 rounded font-semibold shrink-0 cursor-pointer">Сделать главной</button>`
+                            }
+                            <span class="font-mono text-[11px] text-slate-400 truncate">${art.id}</span>
+                        </div>
+                        <span class="font-mono text-[11px] text-slate-500 shrink-0">${art.date}</span>
+                    </div>
+                    <div class="font-bold text-sm text-slate-900 leading-snug">${art.title}</div>
+                    <div class="text-xs text-slate-500 line-clamp-2">${art.lead}</div>
+                    <div class="flex items-center justify-between gap-2 pt-1">
+                        <div class="text-xs text-slate-600 truncate">
+                            <span class="text-brand-red font-bold uppercase mr-1.5">${art.category}</span>•
+                            <span class="ml-1"><i class="fa-solid fa-location-dot text-brand-red mr-1"></i>${art.geo}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button onclick="openArticleInEditor('${art.id}')" class="px-2.5 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-semibold cursor-pointer">
+                                <i class="fa-solid fa-pen"></i> Править
+                            </button>
+                            <a href="article.html?id=${encodeURIComponent(art.id)}" target="_blank" class="px-2.5 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                            <button onclick="deleteArticle('${art.id}')" class="px-2.5 py-1.5 bg-rose-50 text-rose-600 rounded-lg text-xs font-semibold cursor-pointer">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             `).join('');
         }
 
@@ -2113,7 +2104,7 @@ ${userPrompt}`;
             }
         }
 
-        function saveArticleFromEditor(andPush = false) {
+        async function saveArticleFromEditor(andPush = false, stayInCurrentTab = false) {
             const id = document.getElementById('ed-id').value.trim() || ("news-" + Date.now());
             const title = document.getElementById('ed-title').value.trim();
             if (!title) {
@@ -2174,8 +2165,9 @@ ${userPrompt}`;
             showToast("Статья сохранена в базу db.json!");
 
             if (andPush) {
-                pushToGitHub();
-            } else {
+                await pushToGitHub();
+                switchTab('list');
+            } else if (!stayInCurrentTab) {
                 switchTab('list');
             }
         }
@@ -2273,9 +2265,6 @@ ${userPrompt}`;
             showToast("База и Лор сброшены к исходным!");
         }
 
-        // =========================================================================
-        // ДВОЙНОЙ PUSH В GITHUB PAGES (db.json + universe_lore.json)
-        // =========================================================================
         function saveGitHubConfig() {
             const conf = {
                 owner: document.getElementById('gh-owner').value.trim(),
@@ -2306,7 +2295,7 @@ ${userPrompt}`;
             };
 
             let existingSha = null;
-            const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(conf.branch)}`, { headers });
+            const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(conf.branch)}&t=${Date.now()}`, { headers, cache: 'no-store' });
             if (getRes.ok) {
                 const fileInfo = await getRes.json();
                 existingSha = fileInfo.sha;
@@ -2349,8 +2338,8 @@ ${userPrompt}`;
                 await uploadSingleFileToGitHub(conf, 'db.json', appDB, `Обновление выпуска db.json (${timeLabel})`);
                 await uploadSingleFileToGitHub(conf, 'universe_lore.json', appLore, `Обновление лора вселенной (${timeLabel})`);
 
-                document.getElementById('sync-status-line').textContent = `Опубликовано в GitHub (${new Date().toLocaleTimeString('ru-RU')}) • db.json + universe_lore.json синхронизированы`;
-                logBox.innerHTML = `<div class="text-emerald-400 font-bold">✅ УСПЕШНО! Файлы db.json и universe_lore.json обновлены в репозитории ${conf.owner}/${conf.repo}.</div>`;
+                document.getElementById('sync-status-line').textContent = `Опубликовано в GitHub (${new Date().toLocaleTimeString('ru-RU')}) • Статей: ${appDB.articles.length}`;
+                logBox.innerHTML = `<div class="text-emerald-400 font-bold">✅ УСПЕШНО! Файлы db.json (${appDB.articles.length} статей) и universe_lore.json обновлены в репозитории ${conf.owner}/${conf.repo}.</div>`;
                 showToast("db.json и universe_lore.json опубликованы в GitHub!");
             } catch (err) {
                 logBox.innerHTML = `<div class="text-rose-400 font-bold">❌ Ошибка GitHub API: ${err.message}</div>`;
