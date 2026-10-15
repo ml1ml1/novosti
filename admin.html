@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS — Панель управления федеральным агентством</title>
+    <title>ВЕСТНИК-CMS + AI Gemini — Панель управления федеральным агентством</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -49,6 +49,13 @@
             border-left: 4px solid #c01414;
             background: linear-gradient(90deg, #fef2f2 0%, #ffffff 100%);
         }
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .ai-loading {
+            animation: spin-slow 2s linear infinite;
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
@@ -63,24 +70,31 @@
                 <div>
                     <div class="font-bold text-sm sm:text-base tracking-tight flex items-center gap-2">
                         <span>ВЕСТНИК-CMS</span>
-                        <span class="text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-2 py-0.5 rounded uppercase">Главный редактор</span>
+                        <span class="text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-2 py-0.5 rounded uppercase">AI-Edition</span>
                     </div>
                     <div id="sync-status-line" class="text-[11px] text-slate-400 font-mono">
-                        База загружена • Готово к работе
+                        База и Лор загружены • Готово к работе
                     </div>
                 </div>
             </div>
 
             <!-- Быстрые действия справа -->
-            <div class="flex items-center gap-2 sm:gap-3">
+            <div class="flex items-center gap-2 sm:gap-2.5">
+                <button
+                    onclick="switchTab('ai')"
+                    class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-xs transition cursor-pointer"
+                >
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span class="hidden md:inline">ИИ-Генератор</span>
+                </button>
                 <button
                     onclick="pushToGitHub()"
                     id="top-push-btn"
                     class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-xs transition cursor-pointer"
-                    title="Отправить db.json в GitHub репозиторий для всех читателей"
+                    title="Отправить db.json и universe_lore.json в GitHub репозиторий"
                 >
                     <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <span class="hidden sm:inline">Опубликовать на сайт (GitHub)</span>
+                    <span class="hidden sm:inline">Опубликовать в GitHub</span>
                     <span class="sm:hidden">Push</span>
                 </button>
                 <button
@@ -89,14 +103,14 @@
                     title="Скачать файл db.json"
                 >
                     <i class="fa-solid fa-download text-sky-400"></i>
-                    <span class="hidden md:inline">Скачать db.json</span>
+                    <span class="hidden lg:inline">db.json</span>
                 </button>
                 <a
                     href="index.html"
                     class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition"
                 >
                     <i class="fa-solid fa-arrow-up-right-from-square text-brand-red"></i>
-                    <span class="hidden sm:inline">Открыть сайт</span>
+                    <span class="hidden sm:inline">Сайт</span>
                 </a>
             </div>
         </div>
@@ -110,15 +124,23 @@
                 </button>
                 <button onclick="switchTab('editor')" id="tab-btn-editor" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-pen-nib"></i>
-                    <span id="editor-tab-label">2. Редактор статьи</span>
+                    <span>2. Редактор статьи</span>
+                </button>
+                <button onclick="switchTab('ai')" id="tab-btn-ai" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                    <i class="fa-solid fa-robot text-indigo-400"></i>
+                    <span>3. 🤖 ИИ-Ньюсрум Gemini</span>
+                </button>
+                <button onclick="switchTab('lore')" id="tab-btn-lore" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                    <i class="fa-solid fa-book-atlas text-amber-400"></i>
+                    <span>4. 📚 Лор Вселенной (<span id="nav-lore-count">0</span>)</span>
                 </button>
                 <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-sliders"></i>
-                    <span>3. Шапка, Рубрики и Опрос</span>
+                    <span>5. Шапка и Опрос</span>
                 </button>
                 <button onclick="switchTab('github')" id="tab-btn-github" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-brands fa-github text-emerald-400"></i>
-                    <span>4. Синхронизация GitHub Pages</span>
+                    <span>6. GitHub Pages API</span>
                 </button>
             </div>
         </div>
@@ -140,15 +162,22 @@
             <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h1 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Управление материалами агентства</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">Создавайте новые статьи, назначайте главную новость первой полосы и публикуйте обновления для всех читателей.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Создавайте статьи вручную или генерируйте связанные репортажи через ИИ-агента Gemini с учетом базы лора.</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2.5">
+                    <button
+                        onclick="switchTab('ai')"
+                        class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xs transition cursor-pointer"
+                    >
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Создать через ИИ Gemini</span>
+                    </button>
                     <button
                         onclick="startNewArticle()"
                         class="bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xs transition cursor-pointer"
                     >
                         <i class="fa-solid fa-plus"></i>
-                        <span>Создать новую статью</span>
+                        <span>Создать вручную</span>
                     </button>
                 </div>
             </div>
@@ -199,9 +228,7 @@
                                 <th class="py-3.5 px-4 font-bold text-right">Действия</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-articles-tbody" class="divide-y divide-slate-200">
-                            <!-- Заполняется через JS -->
-                        </tbody>
+                        <tbody id="admin-articles-tbody" class="divide-y divide-slate-200"></tbody>
                     </table>
                 </div>
             </div>
@@ -221,7 +248,7 @@
                         ← К списку статей
                     </button>
                     <button onclick="saveArticleFromEditor(false)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition cursor-pointer">
-                        <i class="fa-solid fa-floppy-disk mr-1.5"></i> Сохранить статью в базу
+                        <i class="fa-solid fa-floppy-disk mr-1.5"></i> Сохранить в базу
                     </button>
                     <button onclick="saveArticleFromEditor(true)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-brand-red hover:bg-brand-darkred text-white rounded-lg shadow-xs transition cursor-pointer">
                         <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> Сохранить и Push в GitHub
@@ -238,7 +265,7 @@
                             <label class="block text-xs font-bold text-slate-700 mb-1">Уникальный ID статьи (в ссылке `?id=...`):</label>
                             <div class="flex gap-2">
                                 <input type="text" id="ed-id" placeholder="naprimer-syrnyj-blickrig" oninput="updateLivePreview()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
-                                <button type="button" onclick="generateSlugFromTitle()" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold shrink-0 cursor-pointer" title="Сгенерировать из заголовка">
+                                <button type="button" onclick="generateSlugFromTitle()" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold shrink-0 cursor-pointer">
                                     Auto-ID
                                 </button>
                             </div>
@@ -288,11 +315,11 @@
                             </span>
                             <div class="flex items-center gap-2">
                                 <label class="px-2.5 py-1 bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold rounded cursor-pointer transition">
-                                    <i class="fa-solid fa-upload mr-1"></i> Загрузить фото (Авто-сжатие в базу)
+                                    <i class="fa-solid fa-upload mr-1"></i> Загрузить фото (Авто-сжатие)
                                     <input type="file" accept="image/*" class="hidden" onchange="handleEditorImageUpload(event)">
                                 </label>
                                 <button type="button" onclick="clearEditorImage()" class="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded cursor-pointer">
-                                    Очистить фото (Включить Радар)
+                                    Включить Радар
                                 </button>
                             </div>
                         </div>
@@ -323,10 +350,9 @@
                     <div>
                         <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
                             <label class="text-xs font-bold text-slate-700">Основной текст новости (HTML-блоки):</label>
-                            <span class="text-[11px] text-slate-400">Нажмите на кнопку ниже, чтобы вставить готовый блок</span>
+                            <span class="text-[11px] text-slate-400">Кнопки быстрой вставки фирменных тегов</span>
                         </div>
 
-                        <!-- Панель быстрой вставки фирменных блоков -->
                         <div class="flex flex-wrap gap-1.5 mb-2 p-2 bg-slate-100 rounded-lg border border-slate-200">
                             <button type="button" onclick="insertTemplateBlock('p')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-slate-800 cursor-pointer">+ Абзац &lt;p&gt;</button>
                             <button type="button" onclick="insertTemplateBlock('h2')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-slate-800 cursor-pointer">+ Подзаголовок H2</button>
@@ -394,7 +420,6 @@
                             Лид-абзац...
                         </div>
 
-                        <!-- Превью картинки или радара -->
                         <div id="prev-visual-box" class="mb-4 rounded-lg overflow-hidden bg-slate-950 text-sky-400 p-3 font-mono text-[11px]"></div>
 
                         <div id="prev-body" class="article-preview font-serif text-slate-800 text-xs sm:text-sm"></div>
@@ -404,7 +429,275 @@
         </section>
 
         <!-- ========================================================= -->
-        <!-- ВКЛАДКА 3: НАСТРОЙКИ САЙТА, РУБРИКИ, ИНФОРМЕРЫ И ОПРОС    -->
+        <!-- ВКЛАДКА 3: 🤖 ИИ-НЬЮСРУМ GEMINI (АВТОПИЛОТ НОВОСТЕЙ)      -->
+        <!-- ========================================================= -->
+        <section id="tab-ai" class="hidden space-y-6">
+            <div class="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 text-white rounded-2xl p-6 shadow-md border border-indigo-500/30 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-2xl shrink-0 shadow-inner">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 class="font-headline font-extrabold text-xl sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» (Google Gemini API)</h2>
+                            <span class="text-[10px] font-mono bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 px-2 py-0.5 rounded-full uppercase">Context-Aware</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
+                            Агент знает всех персонажей из <code>universe_lore.json</code> (Станислава Д., Андрея Б., Мирослава К., Германа Ф. и др.), перечитывает уже опубликованные на сайте статьи для идеальной связности сюжета, верстает материал в фирменные HTML-блоки и <strong>сам обновляет базу лора</strong> после каждого выпуска.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Левая колонка: Генератор статьи (8 колонок) -->
+                <div class="lg:col-span-8 bg-white rounded-xl shadow-xs border border-slate-200 p-5 sm:p-6 space-y-5">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="font-headline font-bold text-lg text-slate-900">Задание для ИИ-корреспондента</h3>
+                        <span class="text-xs font-mono text-indigo-600 font-semibold">Стиль: ТАСС / РБК / Коммерсантъ</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">О чем должна быть новая статья? (Опишите идею, персонажей или поворот сюжета):</label>
+                        <textarea
+                            id="ai-prompt-input"
+                            rows="4"
+                            placeholder="Например: Станислав Д. отправил Андрея Б. в творожном бронежилете на переговоры в Магас, но по дороге они встретили инспекторов из Санкт-Петербурга с лазерными дальномерами для носов, а Герман Ф. взломал им табло через мессенджер МАКС..."
+                            class="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"
+                        ></textarea>
+                    </div>
+
+                    <!-- Быстрые пресеты идей для генерации -->
+                    <div>
+                        <div class="text-[11px] font-bold uppercase text-slate-400 mb-2">Быстрые сюжетные задания (нажмите для подстановки):</div>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" onclick="setAiQuickPrompt('Станислав Д. ввел собственную криптовалюту «Крипто-Уалибах», обеспеченную рассольным сыром, а Мирослав К. обрушил курс биткоина в Таганроге до отрицательных величин.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer">
+                                🧀 Крипто-Уалибах Станислава Д.
+                            </button>
+                            <button type="button" onclick="setAiQuickPrompt('Андрей Б. открыл во Владикавказе тренировочный лагерь спецназа ОСС по защите от пенсионерок с термосами шиповника, а Герман Ф. написал симулятор уклонения от пляжных шезлонгов.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer">
+                                🥋 Полигон Андрея Б. против термосов
+                            </button>
+                            <button type="button" onclick="setAiQuickPrompt('Отпиливаемый Башкортостан случайно дал задний ход на водометах и пришвартовался к набережной Санкт-Петербурга, где у всех жителей проверили длину носа по постановлению № 412-п.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer">
+                                🚢 Швартовка Башкортостана в Петербурге
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Параметры генерации -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Желаемая рубрика:</label>
+                            <select id="ai-target-category" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-medium">
+                                <option value="AUTO">Автоматически (на выбор ИИ)</option>
+                                <option value="Безопасность">Безопасность</option>
+                                <option value="Политика">Политика</option>
+                                <option value="Общество">Общество</option>
+                                <option value="Происшествия">Происшествия</option>
+                                <option value="Регионы">Регионы</option>
+                                <option value="Технологии">Технологии</option>
+                                <option value="Геотектоника">Геотектоника</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Обязательные спецблоки в HTML:</label>
+                            <select id="ai-special-blocks" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-medium">
+                                <option value="ALL">Цитата + Таблица-досье + Плашка МАКС (Полный фарш)</option>
+                                <option value="QUOTE_DOSSIER">Цитата + Таблица-досье</option>
+                                <option value="QUOTE_MAX">Цитата + Плашка мессенджера МАКС</option>
+                                <option value="QUOTE_ONLY">Только официальные цитаты и списки</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Чекбоксы контекста и автообновления -->
+                    <div class="p-4 bg-indigo-50/60 border border-indigo-200/80 rounded-xl space-y-2.5 text-xs">
+                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
+                            <input type="checkbox" id="ai-use-lore" checked class="w-4 h-4 accent-indigo-600">
+                            <span>Использовать базу персонажей и правил мира (<code>universe_lore.json</code>)</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
+                            <input type="checkbox" id="ai-use-articles" checked class="w-4 h-4 accent-indigo-600">
+                            <span>Опираться на текст всех существующих статей сайта (полная сюжетная связность без противоречий)</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-indigo-950">
+                            <input type="checkbox" id="ai-auto-update-lore" checked class="w-4 h-4 accent-indigo-600">
+                            <span>🔄 <strong>Авто-обновление Лора:</strong> после написания новости ИИ сам обновит биографии задействованных героев и хронологию в <code>universe_lore.json</code></span>
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-brand-red">
+                            <input type="checkbox" id="ai-make-hero" checked class="w-4 h-4 accent-brand-red">
+                            <span>★ Сделать сгенерированную статью «Главной новостью дня» и обновить строку «МОЛНИЯ»</span>
+                        </label>
+                    </div>
+
+                    <!-- Кнопки запуска ИИ -->
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <button
+                            type="button"
+                            id="btn-ai-generate-edit"
+                            onclick="runGeminiGenerator(false)"
+                            class="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer"
+                        >
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Сгенерировать и открыть в редакторе</span>
+                        </button>
+
+                        <button
+                            type="button"
+                            id="btn-ai-generate-push"
+                            onclick="runGeminiGenerator(true)"
+                            class="px-5 py-3 bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer"
+                        >
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>Автопилот: Сгенерировать + Обновить Лор + Push в GitHub</span>
+                        </button>
+                    </div>
+
+                    <!-- Лог работы ИИ -->
+                    <div id="ai-status-box" class="hidden p-4 rounded-xl bg-slate-950 text-slate-200 font-mono text-xs space-y-1.5 border border-slate-800"></div>
+                </div>
+
+                <!-- Правая колонка: Настройки Gemini API и сводка контекста (4 колонки) -->
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                            <h3 class="font-headline font-bold text-base text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-key text-indigo-600"></i>
+                                <span>Настройки Gemini API</span>
+                            </h3>
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[11px] text-indigo-600 hover:underline font-semibold">Получить ключ →</a>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Gemini API Key:</label>
+                            <input
+                                type="password"
+                                id="gemini-api-key"
+                                placeholder="AIzaSy..."
+                                onchange="saveGeminiConfig()"
+                                class="w-full px-3 py-2 text-xs font-mono border border-slate-300 rounded-lg focus:outline-none focus:border-indigo-600"
+                            >
+                            <p class="text-[11px] text-slate-400 mt-1">Хранится только в <code>localStorage</code> вашего браузера.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Модель Gemini:</label>
+                            <select id="gemini-model" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
+                                <option value="gemini-2.5-flash">gemini-2.5-flash (Быстрая и умная)</option>
+                                <option value="gemini-2.5-pro">gemini-2.5-pro (Максимальное качество)</option>
+                                <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+                            </select>
+                        </div>
+
+                        <button onclick="saveGeminiConfig()" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition cursor-pointer">
+                            Сохранить ключ API
+                        </button>
+                    </div>
+
+                    <!-- Индикатор памяти ИИ -->
+                    <div class="bg-slate-900 text-slate-200 rounded-xl p-5 border border-slate-800 space-y-3 text-xs">
+                        <div class="font-bold text-amber-400 uppercase tracking-wider flex items-center justify-between">
+                            <span><i class="fa-solid fa-brain mr-1.5"></i> Оперативная память ИИ</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-emerald-400">АКТИВНА</span>
+                        </div>
+                        <div class="space-y-1.5 text-slate-300 font-mono text-[11px]">
+                            <div>• Персонажей в лоре: <strong id="ai-stat-chars" class="text-white">0</strong></div>
+                            <div>• Локаций и правил: <strong id="ai-stat-locs" class="text-white">0</strong></div>
+                            <div>• Событий хронологии: <strong id="ai-stat-events" class="text-white">0</strong></div>
+                            <div>• Статей в контексте: <strong id="ai-stat-arts" class="text-white">0</strong></div>
+                        </div>
+                        <button onclick="switchTab('lore')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold rounded-lg transition cursor-pointer">
+                            Открыть редактор Лора →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ВКЛАДКА 4: 📚 ЛОР ВСЕЛЕННОЙ (UNIVERSE_LORE.JSON)          -->
+        <!-- ========================================================= -->
+        <section id="tab-lore" class="hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Хранилище Лора Вселенной (<code>universe_lore.json</code>)</h2>
+                        <span class="bg-amber-100 text-amber-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full">Память ИИ-Агента</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Здесь хранятся досье всех персонажей, локаций и хронология событий. ИИ опирается на эти данные при генерации статей и автоматически дополняет их.
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="syncLoreFromArticlesWithAI()" id="btn-ai-lore-audit" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition cursor-pointer" title="ИИ перечитает все статьи и обновит статусы персонажей">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Актуализировать Лор через ИИ</span>
+                    </button>
+                    <button onclick="downloadLoreJson()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition cursor-pointer">
+                        <i class="fa-solid fa-download text-amber-400"></i>
+                        <span>Скачать universe_lore.json</span>
+                    </button>
+                    <button onclick="pushToGitHub()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition cursor-pointer">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Сохранить и Push в GitHub</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Секция 1: Персонажи Вселенной -->
+            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-200">
+                    <div>
+                        <h3 class="font-headline font-bold text-lg text-slate-900">1. Досье ключевых персонажей</h3>
+                        <p class="text-xs text-slate-500">Вы можете редактировать любое поле прямо в карточке или добавить нового героя.</p>
+                    </div>
+                    <button onclick="addNewCharacterCard()" class="px-3.5 py-2 bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold rounded-lg flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-user-plus"></i> Добавить персонажа
+                    </button>
+                </div>
+
+                <div id="lore-characters-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Рендерится динамически из appLore.characters -->
+                </div>
+            </div>
+
+            <!-- Секция 2: География, Регионы и Правила Вселенной -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                        <h3 class="font-headline font-bold text-lg text-slate-900">2. Регионы, Фракции и Законы</h3>
+                        <button onclick="addNewLocationItem()" class="text-xs font-bold text-brand-red hover:underline cursor-pointer">+ Добавить локацию</button>
+                    </div>
+                    <div id="lore-locations-list" class="space-y-3">
+                        <!-- Рендерится из appLore.locations -->
+                    </div>
+                </div>
+
+                <!-- Секция 3: Хронология событий (Timeline) -->
+                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                        <h3 class="font-headline font-bold text-lg text-slate-900">3. Хронология событий (Память сюжета)</h3>
+                        <button onclick="addNewTimelineEvent()" class="text-xs font-bold text-brand-red hover:underline cursor-pointer">+ Добавить событие</button>
+                    </div>
+                    <div id="lore-timeline-list" class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
+                        <!-- Рендерится из appLore.timeline -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Секция 4: Директивы стиля для ИИ -->
+            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-3">
+                <div class="flex items-center justify-between">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-700">4. Глобальные правила стиля и канона для ИИ-агента:</label>
+                    <button onclick="saveLoreFromUI()" class="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg cursor-pointer">
+                        Сохранить изменения Лора
+                    </button>
+                </div>
+                <textarea id="lore-directives-input" rows="3" class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red"></textarea>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ВКЛАДКА 5: НАСТРОЙКИ САЙТА, РУБРИКИ, ИНФОРМЕРЫ И ОПРОС    -->
         <!-- ========================================================= -->
         <section id="tab-settings" class="hidden space-y-6">
             <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
@@ -423,7 +716,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Шапка и бегущая строка МОЛНИЯ -->
                 <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
                     <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">1. Шапка и бегущая строка «МОЛНИЯ»</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -450,7 +742,6 @@
                     </div>
                 </div>
 
-                <!-- Опрос дня -->
                 <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
                     <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">2. Виджет «Опрос дня»</h3>
                     <div>
@@ -458,21 +749,20 @@
                         <input type="text" id="set-poll-question" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg font-semibold">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-2">Варианты ответа и стартовые голоса (по одному в строке в формате `Текст ответа | 500`):</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Варианты ответа и стартовые голоса (`Текст ответа | 500`):</label>
                         <textarea id="set-poll-options" rows="5" class="w-full px-3 py-2 text-xs font-mono border border-slate-300 rounded-lg leading-relaxed"></textarea>
                     </div>
                 </div>
 
-                <!-- Информеры городов и котировки -->
                 <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4 lg:col-span-2">
-                    <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">3. Информеры городов и Биржевые котировки (верхняя черная полоса)</h3>
+                    <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">3. Информеры городов и Биржевые котировки</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Городские информеры (JSON-массив):</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Городские информеры (JSON):</label>
                             <textarea id="set-informers-json" rows="7" class="w-full px-3 py-2 text-xs font-mono bg-slate-950 text-sky-300 rounded-lg"></textarea>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Котировки валют и сырья (JSON-массив):</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Котировки валют и сырья (JSON):</label>
                             <textarea id="set-tickers-json" rows="7" class="w-full px-3 py-2 text-xs font-mono bg-slate-950 text-emerald-300 rounded-lg"></textarea>
                         </div>
                     </div>
@@ -481,7 +771,7 @@
         </section>
 
         <!-- ========================================================= -->
-        <!-- ВКЛАДКА 4: ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ С GITHUB PAGES          -->
+        <!-- ВКЛАДКА 6: ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ С GITHUB PAGES          -->
         <!-- ========================================================= -->
         <section id="tab-github" class="hidden space-y-6">
             <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-6 max-w-3xl mx-auto space-y-5">
@@ -490,47 +780,40 @@
                         <i class="fa-brands fa-github"></i>
                     </div>
                     <div>
-                        <h2 class="font-headline font-bold text-xl text-slate-900">Прямая публикация в GitHub Pages (Чтобы видели все читатели)</h2>
+                        <h2 class="font-headline font-bold text-xl text-slate-900">Прямая публикация в GitHub Pages (Двойная синхронизация)</h2>
                         <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-                            Когда вы нажимаете <strong>«Опубликовать на сайт (GitHub)»</strong>, админка через официальный GitHub REST API автоматически обновляет файл <code>db.json</code> прямо в вашем репозитории. Все пользователи, заходящие на ваш сайт по ссылке, сразу видят новые статьи и изменения.
+                            При нажатии <strong>«Опубликовать в GitHub»</strong> админка автоматически коммитит в ваш репозиторий сразу оба файла: базу статей <code>db.json</code> и обновленную память ИИ-агента <code>universe_lore.json</code>.
                         </p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Ваш логин на GitHub (Owner):</label>
-                        <input type="text" id="gh-owner" placeholder="например: maksim-dev" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Ваш логин GitHub (Owner):</label>
+                        <input type="text" id="gh-owner" placeholder="maksim-dev" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Название репозитория (Repo):</label>
-                        <input type="text" id="gh-repo" placeholder="например: vestnik-rossii" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Репозиторий (Repo):</label>
+                        <input type="text" id="gh-repo" placeholder="vestnik-rossii" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Ветка (Branch):</label>
                         <input type="text" id="gh-branch" value="main" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Путь к файлу базы:</label>
-                        <input type="text" id="gh-path" value="db.json" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
-                    </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">GitHub Personal Access Token (PAT с правом <code>repo</code> или <code>Contents: Read & Write</code>):</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">GitHub Personal Access Token (PAT с правом <code>Contents: Read & Write</code>):</label>
                     <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg">
-                    <p class="text-[11px] text-slate-500 mt-1">
-                        Токен сохраняется исключительно в <code>localStorage</code> вашего браузера и никогда не попадает в публичный код сайта.
-                    </p>
                 </div>
 
                 <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-200">
                     <button onclick="saveGitHubConfig()" class="px-4 py-2.5 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg cursor-pointer">
-                        Сохранить настройки подключения
+                        Сохранить настройки GitHub
                     </button>
                     <button onclick="pushToGitHub()" class="px-5 py-2.5 text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg shadow-sm flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span>Загрузить текущую базу db.json в GitHub сейчас</span>
+                        <span>Отправить db.json + universe_lore.json в GitHub</span>
                     </button>
                 </div>
 
@@ -540,8 +823,87 @@
 
     </main>
 
-    <!-- JAVASCRIPT: БАЗА И ЛОГИКА ВЕСТНИК-CMS -->
+    <!-- JAVASCRIPT: БАЗА НОВОСТЕЙ, БАЗА ЛОРА И ИИ-АГЕНТ GEMINI -->
     <script>
+        // 1. Дефолтная база Лора Вселенной (если universe_lore.json еще не подгружен)
+        const DEFAULT_LORE = {
+            universeName: "Хроники Вестника России (2026–2027)",
+            styleDirectives: "Писать строго в стиле авторитетных российских федеральных информационных агентств (ТАСС, РБК, Коммерсантъ, РИА Новости): предельно серьезный, сухой, бюрократический и канцелярско-протокольный тон при описании абсолютно абсурдных событий. Всегда соблюдать канон возрастов, родных городов и профессий персонажей.",
+            characters: [
+                {
+                    id: "stanislav-d",
+                    name: "Станислав Д.",
+                    age: 29,
+                    origin: "Владикавказ (Северная Осетия — Алания)",
+                    currentLocation: "Полевой штаб ОСС, Владикавказ / граница с Ингушетией",
+                    role: "Верховный главнокомандующий Объединенных сырных сил (ОСС), бывший технолог Алагирского сырного комбината",
+                    status: "Внесен ФСБ, Минюстом и Росфинмониторингом одновременно в тройной реестр: иноагентов, экстремистов и террористов",
+                    biography: "Возглавил восстание пекарей и пастухов во Владикавказе после полного исчезновения рассольного осетинского сыра («ирон цыхт») для пирогов уалибах. Разработал доктрину «кисломолочного lebensraum», операцию «Таргим» по аннексии пастбищ Ингушетии и начал полномасштабный «Сырный блицкриг»."
+                },
+                {
+                    id: "andrey-b",
+                    name: "Андрей Б.",
+                    age: 22,
+                    origin: "станица Гостагаевская (Краснодарский край)",
+                    currentLocation: "Передовая у реки Сунжа (в рядах ОСС Станислава Д.)",
+                    role: "Начальник штурмового спецназа ОСС и инструктор по рукопашному бою полевой кухни; в прошлом — разнорабочий в суши-баре в Анапе",
+                    status: "Ветеран 7 поражений на Пионерском проспекте (счет 0 : 7), носит бронежилет из спрессованного сухого творога",
+                    biography: "Переехал из станицы Гостагаевской в Анапу, где работал разнорабочим в суши-кафе (таскал мешки с рисом и ронял нори). По вечерам выпрыгивал из можжевельника с деревянной палочкой для суши в образе маньяка-потрошителя, но был избит всеми 7 жертвами (включая 64-летнюю пенсионерку с термосом шиповника и туристок из Норильска). Позже рекрутирован Станиславом Д. за феноменальную живучесть."
+                },
+                {
+                    id: "miroslav-k",
+                    name: "Мирослав К.",
+                    age: 22,
+                    origin: "город Мелеуз (Республика Башкортостан)",
+                    currentLocation: "Нейтральная полоса на границе с Кабардино-Балкарией (спецтранспорт ОСС)",
+                    role: "Заместитель командующего ОСС по стратегической дестабилизации тыла; студент-программист",
+                    status: "Носитель аномальной криминогенной плотности (живое статистическое оружие)",
+                    biography: "Уроженец башкирского города Мелеуз. Покинул Башкортостан перед его отпиливанием от материка и приехал в Таганрог учиться на программиста. На вокзале Таганрог-1 за 40 минут обрушил индекс законопослушности города с +84% до −142% (перешел площадь спиной вперед и покормил голубей немаркированными семечками). Привлечен Станиславом Д. для обрушения дисциплины на блокпостах противника."
+                },
+                {
+                    id: "german-f",
+                    name: "Герман Ф.",
+                    age: 22,
+                    origin: "Владикавказ (коренной уроженец)",
+                    currentLocation: "Санкт-Петербург",
+                    role: "Программист в IT-компании (разработка видеоигр и симуляторов), лидер движения #ДАбольшимносам!, главный крипто-связист ОСС",
+                    status: "Обладатель выступа носа 53.0 мм (при лимите Смольного в 42.0 мм), разыскивается инспекторами КГИОП с лазерными дальномерами",
+                    biography: "Живет и работает в геймдев-студии в Санкт-Петербурге. Когда Смольный постановлением № 412-п запретил носы длиннее 42 мм из-за микровихрей на Невском проспекте, запустил в мессенджере МАКС флешмоб #ДАбольшимносам! и патч NoseSpoofer для камер. Будучи уроженцем Владикавказа, тайно обеспечивает шифрованную P2P-связь молоковозов Станислава Д. через мессенджер МАКС и прячет карты Дарьяльского ущелья в коде видеоигр."
+                }
+            ],
+            locations: [
+                {
+                    name: "Республика Башкортостан (и г. Мелеуз)",
+                    description: "Согласно закону Госдумы о пространственно-географической изоляции, с 1 января 2027 года отпиливается от Евразийской плиты алмазными бурами из-за 0% законопослушности и выводится по Волго-Донскому каналу в свободное плавание в Мировой океан."
+                },
+                {
+                    name: "Владикавказ и Северная Осетия — Алания",
+                    description: "Эпицентр «лактозных бунтов» и штаб-квартира Объединенных сырных сил (ОСС) Станислава Д. Из-за исчезновения сыра «ирон цыхт» для пирогов уалибах килограмм сыра у Чугунного моста торгуется по 1.5 грамма банковского золота."
+                },
+                {
+                    name: "Санкт-Петербург",
+                    description: "Зона действия постановления Смольного № 412-п: максимальный выступ носа ограничен 42 мм. На выходах из метро «Гостиный двор» и «Маяковская» дежурят патрули с лазерными дальномерами."
+                },
+                {
+                    name: "Таганрог",
+                    description: "Зона статистического бедствия с индексом правопорядка −142% после приезда Мирослава К. Серверы системы «Безопасный город» выписывают штрафы сами себе."
+                },
+                {
+                    name: "Анапа и станица Гостагаевская",
+                    description: "Курорт повышенной самообороны отдыхающих, где сушист-разнорабочий Андрей Б. потерпел 7 поражений подряд от пенсионерок с термосами шиповника."
+                }
+            ],
+            timeline: [
+                "14.10.2026, 11:30 — Госдума одобрила закон об отпиливании Башкортостана от материка и буксировке в Мировой океан с 1 января 2027 года.",
+                "14.10.2026, 17:45 — Уроженец Мелеуза Мирослав К. прибыл в Таганрог учиться на программиста и обрушил индекс правопорядка города до −142%.",
+                "14.10.2026, 19:15 — В Анапе 22-летний разнорабочий суши-бара Андрей Б. из станицы Гостагаевской проиграл 7 схваток подряд своим потенциальным жертвам (счет 0 : 7).",
+                "14.10.2026, 21:40 — Во Владикавказе полностью закончился сыр «ирон цыхт» для пирогов уалибах; Станислав Д. возглавил Объединенные сырные силы (ОСС).",
+                "14.10.2026, 23:10 — Смольный ограничил длину носа в Петербурге до 42 мм; 22-летний программист Герман Ф. (нос 53 мм) запустил в мессенджере МАКС флешмоб #ДАбольшимносам!.",
+                "15.10.2026, 08:30 — Станислав Д. внесен в тройной реестр (иноагент, экстремист, террорист) и начал «Сырный блицкриг», назначив Андрея Б. командиром штурмовиков в творожной броне, Мирослава К. — психотронным оружием на границе КБР (−76%), а Германа Ф. — главным IT-координатором в мессенджере МАКС."
+            ]
+        };
+
+        // 2. Дефолтная база статей (db.json)
         const DEFAULT_DB = {
             siteSettings: {
                 title: "ВЕСТНИК РОССИИ",
@@ -612,8 +974,7 @@
                     tags: ["#ДАбольшимносам!", "Санкт-Петербург", "Герман Ф.", "Мессенджер МАКС"],
                     reactions: { fire: 4812, cheese: 3190, shock: 2405 },
                     commentsCount: 2,
-                    body: `<p>Чиновники пришли к выводу, что чрезмерно выступающие части лиц создают неконтролируемые микровихри на узких тротуарах Невского проспекта и ускоряют коррозию чугунных оград мостов.</p>
-<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans"><p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed font-serif">«Я пять лет оптимизирую базы данных и проектирую микросервисы, но никогда не думал, что архитектурной угрозой для города признают мой собственный профиль. Мой нос выступает на 53 миллиметра — это фамильная черта!», — заявил Герман Ф.</p></blockquote>`
+                    body: `<p>Чиновники пришли к выводу, что чрезмерно выступающие части лиц создают неконтролируемые микровихри на узких тротуарах Невского проспекта и ускоряют коррозию чугунных оград мостов.</p>`
                 },
                 {
                     id: "vladikavkaz-cheese-shortage",
@@ -687,32 +1048,45 @@
         };
 
         let appDB = JSON.parse(JSON.stringify(DEFAULT_DB));
+        let appLore = JSON.parse(JSON.stringify(DEFAULT_LORE));
         let editingOriginalId = null;
 
         async function initCMS() {
-            // Загружаем сохраненные настройки GitHub
+            // Загружаем настройки GitHub и Gemini
             const ghConf = JSON.parse(localStorage.getItem('vestnik_gh_config') || '{}');
             if (ghConf.owner) document.getElementById('gh-owner').value = ghConf.owner;
             if (ghConf.repo) document.getElementById('gh-repo').value = ghConf.repo;
             if (ghConf.branch) document.getElementById('gh-branch').value = ghConf.branch;
-            if (ghConf.path) document.getElementById('gh-path').value = ghConf.path;
             if (ghConf.token) document.getElementById('gh-token').value = ghConf.token;
 
-            // Сначала проверяем локальный черновик админа, затем db.json на сервере
+            const geminiConf = JSON.parse(localStorage.getItem('vestnik_gemini_config') || '{}');
+            if (geminiConf.apiKey) document.getElementById('gemini-api-key').value = geminiConf.apiKey;
+            if (geminiConf.model) document.getElementById('gemini-model').value = geminiConf.model;
+
+            // Загружаем db.json
             const localBackup = localStorage.getItem('vestnik_db_backup');
             if (localBackup) {
-                try {
-                    appDB = JSON.parse(localBackup);
-                    document.getElementById('sync-status-line').textContent = "Загружена рабочая копия из браузера • Не забудьте нажать Push в GitHub";
-                } catch (e) {}
+                try { appDB = JSON.parse(localBackup); } catch (e) {}
             } else {
                 try {
                     const res = await fetch('./db.json?t=' + Date.now(), { cache: 'no-store' });
                     if (res.ok) {
                         const remote = await res.json();
-                        if (remote && Array.isArray(remote.articles)) {
-                            appDB = remote;
-                        }
+                        if (remote && Array.isArray(remote.articles)) appDB = remote;
+                    }
+                } catch (err) {}
+            }
+
+            // Загружаем universe_lore.json
+            const localLore = localStorage.getItem('vestnik_lore_backup');
+            if (localLore) {
+                try { appLore = JSON.parse(localLore); } catch (e) {}
+            } else {
+                try {
+                    const resLore = await fetch('./universe_lore.json?t=' + Date.now(), { cache: 'no-store' });
+                    if (resLore.ok) {
+                        const remoteLore = await resLore.json();
+                        if (remoteLore && Array.isArray(remoteLore.characters)) appLore = remoteLore;
                     }
                 } catch (err) {}
             }
@@ -720,8 +1094,9 @@
             populateCategoryFilters();
             renderAdminArticlesList();
             populateSiteSettingsForm();
+            renderLoreUI();
+            updateAiMemoryStats();
 
-            // Проверяем, не перешел ли админ по ссылке admin.html?editId=...
             const params = new URLSearchParams(window.location.search);
             const editId = params.get('editId');
             if (editId) {
@@ -735,17 +1110,28 @@
             document.getElementById('toast-message').textContent = msg;
             icon.className = isError ? 'fa-solid fa-triangle-exclamation text-rose-400 text-lg' : 'fa-solid fa-circle-check text-emerald-400 text-lg';
             box.classList.remove('hidden');
-            setTimeout(() => box.classList.add('hidden'), 3500);
+            setTimeout(() => box.classList.add('hidden'), 3800);
         }
 
         function persistLocalBackup() {
             localStorage.setItem('vestnik_db_backup', JSON.stringify(appDB));
+            localStorage.setItem('vestnik_lore_backup', JSON.stringify(appLore));
             document.getElementById('nav-articles-count').textContent = (appDB.articles || []).length;
+            document.getElementById('nav-lore-count').textContent = (appLore.characters || []).length;
+            updateAiMemoryStats();
+        }
+
+        function updateAiMemoryStats() {
+            document.getElementById('ai-stat-chars').textContent = (appLore.characters || []).length;
+            document.getElementById('ai-stat-locs').textContent = (appLore.locations || []).length;
+            document.getElementById('ai-stat-events').textContent = (appLore.timeline || []).length;
+            document.getElementById('ai-stat-arts').textContent = (appDB.articles || []).length;
+            document.getElementById('nav-lore-count').textContent = (appLore.characters || []).length;
         }
 
         // Переключение вкладок
         function switchTab(tabName) {
-            ['list', 'editor', 'settings', 'github'].forEach(t => {
+            ['list', 'editor', 'ai', 'lore', 'settings', 'github'].forEach(t => {
                 document.getElementById('tab-' + t).classList.toggle('hidden', t !== tabName);
                 const btn = document.getElementById('tab-btn-' + t);
                 if (t === tabName) {
@@ -756,6 +1142,405 @@
             });
         }
 
+        // =========================================================
+        // ЛОР ВСЕЛЕННОЙ (UNIVERSE_LORE.JSON) — УПРАВЛЕНИЕ В UI
+        // =========================================================
+        function renderLoreUI() {
+            document.getElementById('lore-directives-input').value = appLore.styleDirectives || "";
+
+            // 1. Персонажи
+            const charsGrid = document.getElementById('lore-characters-grid');
+            charsGrid.innerHTML = (appLore.characters || []).map((ch, idx) => `
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2.5 relative">
+                    <div class="flex items-center justify-between gap-2">
+                        <input type="text" value="${escapeAttr(ch.name)}" onchange="updateLoreChar(${idx}, 'name', this.value)" placeholder="Имя персонажа" class="font-bold text-sm bg-white px-2.5 py-1 border border-slate-300 rounded-lg w-1/2">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[11px] text-slate-500">Возраст:</span>
+                            <input type="number" value="${ch.age || 22}" onchange="updateLoreChar(${idx}, 'age', parseInt(this.value,10))" class="w-14 text-xs font-mono bg-white px-2 py-1 border border-slate-300 rounded-lg">
+                            <button onclick="removeLoreChar(${idx})" class="text-rose-500 hover:text-rose-700 px-1.5 py-1 cursor-pointer" title="Удалить персонажа">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400">Откуда родом:</label>
+                            <input type="text" value="${escapeAttr(ch.origin)}" onchange="updateLoreChar(${idx}, 'origin', this.value)" class="w-full bg-white px-2.5 py-1 border border-slate-300 rounded">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400">Где находится сейчас:</label>
+                            <input type="text" value="${escapeAttr(ch.currentLocation)}" onchange="updateLoreChar(${idx}, 'currentLocation', this.value)" class="w-full bg-white px-2.5 py-1 border border-slate-300 rounded font-medium text-brand-red">
+                        </div>
+                    </div>
+                    <div class="text-xs">
+                        <label class="block text-[10px] font-bold uppercase text-slate-400">Роль / Должность / Профессия:</label>
+                        <input type="text" value="${escapeAttr(ch.role)}" onchange="updateLoreChar(${idx}, 'role', this.value)" class="w-full bg-white px-2.5 py-1 border border-slate-300 rounded">
+                    </div>
+                    <div class="text-xs">
+                        <label class="block text-[10px] font-bold uppercase text-slate-400">Текущий статус / Особые приметы:</label>
+                        <input type="text" value="${escapeAttr(ch.status)}" onchange="updateLoreChar(${idx}, 'status', this.value)" class="w-full bg-white px-2.5 py-1 border border-slate-300 rounded">
+                    </div>
+                    <div class="text-xs">
+                        <label class="block text-[10px] font-bold uppercase text-slate-400">Биография и сюжетная история:</label>
+                        <textarea rows="3" onchange="updateLoreChar(${idx}, 'biography', this.value)" class="w-full bg-white px-2.5 py-1.5 border border-slate-300 rounded leading-relaxed">${ch.biography || ''}</textarea>
+                    </div>
+                </div>
+            `).join('');
+
+            // 2. Локации
+            const locsList = document.getElementById('lore-locations-list');
+            locsList.innerHTML = (appLore.locations || []).map((loc, idx) => `
+                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-1.5 text-xs">
+                    <div class="flex items-center justify-between gap-2">
+                        <input type="text" value="${escapeAttr(loc.name)}" onchange="updateLoreLoc(${idx}, 'name', this.value)" class="font-bold text-slate-900 bg-white px-2.5 py-1 border border-slate-300 rounded w-full">
+                        <button onclick="removeLoreLoc(${idx})" class="text-rose-500 hover:text-rose-700 px-1.5 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <textarea rows="2" onchange="updateLoreLoc(${idx}, 'description', this.value)" class="w-full bg-white px-2.5 py-1 border border-slate-300 rounded text-slate-700">${loc.description || ''}</textarea>
+                </div>
+            `).join('');
+
+            // 3. Таймлайн
+            const timeList = document.getElementById('lore-timeline-list');
+            timeList.innerHTML = (appLore.timeline || []).map((ev, idx) => `
+                <div class="flex items-start gap-2">
+                    <span class="font-mono text-[11px] font-bold text-brand-red mt-1.5">${idx + 1}.</span>
+                    <input type="text" value="${escapeAttr(ev)}" onchange="updateLoreTimeline(${idx}, this.value)" class="flex-1 text-xs bg-slate-50 px-2.5 py-1.5 border border-slate-300 rounded">
+                    <button onclick="removeLoreTimeline(${idx})" class="text-slate-400 hover:text-rose-600 px-1.5 py-1 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function escapeAttr(str) {
+            return String(str || '').replace(/"/g, '&quot;');
+        }
+
+        function updateLoreChar(idx, field, val) {
+            appLore.characters[idx][field] = val;
+            persistLocalBackup();
+        }
+        function removeLoreChar(idx) {
+            appLore.characters.splice(idx, 1);
+            persistLocalBackup();
+            renderLoreUI();
+        }
+        function addNewCharacterCard() {
+            appLore.characters.push({
+                id: "char-" + Date.now().toString().slice(-4),
+                name: "Новый Персонаж",
+                age: 22,
+                origin: "Город происхождения",
+                currentLocation: "Текущая локация",
+                role: "Профессия / Роль в сюжете",
+                status: "Активен",
+                biography: "Описание персонажа и его связей с остальными героями..."
+            });
+            persistLocalBackup();
+            renderLoreUI();
+            showToast("Добавлена карточка нового персонажа");
+        }
+
+        function updateLoreLoc(idx, field, val) {
+            appLore.locations[idx][field] = val;
+            persistLocalBackup();
+        }
+        function removeLoreLoc(idx) {
+            appLore.locations.splice(idx, 1);
+            persistLocalBackup();
+            renderLoreUI();
+        }
+        function addNewLocationItem() {
+            appLore.locations.push({ name: "Новый регион / объект", description: "Описание аномалии или действующего регламента..." });
+            persistLocalBackup();
+            renderLoreUI();
+        }
+
+        function updateLoreTimeline(idx, val) {
+            appLore.timeline[idx] = val;
+            persistLocalBackup();
+        }
+        function removeLoreTimeline(idx) {
+            appLore.timeline.splice(idx, 1);
+            persistLocalBackup();
+            renderLoreUI();
+        }
+        function addNewTimelineEvent() {
+            appLore.timeline.push(`${new Date().toLocaleDateString('ru-RU')} — Новое событие вселенной...`);
+            persistLocalBackup();
+            renderLoreUI();
+        }
+
+        function saveLoreFromUI() {
+            appLore.styleDirectives = document.getElementById('lore-directives-input').value.trim();
+            persistLocalBackup();
+            showToast("База Лора Вселенной сохранена!");
+        }
+
+        function downloadLoreJson() {
+            saveLoreFromUI();
+            const dataStr = JSON.stringify(appLore, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "universe_lore.json";
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast("Файл universe_lore.json скачан!");
+        }
+
+        // =========================================================
+        // 🤖 ИНТЕГРАЦИЯ GOOGLE GEMINI API (ГЕНЕРАТОР + САМООБНОВЛЕНИЕ ЛОРА)
+        // =========================================================
+        function saveGeminiConfig() {
+            const conf = {
+                apiKey: document.getElementById('gemini-api-key').value.trim(),
+                model: document.getElementById('gemini-model').value
+            };
+            localStorage.setItem('vestnik_gemini_config', JSON.stringify(conf));
+            showToast("Настройки Gemini API сохранены!");
+            return conf;
+        }
+
+        function setAiQuickPrompt(text) {
+            document.getElementById('ai-prompt-input').value = text;
+        }
+
+        async function runGeminiGenerator(autoPublishAndPush = false) {
+            const conf = saveGeminiConfig();
+            if (!conf.apiKey) {
+                showToast("Введите ваш Gemini API Key в правой колонке!", true);
+                document.getElementById('gemini-api-key').focus();
+                return;
+            }
+
+            const userPrompt = document.getElementById('ai-prompt-input').value.trim();
+            if (!userPrompt) {
+                showToast("Напишите идею или тему новости для ИИ!", true);
+                return;
+            }
+
+            const useLore = document.getElementById('ai-use-lore').checked;
+            const useArticles = document.getElementById('ai-use-articles').checked;
+            const autoUpdateLore = document.getElementById('ai-auto-update-lore').checked;
+            const makeHero = document.getElementById('ai-make-hero').checked;
+            const targetCat = document.getElementById('ai-target-category').value;
+            const specialBlocks = document.getElementById('ai-special-blocks').value;
+
+            const statusBox = document.getElementById('ai-status-box');
+            statusBox.classList.remove('hidden');
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>ИИ-агент анализирует базу лора (${appLore.characters.length} персонажей) и существующие статьи (${appDB.articles.length} шт.)...</div>`;
+
+            // Формируем контекст существующих статей, чтобы не было сюжетных противоречий
+            const existingArticlesDigest = useArticles
+                ? (appDB.articles || []).map((a, i) => `${i + 1}. [ID: ${a.id} | ${a.date} | ${a.geo}] Заголовок: ${a.title}\nЛид: ${a.lead}`).join('\n\n')
+                : "Контекст прошлых статей отключен.";
+
+            const loreContext = useLore ? JSON.stringify(appLore, null, 2) : "Лор отключен.";
+
+            const systemInstruction = `Ты — главный редактор сатирического федерального информационного агентства «ВЕСТНИК РОССИИ» (стиль РБК, ТАСС, Коммерсантъ).
+Твоя задача — написать невероятно смешную, абсурдную, но выдержанную в предельно серьезном, канцелярско-протокольном, бюрократическом тоне новостную статью по заданию пользователя.
+
+КРИТИЧЕСКИ ВАЖНЫЕ ПРАВИЛА КАНОНА И СВЯЗНОСТИ:
+1. Внимательно изучи БАЗУ ЛОРА ВСЕЛЕННОЙ (персонажей, их точный возраст, родные города, должности и историю) и ДАЙДЖЕСТ СУЩЕСТВУЮЩИХ СТАТЕЙ.
+2. НИКОГДА не противоречь установленным фактам:
+   - Станислав Д. — верховный главнокомандующий Объединенных сырных сил (ОСС) во Владикавказе, воюет за рассольный сыр «ирон цыхт» для пирогов уалибах, внесен в тройной реестр (иноагент, экстремист, террорист).
+   - Андрей Б. — 22 года, родом из станицы Гостагаевской, жил в Анапе, работал разнорабочим в суши-баре (НЕ шеф-поваром!), проиграл 7 схваток жертвам на Пионерском проспекте (включая 64-летнюю пенсионерку с термосом шиповника), теперь командир штурмовиков ОСС в бронежилете из спрессованного творога.
+   - Мирослав К. — 22 года, родом из г. Мелеуз (отпиливаемый Башкортостан), уехал в Таганрог учиться на программиста, обрушил индекс правопорядка Таганрога до −142%, используется ОСС как статистическое психотронное оружие.
+   - Герман Ф. — 22 года, родом из Владикавказа, живет в Санкт-Петербурге, программист геймдев-студии (разрабатывает игры), выступ носа 53 мм (при лимите Смольного в 42 мм), запустил в мессенджере МАКС флешмоб #ДАбольшимносам! и курирует IT-связь молоковозов Станислава Д.
+3. Органично ссылайся на прошлые события из существующих статей, чтобы сайт читался как единая киновселенная.
+
+ТРЕБОВАНИЯ К HTML-ВЕРСТКЕ ПОЛЯ "body":
+Поле "body" должно содержать ТОЛЬКО чистую, богатую HTML-верстку тела статьи (без <h1> и без лид-абзаца, так как они передаются в отдельных полях):
+- Обычные абзацы оборачивай в <p>...</p>.
+- Подзаголовки разделов оборачивай строго в: <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Текст подзаголовка</h2>
+- Официальные цитаты оборачивай строго в:
+<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs"><p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«Текст цитаты», — должность спикера.</p></blockquote>
+- Режим спецблоков (${specialBlocks}): при необходимости включи маркированный список, таблицу сводки <div id="dossier-block" ...> или карточку поста из мессенджера МАКС <div id="max-flashmob" ...> в точно таком же Tailwind-стиле, как в прошлых статьях.
+
+Верни ответ СТРОГО в формате валидного JSON по следующей схеме:
+{
+  "article": {
+    "id": "krotkiy-latin-slug-novosti",
+    "title": "Громкий заголовок в стиле ТАСС/РБК",
+    "lead": "Подробный жирный лид-абзац из 2-3 предложений",
+    "category": "${targetCat === 'AUTO' ? 'Одна из рубрик: Безопасность, Политика, Общество, Происшествия, Регионы, Технологии, Геотектоника' : targetCat}",
+    "geo": "Город / Регион",
+    "badgeType": "ЗАГОЛОВОК КАМЕРЫ ИЛИ РАДАРА (КАПСОМ)",
+    "badgeTelemetry": "КРАТКАЯ ТЕЛЕМЕТРИЯ РАДАРА С ЦИФРАМИ И ПРОЦЕНТАМИ",
+    "caption": "Фото: Подпись фотослужбы «Вестник России»",
+    "tags": ["Тег1", "Тег2", "Тег3"],
+    "body": "Полный HTML-код тела статьи со всеми тегами <p>, <h2>, <blockquote> и спецблоками"
+  },
+  "updatedBreakingNews": "Новая строка МОЛНИИ для шапки сайта по мотивам этой статьи",
+  "loreUpdates": {
+    "newTimelineEvent": "Краткая запись о событии этой статьи с датой для добавления в хронологию вселенной",
+    "characterUpdates": [
+      {
+        "name": "Имя персонажа (точно как в базе или новый)",
+        "currentLocation": "Обновленная локация персонажа после событий статьи",
+        "status": "Обновленный статус персонажа",
+        "appendBiography": "Одно предложение о том, что персонаж сделал в этой статье (будет добавлено к его биографии)"
+      }
+    ]
+  }
+}`;
+
+            const fullUserContent = `БАЗА ЛОРА ВСЕЛЕННОЙ (universe_lore.json):
+${loreContext}
+
+ДАЙДЖЕСТ СУЩЕСТВУЮЩИХ СТАТЕЙ НА САЙТЕ (db.json):
+${existingArticlesDigest}
+
+ЗАДАНИЕ НА НОВУЮ СТАТЬЮ ОТ ГЛАВНОГО РЕДАКТОРА:
+${userPrompt}`;
+
+            try {
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(conf.model)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        systemInstruction: { parts: [{ text: systemInstruction }] },
+                        contents: [{ role: "user", parts: [{ text: fullUserContent }] }],
+                        generationConfig: {
+                            temperature: 0.85,
+                            responseMimeType: "application/json"
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errJson = await response.json().catch(() => ({}));
+                    throw new Error((errJson.error && errJson.error.message) || `HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
+                const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!rawText) throw new Error("Пустой ответ от модели Gemini");
+
+                const parsed = JSON.parse(rawText);
+                const genArt = parsed.article;
+
+                statusBox.innerHTML += `<div class="text-emerald-400">✅ Статья сгенерирована: «${genArt.title}»</div>`;
+
+                // Автообновление базы Лора (Self-Updating Lore)
+                if (autoUpdateLore && parsed.loreUpdates) {
+                    if (parsed.loreUpdates.newTimelineEvent) {
+                        appLore.timeline.push(parsed.loreUpdates.newTimelineEvent);
+                    }
+                    if (Array.isArray(parsed.loreUpdates.characterUpdates)) {
+                        parsed.loreUpdates.characterUpdates.forEach(upd => {
+                            const existingChar = appLore.characters.find(c =>
+                                c.name.toLowerCase().includes(upd.name.toLowerCase()) ||
+                                upd.name.toLowerCase().includes(c.name.toLowerCase())
+                            );
+                            if (existingChar) {
+                                if (upd.currentLocation) existingChar.currentLocation = upd.currentLocation;
+                                if (upd.status) existingChar.status = upd.status;
+                                if (upd.appendBiography && !existingChar.biography.includes(upd.appendBiography)) {
+                                    existingChar.biography = (existingChar.biography + " " + upd.appendBiography).trim();
+                                }
+                            } else if (upd.name) {
+                                appLore.characters.push({
+                                    id: "char-" + Date.now().toString().slice(-4),
+                                    name: upd.name,
+                                    age: 25,
+                                    origin: genArt.geo || "РФ",
+                                    currentLocation: upd.currentLocation || genArt.geo || "РФ",
+                                    role: "Фигурант сводки",
+                                    status: upd.status || "Активен",
+                                    biography: upd.appendBiography || ""
+                                });
+                            }
+                        });
+                    }
+                    renderLoreUI();
+                    statusBox.innerHTML += `<div class="text-amber-300">📚 Память Лора (universe_lore.json) автоматически обновлена новыми фактами!</div>`;
+                }
+
+                // Обновляем строку МОЛНИИ, если отмечено
+                if (makeHero && parsed.updatedBreakingNews) {
+                    appDB.siteSettings.breakingNews = parsed.updatedBreakingNews;
+                    populateSiteSettingsForm();
+                }
+
+                // Заполняем поля редактора сгенерированной статьей
+                editingOriginalId = null;
+                document.getElementById('ed-id').value = genArt.id || ("ai-news-" + Date.now().toString().slice(-4));
+                document.getElementById('ed-ishero').checked = makeHero;
+                document.getElementById('ed-title').value = genArt.title || "";
+                document.getElementById('ed-category').value = genArt.category || "Общество";
+                document.getElementById('ed-geo').value = genArt.geo || "РФ";
+                setNowDate();
+                document.getElementById('ed-lead').value = genArt.lead || "";
+                document.getElementById('ed-image').value = "";
+                document.getElementById('ed-badgetype').value = genArt.badgeType || "ОПЕРАТИВНЫЙ МОНИТОРИНГ";
+                document.getElementById('ed-badgetelemetry').value = genArt.badgeTelemetry || "СТАТУС: КОНТРОЛЬ";
+                document.getElementById('ed-caption').value = genArt.caption || "Фото: Фотослужба «Вестник России»";
+                document.getElementById('ed-body').value = genArt.body || "";
+                document.getElementById('ed-tags').value = (genArt.tags || []).join(', ');
+                updateLivePreview();
+
+                if (autoPublishAndPush) {
+                    saveArticleFromEditor(true);
+                } else {
+                    persistLocalBackup();
+                    showToast("Статья создана ИИ и открыта в редакторе!");
+                    setTimeout(() => switchTab('editor'), 900);
+                }
+
+            } catch (err) {
+                statusBox.innerHTML += `<div class="text-rose-400 font-bold">❌ Ошибка Gemini API: ${err.message}</div>`;
+                showToast("Ошибка генерации: " + err.message, true);
+            }
+        }
+
+        // ИИ-Аудит существующих статей для актуализации Лора
+        async function syncLoreFromArticlesWithAI() {
+            const conf = saveGeminiConfig();
+            if (!conf.apiKey) {
+                switchTab('ai');
+                showToast("Сначала укажите Gemini API Key во вкладке 3!", true);
+                return;
+            }
+
+            const btn = document.getElementById('btn-ai-lore-audit');
+            const origHTML = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading"></i> Синхронизация...`;
+
+            try {
+                const digest = (appDB.articles || []).map(a => `[${a.date} | ${a.geo}] ${a.title}\n${a.lead}\n${a.body}`).join('\n\n---\n\n');
+                const prompt = `Проанализируй все текущие статьи сайта и текущую базу universe_lore.json. Обнови статусы, локации и биографии существующих персонажей, добавь новых упомянутых персонажей и актуализируй хронологию событий (timeline), чтобы база знаний на 100% соответствовала всем статьям. Верни полный обновленный JSON-объект структуры universe_lore.json.\n\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\n\nСТАТЬИ САЙТА:\n${digest}`;
+
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(conf.model)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ role: "user", parts: [{ text: prompt }] }],
+                        generationConfig: { temperature: 0.3, responseMimeType: "application/json" }
+                    })
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const updatedLore = JSON.parse(data.candidates[0].content.parts[0].text);
+                if (updatedLore && Array.isArray(updatedLore.characters)) {
+                    appLore = updatedLore;
+                    persistLocalBackup();
+                    renderLoreUI();
+                    showToast("База Лора успешно синхронизирована со всеми статьями!");
+                }
+            } catch (e) {
+                showToast("Ошибка синхронизации Лора: " + e.message, true);
+            } finally {
+                btn.innerHTML = origHTML;
+            }
+        }
+
+        // =========================================================
+        // СТАНДАРТНЫЕ ФУНКЦИИ СПИСКА СТАТЕЙ И РЕДАКТОРА
+        // =========================================================
         function populateCategoryFilters() {
             const cats = (appDB.siteSettings && appDB.siteSettings.categories) || DEFAULT_DB.siteSettings.categories;
             const select = document.getElementById('admin-cat-filter');
@@ -767,7 +1552,6 @@
             document.getElementById('nav-articles-count').textContent = (appDB.articles || []).length;
         }
 
-        // Рендер таблицы всех статей
         function renderAdminArticlesList() {
             const q = (document.getElementById('admin-search-input').value || "").trim().toLowerCase();
             const cat = document.getElementById('admin-cat-filter').value;
@@ -803,13 +1587,13 @@
                         ${art.date}
                     </td>
                     <td class="py-3.5 px-4 align-top text-right whitespace-nowrap space-x-1">
-                        <button onclick="openArticleInEditor('${art.id}')" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold cursor-pointer" title="Редактировать">
+                        <button onclick="openArticleInEditor('${art.id}')" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold cursor-pointer">
                             <i class="fa-solid fa-pen"></i> Править
                         </button>
-                        <a href="article.html?id=${encodeURIComponent(art.id)}" target="_blank" class="inline-block px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold" title="Открыть на сайте">
+                        <a href="article.html?id=${encodeURIComponent(art.id)}" target="_blank" class="inline-block px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">
                             <i class="fa-solid fa-eye"></i>
                         </a>
-                        <button onclick="deleteArticle('${art.id}')" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-lg text-xs font-semibold cursor-pointer" title="Удалить">
+                        <button onclick="deleteArticle('${art.id}')" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-lg text-xs font-semibold cursor-pointer">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
@@ -832,12 +1616,10 @@
             showToast("Материал удален");
         }
 
-        // Открытие статьи в редакторе
         function startNewArticle() {
             editingOriginalId = null;
             document.getElementById('editor-mode-badge').textContent = "РЕЖИМ: СОЗДАНИЕ НОВОЙ ПУБЛИКАЦИИ";
             document.getElementById('editor-heading-title').textContent = "Новый материал агентства";
-
             document.getElementById('ed-id').value = "news-" + Date.now().toString().slice(-5);
             document.getElementById('ed-ishero').checked = false;
             document.getElementById('ed-title').value = "";
@@ -851,10 +1633,6 @@
             document.getElementById('ed-caption').value = "Фото: Фотослужба «Вестник России»";
             document.getElementById('ed-body').value = "<p>\n    Введите основной текст новости...\n</p>";
             document.getElementById('ed-tags').value = "Россия, Общество";
-            document.getElementById('ed-r-fire').value = 1250;
-            document.getElementById('ed-r-cheese').value = 840;
-            document.getElementById('ed-r-shock').value = 620;
-
             updateLivePreview();
             switchTab('editor');
         }
@@ -863,10 +1641,8 @@
             const art = (appDB.articles || []).find(a => a.id === id);
             if (!art) return;
             editingOriginalId = art.id;
-
             document.getElementById('editor-mode-badge').textContent = `РЕЖИМ: РЕДАКТИРОВАНИЕ СТАТЬИ [${art.id}]`;
             document.getElementById('editor-heading-title').textContent = art.title;
-
             document.getElementById('ed-id').value = art.id || "";
             document.getElementById('ed-ishero').checked = !!art.isHero;
             document.getElementById('ed-title').value = art.title || "";
@@ -883,36 +1659,24 @@
             document.getElementById('ed-r-fire').value = (art.reactions && art.reactions.fire) || 3500;
             document.getElementById('ed-r-cheese').value = (art.reactions && art.reactions.cheese) || 2100;
             document.getElementById('ed-r-shock').value = (art.reactions && art.reactions.shock) || 1800;
-
             updateLivePreview();
             switchTab('editor');
         }
 
-        // Генератор латинского ID (slug) из русского заголовка
         function generateSlugFromTitle() {
             const title = document.getElementById('ed-title').value.trim().toLowerCase();
-            const map = {
-                'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z','и':'i','й':'y',
-                'к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f',
-                'х':'kh','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'
-            };
-            const slug = title.split('').map(ch => map[ch] !== undefined ? map[ch] : ch)
-                .join('')
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-+|-+$/g, '')
-                .slice(0, 48);
+            const map = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'kh','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'};
+            const slug = title.split('').map(ch => map[ch] !== undefined ? map[ch] : ch).join('').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48);
             document.getElementById('ed-id').value = slug || ("news-" + Date.now().toString().slice(-5));
         }
 
         function setNowDate() {
             const months = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
             const d = new Date();
-            const str = `${d.getDate()} ${months[d.getMonth()]} 2026, ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
-            document.getElementById('ed-date').value = str;
+            document.getElementById('ed-date').value = `${d.getDate()} ${months[d.getMonth()]} 2026, ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
             updateLivePreview();
         }
 
-        // Сжатие загружаемой картинки через Canvas в легкий Base64 (чтобы хранить прямо в db.json)
         function handleEditorImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -927,8 +1691,7 @@
                     canvas.height = Math.round(img.height * scale);
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.78);
-                    document.getElementById('ed-image').value = compressedDataUrl;
+                    document.getElementById('ed-image').value = canvas.toDataURL('image/jpeg', 0.78);
                     updateLivePreview();
                     showToast("Фото сжато и встроено в статью!");
                 };
@@ -942,23 +1705,15 @@
             updateLivePreview();
         }
 
-        // Вставка готовых HTML-блоков в тело статьи
         function insertTemplateBlock(type) {
             const textarea = document.getElementById('ed-body');
             let snippet = "";
-            if (type === 'p') {
-                snippet = `\n<p>\n    Новый абзац текста репортажа...\n</p>\n`;
-            } else if (type === 'h2') {
-                snippet = `\n<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">\n    Подзаголовок раздела\n</h2>\n`;
-            } else if (type === 'quote') {
-                snippet = `\n<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">\n    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">\n        «Текст официального заявления или цитаты очевидца», — прокомментировал источник.\n    </p>\n</blockquote>\n`;
-            } else if (type === 'list') {
-                snippet = `\n<ul class="my-6 space-y-3.5 font-sans text-base text-slate-800 bg-slate-50 p-5 sm:p-6 rounded-xl border border-slate-200">\n    <li class="flex items-start gap-3">\n        <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>\n        <span>Первый пункт оперативного плана;</span>\n    </li>\n    <li class="flex items-start gap-3">\n        <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>\n        <span>Второй пункт оперативного плана.</span>\n    </li>\n</ul>\n`;
-            } else if (type === 'dossier') {
-                snippet = `\n<div id="dossier-block" class="my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-2xs">\n    <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">\n        <span class="font-bold text-xs uppercase tracking-wider">Оперативная сводка / Досье</span>\n        <span class="text-[11px] font-mono text-amber-400">МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">\n        Данные статистического наблюдения по объекту...\n    </div>\n</div>\n`;
-            } else if (type === 'max') {
-                snippet = `\n<div id="max-flashmob" class="my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm">\n    <div class="text-xs font-bold text-sky-400 mb-2">МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">Текст популярного поста или координационной сводки в мессенджере МАКС...</p>\n</div>\n`;
-            }
+            if (type === 'p') snippet = `\n<p>\n    Новый абзац текста репортажа...\n</p>\n`;
+            else if (type === 'h2') snippet = `\n<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">\n    Подзаголовок раздела\n</h2>\n`;
+            else if (type === 'quote') snippet = `\n<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">\n    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">\n        «Текст официального заявления или цитаты очевидца», — прокомментировал источник.\n    </p>\n</blockquote>\n`;
+            else if (type === 'list') snippet = `\n<ul class="my-6 space-y-3.5 font-sans text-base text-slate-800 bg-slate-50 p-5 sm:p-6 rounded-xl border border-slate-200">\n    <li class="flex items-start gap-3">\n        <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>\n        <span>Первый пункт оперативного плана;</span>\n    </li>\n</ul>\n`;
+            else if (type === 'dossier') snippet = `\n<div id="dossier-block" class="my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-2xs">\n    <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">\n        <span class="font-bold text-xs uppercase tracking-wider">Оперативная сводка / Досье</span>\n        <span class="text-[11px] font-mono text-amber-400">МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">Данные статистического наблюдения...</div>\n</div>\n`;
+            else if (type === 'max') snippet = `\n<div id="max-flashmob" class="my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm">\n    <div class="text-xs font-bold text-sky-400 mb-2">МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">Текст координационной сводки в мессенджере МАКС...</p>\n</div>\n`;
 
             const start = textarea.selectionStart || textarea.value.length;
             textarea.value = textarea.value.slice(0, start) + snippet + textarea.value.slice(start);
@@ -980,14 +1735,10 @@
             } else {
                 const bType = document.getElementById('ed-badgetype').value || "РАДАР СПЕЦКОНТРОЛЯ";
                 const bTel = document.getElementById('ed-badgetelemetry').value || "СТАТУС: КОНТРОЛЬ";
-                visualBox.innerHTML = `
-                    <div class="text-white font-bold mb-1">● ${bType}</div>
-                    <div class="text-amber-300">${bTel}</div>
-                `;
+                visualBox.innerHTML = `<div class="text-white font-bold mb-1">● ${bType}</div><div class="text-amber-300">${bTel}</div>`;
             }
         }
 
-        // Сохранение статьи из редактора в базу
         function saveArticleFromEditor(andPush = false) {
             const id = document.getElementById('ed-id').value.trim() || ("news-" + Date.now());
             const title = document.getElementById('ed-title').value.trim();
@@ -1023,7 +1774,6 @@
                 body: document.getElementById('ed-body').value
             };
 
-            // Если это новая рубрика — автоматически добавляем её в список рубрик сайта
             if (!appDB.siteSettings.categories.includes(newArticleObj.category)) {
                 appDB.siteSettings.categories.push(newArticleObj.category);
             }
@@ -1041,7 +1791,7 @@
             persistLocalBackup();
             populateCategoryFilters();
             renderAdminArticlesList();
-            showToast("Статья успешно сохранена в базу!");
+            showToast("Статья сохранена в базу!");
 
             if (andPush) {
                 pushToGitHub();
@@ -1050,7 +1800,6 @@
             }
         }
 
-        // Настройки сайта (Вкладка 3)
         function populateSiteSettingsForm() {
             const s = appDB.siteSettings || DEFAULT_DB.siteSettings;
             document.getElementById('set-title').value = s.title || "";
@@ -1080,10 +1829,7 @@
                 question: document.getElementById('set-poll-question').value.trim(),
                 options: pollLines.map(line => {
                     const parts = line.split('|');
-                    return {
-                        text: (parts[0] || "").trim(),
-                        votes: parseInt((parts[1] || "100").trim(), 10) || 100
-                    };
+                    return { text: (parts[0] || "").trim(), votes: parseInt((parts[1] || "100").trim(), 10) || 100 };
                 })
             };
 
@@ -1097,11 +1843,10 @@
 
             persistLocalBackup();
             populateCategoryFilters();
-            showToast("Глобальные настройки портала сохранены!");
+            showToast("Настройки портала сохранены!");
             if (andPush) pushToGitHub();
         }
 
-        // Скачивание и импорт db.json
         function downloadDbJson() {
             const dataStr = JSON.stringify(appDB, null, 2);
             const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
@@ -1127,7 +1872,7 @@
                         populateCategoryFilters();
                         renderAdminArticlesList();
                         populateSiteSettingsForm();
-                        showToast("База db.json успешно импортирована!");
+                        showToast("База db.json импортирована!");
                     }
                 } catch (err) {
                     showToast("Некорректный JSON-файл!", true);
@@ -1137,32 +1882,31 @@
         }
 
         function resetToDefaultDB() {
-            if (!confirm("Сбросить базу к 6 исходным новостям?")) return;
+            if (!confirm("Восстановить исходные 6 новостей и стартовый Лор Вселенной?")) return;
             appDB = JSON.parse(JSON.stringify(DEFAULT_DB));
+            appLore = JSON.parse(JSON.stringify(DEFAULT_LORE));
             persistLocalBackup();
             populateCategoryFilters();
             renderAdminArticlesList();
             populateSiteSettingsForm();
-            showToast("Восстановлены все 6 исходных статей!");
+            renderLoreUI();
+            showToast("База и Лор сброшены к исходным!");
         }
 
         // =========================================================================
-        // ОТПРАВКА DB.JSON В GITHUB PAGES ЧЕРЕЗ GITHUB REST API (ДЛЯ ВСЕХ ЧИТАТЕЛЕЙ)
+        // ДВОЙНОЙ PUSH В GITHUB PAGES (db.json + universe_lore.json)
         // =========================================================================
         function saveGitHubConfig() {
             const conf = {
                 owner: document.getElementById('gh-owner').value.trim(),
                 repo: document.getElementById('gh-repo').value.trim(),
                 branch: document.getElementById('gh-branch').value.trim() || 'main',
-                path: document.getElementById('gh-path').value.trim() || 'db.json',
                 token: document.getElementById('gh-token').value.trim()
             };
             localStorage.setItem('vestnik_gh_config', JSON.stringify(conf));
-            showToast("Настройки GitHub сохранены в браузере!");
             return conf;
         }
 
-        // Надежное кодирование UTF-8 (русского текста) в Base64 для GitHub API
         function utf8ToBase64(str) {
             const bytes = new TextEncoder().encode(str);
             let binary = "";
@@ -1173,59 +1917,61 @@
             return btoa(binary);
         }
 
-        async function pushToGitHub() {
-            const conf = saveGitHubConfig();
-            if (!conf.owner || !conf.repo || !conf.token) {
-                switchTab('github');
-                showToast("Заполните логин, репозиторий и токен GitHub во вкладке 4!", true);
-                return;
-            }
-
-            const logBox = document.getElementById('gh-log-box');
-            logBox.classList.remove('hidden');
-            logBox.innerHTML = `<div class="text-sky-400">⏳ Подключение к GitHub API (${conf.owner}/${conf.repo})...</div>`;
-
-            const apiUrl = `https://api.github.com/repos/${encodeURIComponent(conf.owner)}/${encodeURIComponent(conf.repo)}/contents/${conf.path}`;
+        async function uploadSingleFileToGitHub(conf, filePath, jsonObject, commitMsg) {
+            const apiUrl = `https://api.github.com/repos/${encodeURIComponent(conf.owner)}/${encodeURIComponent(conf.repo)}/contents/${filePath}`;
             const headers = {
                 'Authorization': `Bearer ${conf.token}`,
                 'Accept': 'application/vnd.github+json',
                 'Content-Type': 'application/json'
             };
 
+            let existingSha = null;
+            const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(conf.branch)}`, { headers });
+            if (getRes.ok) {
+                const fileInfo = await getRes.json();
+                existingSha = fileInfo.sha;
+            }
+
+            const payload = {
+                message: commitMsg,
+                content: utf8ToBase64(JSON.stringify(jsonObject, null, 2)),
+                branch: conf.branch
+            };
+            if (existingSha) payload.sha = existingSha;
+
+            const putRes = await fetch(apiUrl, {
+                method: 'PUT',
+                headers,
+                body: JSON.stringify(payload)
+            });
+
+            if (!putRes.ok) {
+                const errData = await putRes.json().catch(() => ({}));
+                throw new Error(`${filePath}: ${errData.message || putRes.status}`);
+            }
+        }
+
+        async function pushToGitHub() {
+            saveLoreFromUI();
+            const conf = saveGitHubConfig();
+            if (!conf.owner || !conf.repo || !conf.token) {
+                switchTab('github');
+                showToast("Заполните логин, репозиторий и токен GitHub во вкладке 6!", true);
+                return;
+            }
+
+            const logBox = document.getElementById('gh-log-box');
+            logBox.classList.remove('hidden');
+            logBox.innerHTML = `<div class="text-sky-400">⏳ Отправка db.json и universe_lore.json в репозиторий ${conf.owner}/${conf.repo}...</div>`;
+
             try {
-                // 1. Проверяем, существует ли уже db.json, чтобы получить его текущий SHA
-                let existingSha = null;
-                const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(conf.branch)}`, { headers });
-                if (getRes.ok) {
-                    const fileInfo = await getRes.json();
-                    existingSha = fileInfo.sha;
-                }
+                const timeLabel = new Date().toLocaleString('ru-RU');
+                await uploadSingleFileToGitHub(conf, 'db.json', appDB, `Обновление выпуска db.json (${timeLabel})`);
+                await uploadSingleFileToGitHub(conf, 'universe_lore.json', appLore, `Обновление лора вселенной (${timeLabel})`);
 
-                // 2. Кодируем всю базу сайта в Base64 и отправляем PUT-запрос
-                const jsonString = JSON.stringify(appDB, null, 2);
-                const bodyPayload = {
-                    message: `Обновление выпуска ВЕСТНИК-CMS (${new Date().toLocaleString('ru-RU')})`,
-                    content: utf8ToBase64(jsonString),
-                    branch: conf.branch
-                };
-                if (existingSha) {
-                    bodyPayload.sha = existingSha;
-                }
-
-                const putRes = await fetch(apiUrl, {
-                    method: 'PUT',
-                    headers,
-                    body: JSON.stringify(bodyPayload)
-                });
-
-                if (!putRes.ok) {
-                    const errData = await putRes.json().catch(() => ({}));
-                    throw new Error(errData.message || `HTTP ${putRes.status}`);
-                }
-
-                document.getElementById('sync-status-line').textContent = `Опубликовано в GitHub (${new Date().toLocaleTimeString('ru-RU')}) • Доступно всем пользователям`;
-                logBox.innerHTML = `<div class="text-emerald-400 font-bold">✅ УСПЕШНО! Файл db.json обновлен в репозитории ${conf.owner}/${conf.repo}. Все посетители сайта видят актуальную версию.</div>`;
-                showToast("Опубликовано на GitHub Pages для всех читателей!");
+                document.getElementById('sync-status-line').textContent = `Опубликовано в GitHub (${new Date().toLocaleTimeString('ru-RU')}) • db.json + universe_lore.json синхронизированы`;
+                logBox.innerHTML = `<div class="text-emerald-400 font-bold">✅ УСПЕШНО! Файлы db.json и universe_lore.json обновлены в репозитории ${conf.owner}/${conf.repo}.</div>`;
+                showToast("db.json и universe_lore.json опубликованы в GitHub!");
             } catch (err) {
                 logBox.innerHTML = `<div class="text-rose-400 font-bold">❌ Ошибка GitHub API: ${err.message}</div>`;
                 showToast("Ошибка отправки в GitHub: " + err.message, true);
