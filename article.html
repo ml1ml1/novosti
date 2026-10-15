@@ -157,7 +157,6 @@
                     <button
                         id="molniya-btn"
                         onclick="handleMolniyaClick()"
-                        title="Нажмите 5 раз для вызова панели редактора"
                         class="bg-brand-red hover:bg-brand-darkred active:scale-95 text-white font-bold px-2.5 py-0.5 rounded-xs uppercase tracking-wider text-[11px] flex items-center gap-1.5 shrink-0 cursor-pointer select-none transition"
                     >
                         <span class="w-2 h-2 rounded-full bg-white live-dot"></span>
@@ -369,26 +368,11 @@
                     <div id="poll-options-container" class="space-y-2.5 text-xs sm:text-sm"></div>
                 </div>
 
-                <!-- БЫСТРЫЙ ПЕРЕХОД В АДМИНКУ -->
-                <div class="bg-slate-900 text-slate-200 rounded-xl p-5 border border-slate-800 text-xs space-y-2.5">
-                    <div class="flex items-center justify-between text-amber-400 font-bold uppercase tracking-wider">
-                        <span><i class="fa-solid fa-sliders mr-1.5"></i> Управление статьей</span>
-                        <span class="font-mono text-[10px]">ВЕСТНИК-CMS</span>
-                    </div>
-                    <p class="text-slate-400 leading-relaxed">
-                        Нажмите <strong>5 раз</strong> на кнопку <strong>«МОЛНИЯ»</strong>, чтобы править текст прямо на странице или открыть статью в полном редакторе.
-                    </p>
-                    <a id="direct-admin-edit-link" href="admin.html" class="inline-flex items-center gap-1.5 text-white hover:text-amber-300 font-semibold pt-1 transition">
-                        <i class="fa-solid fa-pen-to-square text-brand-red"></i>
-                        <span>Открыть эту статью в Вестник-CMS →</span>
-                    </a>
-                </div>
-
             </aside>
         </div>
     </main>
 
-    <!-- НИЖНЯЯ ПАНЕЛЬ БЫСТРОЙ ПРАВКИ (ПОЯВЛЯЕТСЯ ПОСЛЕ 5 КЛИКОВ НА «МОЛНИЯ» ИЛИ ?edit=1) -->
+    <!-- НИЖНЯЯ ПАНЕЛЬ БЫСТРОЙ ПРАВКИ (ПОЯВЛЯЕТСЯ ТОЛЬКО ПОСЛЕ 5 КЛИКОВ НА «МОЛНИЯ») -->
     <div id="cms-quick-bar" class="hidden fixed bottom-4 inset-x-4 max-w-4xl mx-auto bg-slate-900/95 backdrop-blur-md text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700 z-50 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div class="flex items-center gap-2.5">
             <span class="px-2 py-0.5 bg-brand-red text-white font-bold rounded uppercase">ВЕСТНИК-CMS</span>
@@ -685,11 +669,6 @@
             renderTopAndHeader();
             renderCurrentArticle();
             renderSidebar();
-
-            // Если открыто с параметром ?edit=1, сразу показываем нижнюю панель правок
-            if (params.get('edit') === '1') {
-                document.getElementById('cms-quick-bar').classList.remove('hidden');
-            }
         }
 
         function renderTopAndHeader() {
@@ -738,9 +717,6 @@
             document.getElementById('article-title').textContent = currentArticle.title || "";
             document.getElementById('article-lead').textContent = currentArticle.lead || "";
             document.getElementById('article-caption').textContent = currentArticle.caption || "Фото: Фотослужба «Вестник России»";
-
-            // Ссылка на прямое редактирование именно этой статьи в admin.html
-            document.getElementById('direct-admin-edit-link').href = `admin.html?editId=${encodeURIComponent(currentArticle.id)}`;
 
             // Иллюстрация или радар
             const mainImg = document.getElementById('article-main-img');
@@ -996,7 +972,7 @@
             }, 2000);
         }
 
-        // 5 кликов на «МОЛНИЯ» -> открытие нижней панели быстрой правки и переход в admin.html
+        // Единственный способ входа в админку / панель правки: 5 нажатий подряд на кнопку «МОЛНИЯ»
         function handleMolniyaClick() {
             molniyaClicks++;
             const hint = document.getElementById('molniya-counter-hint');
