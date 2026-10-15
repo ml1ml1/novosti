@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS</title>
-    <!-- Tailwind CSS -->
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <title>ВЕСТНИК-CMS 2</title>
+    <!-- Tailwind CSS (идентично index.html и article.html) -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
-    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap)" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css)">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script>
         tailwind.config = {
@@ -64,13 +64,13 @@
     <header class="bg-slate-950 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <a href="index.html" class="w-9 h-9 bg-brand-red flex items-center justify-center font-headline font-extrabold text-lg rounded-xs hover:bg-brand-darkred transition" title="На главную сайта">
+                <a href="index.html" class="w-9 h-9 bg-brand-red flex items-center justify-center font-headline font-extrabold text-lg rounded hover:bg-brand-darkred transition" title="На главную сайта">
                     ВР
                 </a>
                 <div>
                     <div class="font-bold text-sm sm:text-base tracking-tight flex items-center gap-2">
                         <span>ВЕСТНИК-CMS</span>
-                        <span class="text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-2 py-0.5 rounded uppercase">Interactions API v3.8</span>
+                        <span class="text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-2 py-0.5 rounded uppercase">AI v3.8</span>
                     </div>
                     <div id="sync-status-line" class="text-[11px] text-slate-400 font-mono">
                         База и Лор загружены • Готово к работе
@@ -82,7 +82,7 @@
             <div class="flex items-center gap-2 sm:gap-2.5">
                 <button
                     onclick="switchTab('ai')"
-                    class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-xs transition cursor-pointer"
+                    class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition cursor-pointer"
                 >
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
                     <span class="hidden md:inline">ИИ-Генератор</span>
@@ -90,7 +90,7 @@
                 <button
                     onclick="pushToGitHub()"
                     id="top-push-btn"
-                    class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-xs transition cursor-pointer"
+                    class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition cursor-pointer"
                     title="Отправить db.json и universe_lore.json в GitHub репозиторий"
                 >
                     <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -159,7 +159,7 @@
         <!-- ВКЛАДКА 1: СПИСОК ВСЕХ НОВОСТЕЙ                           -->
         <!-- ========================================================= -->
         <section id="tab-list" class="space-y-6">
-            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h1 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Управление материалами агентства</h1>
                     <p class="text-xs text-slate-500 mt-0.5">Создавайте статьи вручную или генерируйте связанные репортажи через ИИ-агента Gemini с учетом базы лора.</p>
@@ -167,14 +167,14 @@
                 <div class="flex flex-wrap items-center gap-2.5">
                     <button
                         onclick="switchTab('ai')"
-                        class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xs transition cursor-pointer"
+                        class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer"
                     >
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                         <span>Создать через ИИ Gemini</span>
                     </button>
                     <button
                         onclick="startNewArticle()"
-                        class="bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-xs transition cursor-pointer"
+                        class="bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer"
                     >
                         <i class="fa-solid fa-plus"></i>
                         <span>Создать вручную</span>
@@ -183,7 +183,7 @@
             </div>
 
             <!-- Фильтр и поиск по списку статей -->
-            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-wrap items-center justify-between gap-3">
                 <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[240px]">
                     <div class="relative flex-1 max-w-md">
                         <input
@@ -216,7 +216,7 @@
             </div>
 
             <!-- Таблица статей -->
-            <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-xs sm:text-sm">
                         <thead>
@@ -238,7 +238,7 @@
         <!-- ВКЛАДКА 2: РЕДАКТОР СТАТЬИ (СОЗДАНИЕ / ПРАВКА + ПРЕВЬЮ)   -->
         <!-- ========================================================= -->
         <section id="tab-editor" class="hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <div class="text-xs font-mono uppercase text-brand-red font-bold" id="editor-mode-badge">РЕЖИМ: СОЗДАНИЕ НОВОГО МАТЕРИАЛА</div>
                     <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900" id="editor-heading-title">Конструктор публикации</h2>
@@ -250,7 +250,7 @@
                     <button onclick="saveArticleFromEditor(false)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition cursor-pointer">
                         <i class="fa-solid fa-floppy-disk mr-1.5"></i> Сохранить в базу
                     </button>
-                    <button onclick="saveArticleFromEditor(true)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-brand-red hover:bg-brand-darkred text-white rounded-lg shadow-xs transition cursor-pointer">
+                    <button onclick="saveArticleFromEditor(true)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-brand-red hover:bg-brand-darkred text-white rounded-lg shadow-sm transition cursor-pointer">
                         <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> Сохранить и Push в GitHub
                     </button>
                 </div>
@@ -258,7 +258,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- Левая часть: поля ввода (7 колонок) -->
-                <div class="lg:col-span-7 bg-white rounded-xl shadow-xs border border-slate-200 p-5 sm:p-6 space-y-4">
+                <div class="lg:col-span-7 bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-4">
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="sm:col-span-2">
@@ -396,7 +396,7 @@
 
                 <!-- Правая часть: ЖИВОЕ ПРЕВЬЮ СТАТЬИ (5 колонок) -->
                 <div class="lg:col-span-5">
-                    <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 sm:p-6 sticky top-28 max-h-[82vh] overflow-y-auto">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 sticky top-28 max-h-[82vh] overflow-y-auto">
                         <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
                                 <i class="fa-solid fa-eye text-brand-red mr-1"></i> Живое превью статьи
@@ -440,10 +440,10 @@
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="font-headline font-extrabold text-xl sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» (Interactions API)</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">POST /v1beta/interactions</span>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">gemini-3.8-flash</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Работает через актуальный протокол <strong>Google Gemini Interactions API</strong> для модели <code>gemini-3.8-flash</code>. Агент учитывает досье всех персонажей из <code>universe_lore.json</code>, сверяется с опубликованными статьями и автоматически дополняет память вселенной.
+                            Работает через протокол <strong>Google Gemini Interactions API</strong>. Агент учитывает досье всех персонажей из <code>universe_lore.json</code>, сверяется с опубликованными статьями и автоматически дополняет память вселенной.
                         </p>
                     </div>
                 </div>
@@ -451,7 +451,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- Левая колонка: Генератор статьи (8 колонок) -->
-                <div class="lg:col-span-8 bg-white rounded-xl shadow-xs border border-slate-200 p-5 sm:p-6 space-y-5">
+                <div class="lg:col-span-8 bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-5">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <h3 class="font-headline font-bold text-lg text-slate-900">Задание для ИИ-корреспондента</h3>
                         <span class="text-xs font-mono text-indigo-600 font-semibold">Стиль: ТАСС / РБК / Коммерсантъ</span>
@@ -558,13 +558,13 @@
 
                 <!-- Правая колонка: Настройки Gemini API и сводка контекста (4 колонки) -->
                 <div class="lg:col-span-4 space-y-6">
-                    <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
                             <h3 class="font-headline font-bold text-base text-slate-900 flex items-center gap-2">
                                 <i class="fa-solid fa-key text-indigo-600"></i>
                                 <span>Настройки Gemini API</span>
                             </h3>
-                            <a href="[https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)" target="_blank" class="text-[11px] text-indigo-600 hover:underline font-semibold">Получить ключ →</a>
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[11px] text-indigo-600 hover:underline font-semibold">Получить ключ →</a>
                         </div>
 
                         <div>
@@ -594,16 +594,15 @@
                                 <option value="gemini-3.8-flash">Gemini 3.8 Flash (Рекомендуемая)</option>
                                 <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite</option>
                                 <option value="gemini-4-argon">Gemini 4 Argon</option>
-                                <option value="gemini-flash-latest">gemini-flash-latest</option>
                             </datalist>
                         </div>
 
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Протокол подключения:</label>
                             <select id="gemini-protocol" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
-                                <option value="interactions">Interactions API (/v1beta/interactions) — Новый</option>
-                                <option value="auto">Авто (Interactions API с фоллбэком на generateContent)</option>
-                                <option value="generateContent">Legacy (:generateContent)</option>
+                                <option value="auto">Авто (Interactions API + резервный generateContent)</option>
+                                <option value="interactions">Interactions API (/v1beta/interactions)</option>
+                                <option value="generateContent">Классический (:generateContent)</option>
                             </select>
                         </div>
 
@@ -636,7 +635,7 @@
         <!-- ВКЛАДКА 4: 📚 ЛОР ВСЕЛЕННОЙ (UNIVERSE_LORE.JSON)          -->
         <!-- ========================================================= -->
         <section id="tab-lore" class="hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <div class="flex items-center gap-2">
                         <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Хранилище Лора Вселенной (<code>universe_lore.json</code>)</h2>
@@ -663,7 +662,7 @@
             </div>
 
             <!-- Секция 1: Персонажи Вселенной -->
-            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-200">
                     <div>
                         <h3 class="font-headline font-bold text-lg text-slate-900">1. Досье ключевых персонажей</h3>
@@ -679,7 +678,7 @@
 
             <!-- Секция 2: География, Регионы и Правила Вселенной -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
                     <div class="flex items-center justify-between pb-2 border-b border-slate-100">
                         <h3 class="font-headline font-bold text-lg text-slate-900">2. Регионы, Фракции и Законы</h3>
                         <button onclick="addNewLocationItem()" class="text-xs font-bold text-brand-red hover:underline cursor-pointer">+ Добавить локацию</button>
@@ -688,7 +687,7 @@
                 </div>
 
                 <!-- Секция 3: Хронология событий (Timeline) -->
-                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
                     <div class="flex items-center justify-between pb-2 border-b border-slate-100">
                         <h3 class="font-headline font-bold text-lg text-slate-900">3. Хронология событий (Память сюжета)</h3>
                         <button onclick="addNewTimelineEvent()" class="text-xs font-bold text-brand-red hover:underline cursor-pointer">+ Добавить событие</button>
@@ -698,7 +697,7 @@
             </div>
 
             <!-- Секция 4: Директивы стиля для ИИ -->
-            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-3">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
                 <div class="flex items-center justify-between">
                     <label class="text-xs font-bold uppercase tracking-wider text-slate-700">4. Глобальные правила стиля и канона для ИИ-агента:</label>
                     <button onclick="saveLoreFromUI()" class="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg cursor-pointer">
@@ -713,7 +712,7 @@
         <!-- ВКЛАДКА 5: НАСТРОЙКИ САЙТА, РУБРИКИ, ИНФОРМЕРЫ И ОПРОС    -->
         <!-- ========================================================= -->
         <section id="tab-settings" class="hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Глобальные настройки портала «Вестник России»</h2>
                     <p class="text-xs text-slate-500">Все изменения здесь меняют шапку, бегущую строку «МОЛНИЯ», рубрики и опрос сразу на всех страницах сайта.</p>
@@ -729,7 +728,7 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
                     <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">1. Шапка и бегущая строка «МОЛНИЯ»</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
@@ -755,7 +754,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
                     <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">2. Виджет «Опрос дня»</h3>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Вопрос опроса:</label>
@@ -767,7 +766,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 space-y-4 lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4 lg:col-span-2">
                     <h3 class="font-headline font-bold text-lg text-slate-900 border-b border-slate-100 pb-2">3. Информеры городов и Биржевые котировки</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -787,7 +786,7 @@
         <!-- ВКЛАДКА 6: ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ С GITHUB PAGES          -->
         <!-- ========================================================= -->
         <section id="tab-github" class="hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-6 max-w-3xl mx-auto space-y-5">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-3xl mx-auto space-y-5">
                 <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center text-2xl shrink-0">
                         <i class="fa-brands fa-github"></i>
@@ -838,7 +837,6 @@
 
     <!-- JAVASCRIPT: БАЗА НОВОСТЕЙ, БАЗА ЛОРА И INTERACTIONS API GEMINI 3.8 -->
     <script>
-        // 1. Дефолтная база Лора Вселенной
         const DEFAULT_LORE = {
             universeName: "Хроники Вестника России (2026–2027)",
             styleDirectives: "Писать строго в стиле авторитетных российских федеральных информационных агентств (ТАСС, РБК, Коммерсантъ, РИА Новости): предельно серьезный, сухой, бюрократический и канцелярско-протокольный тон при описании абсолютно абсурдных событий. Всегда соблюдать канон возрастов, родных городов и профессий персонажей.",
@@ -916,7 +914,6 @@
             ]
         };
 
-        // 2. Дефолтная база статей (db.json)
         const DEFAULT_DB = {
             siteSettings: {
                 title: "ВЕСТНИК РОССИИ",
@@ -965,7 +962,7 @@
                     body: `<p>Поводом для предельно жесткой реакции федерального центра стал ультиматум полевого штаба ОСС: Станислав Д. потребовал от правительства РФ признать рассольный сыр («ирон цыхт») международным валютным эквивалентом, а также передать под оперативный контроль его формирований все молочно-товарные фермы Южного и Северо-Кавказского федеральных округов. Не дожидаясь ответа Москвы, штаб мятежного технолога перешел к активной фазе наступательной операции.</p>
 <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Кадровое усиление: диверсанты из Гостагаевской и Мелеуза</h2>
 <p>На должность начальника штурмового спецназа и инструктора по рукопашному бою полевой кухни был экстренно назначен 22-летний уроженец станицы Гостагаевской Андрей Б., ранее покинувший Анапу после фиаско на Пионерском проспекте. Как выяснилось в ходе проверки биографии, в анапском суши-баре молодой человек числился не поваром, а разнорабочим по разгрузке мешков с рисом и утилизации водорослей.</p>
-<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">
+<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm">
     <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«Командование оценило колоссальный потенциал Андрея Б. в ближнем бою: парень пережил сокрушительное прямое попадание литрового термоса с шиповником от пенсионерки, выдержал удары пляжным шезлонгом и сохранил волю к сопротивлению. В рядах ОСС ему выдали бронежилет из спрессованного сухого творога и доверили командование авангардом, штурмующим сыроварни на границе с Ингушетией», — передают военные корреспонденты с позиций у реки Сунжа.</p>
 </blockquote>
 <p>Заместителем командующего по стратегической дестабилизации тыла противника стал 22-летний Мирослав К., бежавший из города Мелеуз Республики Башкортостан в Таганрог под предлогом поступления на IT-специальность. Мирослава К. на бронированном молоковозе доставили на нейтральную полосу у административной границы Кабардино-Балкарии: за два часа его присутствия совокупный индекс дисциплины на местных блокпостах рухнул до рекордных −76%.</p>
@@ -1313,7 +1310,7 @@
             modelName = modelName.replace(/^models\//, '');
             document.getElementById('gemini-model').value = modelName;
 
-            const protocol = document.getElementById('gemini-protocol').value || 'interactions';
+            const protocol = document.getElementById('gemini-protocol').value || 'auto';
             const conf = {
                 apiKey: document.getElementById('gemini-api-key').value.trim(),
                 model: modelName,
@@ -1327,16 +1324,13 @@
             document.getElementById('ai-prompt-input').value = text;
         }
 
-        // Извлечение текста ответа из всех версий Gemini API (Interactions API steps/outputs/output_text + Legacy candidates)
         function extractTextFromGeminiResponse(result) {
             if (!result) return null;
 
-            // 1. Прямое поле output_text
             if (typeof result.output_text === 'string' && result.output_text.trim()) {
                 return result.output_text;
             }
 
-            // 2. Актуальный Interactions API: массив steps[] -> step.type === 'model_output' -> content[].text
             if (Array.isArray(result.steps)) {
                 const collected = [];
                 for (const step of result.steps) {
@@ -1351,13 +1345,11 @@
                 if (collected.length > 0) return collected.join('\n');
             }
 
-            // 3. Альтернативный массив outputs[] в Interactions API
             if (Array.isArray(result.outputs)) {
                 const texts = result.outputs.map(o => o.text || (o.content && o.content[0] && o.content[0].text)).filter(Boolean);
                 if (texts.length > 0) return texts.join('\n');
             }
 
-            // 4. Классический generateContent: candidates[0].content.parts[0].text
             if (result.candidates?.[0]?.content?.parts) {
                 const partsText = result.candidates[0].content.parts.map(p => p.text).filter(Boolean).join('\n');
                 if (partsText) return partsText;
@@ -1366,12 +1358,12 @@
             return null;
         }
 
-        // Надежное извлечение JSON-объекта из текстового ответа модели
+        // Безопасная очистка JSON без использования сырых тройных кавычек в коде
         function parseModelJsonSafely(rawText) {
             let cleaned = String(rawText || '')
-                .replace(/^```json\s*/i, '')
-                .replace(/^```\s*/i, '')
-                .replace(/\s*```$/i, '')
+                .replace(/^\x60\x60\x60json\s*/i, '')
+                .replace(/^\x60\x60\x60\s*/i, '')
+                .replace(/\s*\x60\x60\x60$/i, '')
                 .trim();
 
             const firstBrace = cleaned.indexOf('{');
@@ -1382,7 +1374,6 @@
             return JSON.parse(cleaned);
         }
 
-        // Единая функция вызова Gemini через новый Interactions API с поддержкой фоллбэка
         async function callGeminiAPI(conf, systemInstruction, userInput) {
             const tryInteractionsAPI = async () => {
                 const url = `https://generativelanguage.googleapis.com/v1beta/interactions?key=${encodeURIComponent(conf.apiKey)}`;
@@ -1414,7 +1405,7 @@
                 const data = await response.json();
                 const text = extractTextFromGeminiResponse(data);
                 if (!text) {
-                    throw new Error("Модель вернула ответ без текстового блока: " + JSON.stringify(data).slice(0, 200));
+                    throw new Error("Модель вернула ответ без текстового блока");
                 }
                 return text;
             };
@@ -1456,7 +1447,6 @@
             if (conf.protocol === 'interactions') {
                 return await tryInteractionsAPI();
             }
-            // Режим 'auto': сначала пробуем новый Interactions API, при ошибке пробуем legacy
             try {
                 return await tryInteractionsAPI();
             } catch (firstErr) {
@@ -1487,7 +1477,7 @@
 
             const statusBox = document.getElementById('ai-status-box');
             statusBox.classList.remove('hidden');
-            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Отправка запроса в <strong>Interactions API (${conf.model})</strong> • Персонажей в лоре: ${appLore.characters.length}, статей: ${appDB.articles.length}...</div>`;
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Отправка запроса в <strong>Gemini (${conf.model})</strong> • Персонажей в лоре: ${appLore.characters.length}, статей: ${appDB.articles.length}...</div>`;
 
             const existingArticlesDigest = useArticles
                 ? (appDB.articles || []).map((a, i) => `${i + 1}. [ID: ${a.id} | ${a.date} | ${a.geo}] Заголовок: ${a.title}\nЛид: ${a.lead}`).join('\n\n')
@@ -1512,10 +1502,10 @@
 - Обычные абзацы оборачивай в <p>...</p>.
 - Подзаголовки разделов оборачивай строго в: <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Текст подзаголовка</h2>
 - Официальные цитаты оборачивай строго в:
-<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs"><p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«Текст цитаты», — должность спикера.</p></blockquote>
+<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm"><p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«Текст цитаты», — должность спикера.</p></blockquote>
 - Режим спецблоков (${specialBlocks}): при необходимости включи маркированный список, таблицу сводки <div id="dossier-block" ...> или карточку поста из мессенджера МАКС <div id="max-flashmob" ...> в точно таком же Tailwind-стиле, как в прошлых статьях.
 
-ВАЖНО: Верни ответ СТРОГО в виде валидного JSON-объекта (без markdown-оберток и без лишнего текста до или после JSON) по следующей схеме:
+ВАЖНО: Верни ответ СТРОГО в виде валидного JSON-объекта (без оберток и без лишнего текста до или после JSON) по следующей схеме:
 {
   "article": {
     "id": "krotkiy-latin-slug-novosti",
@@ -1561,9 +1551,8 @@ ${userPrompt}`;
                     throw new Error("Не удалось распознать структуру статьи в ответе ИИ");
                 }
 
-                statusBox.innerHTML += `<div class="text-emerald-400">✅ Статья сгенерирована через Interactions API: «${genArt.title}»</div>`;
+                statusBox.innerHTML += `<div class="text-emerald-400">✅ Статья сгенерирована: «${genArt.title}»</div>`;
 
-                // Автообновление базы Лора (Self-Updating Lore)
                 if (autoUpdateLore && parsed.loreUpdates) {
                     if (parsed.loreUpdates.newTimelineEvent) {
                         appLore.timeline.push(parsed.loreUpdates.newTimelineEvent);
@@ -1633,7 +1622,6 @@ ${userPrompt}`;
             }
         }
 
-        // ИИ-Аудит существующих статей для актуализации Лора (также через Interactions API)
         async function syncLoreFromArticlesWithAI() {
             const conf = saveGeminiConfig();
             if (!conf.apiKey) {
@@ -1648,7 +1636,7 @@ ${userPrompt}`;
 
             try {
                 const digest = (appDB.articles || []).map(a => `[${a.date} | ${a.geo}] ${a.title}\n${a.lead}\n${a.body}`).join('\n\n---\n\n');
-                const sysPrompt = "Ты — аналитик базы знаний агентства «Вестник России». Верни ТОЛЬКО валидный JSON-объект структуры universe_lore.json без markdown-оберток.";
+                const sysPrompt = "Ты — аналитик базы знаний агентства «Вестник России». Верни ТОЛЬКО валидный JSON-объект структуры universe_lore.json без лишнего текста.";
                 const userPrompt = `Проанализируй все текущие статьи сайта и текущую базу universe_lore.json. Обнови статусы, локации и биографии существующих персонажей, добавь новых упомянутых персонажей и актуализируй хронологию событий (timeline), чтобы база знаний на 100% соответствовала всем статьям.\n\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\n\nСТАТЬИ САЙТА:\n${digest}`;
 
                 const rawText = await callGeminiAPI(conf, sysPrompt, userPrompt);
@@ -1838,9 +1826,9 @@ ${userPrompt}`;
             let snippet = "";
             if (type === 'p') snippet = `\n<p>\n    Новый абзац текста репортажа...\n</p>\n`;
             else if (type === 'h2') snippet = `\n<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">\n    Подзаголовок раздела\n</h2>\n`;
-            else if (type === 'quote') snippet = `\n<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-2xs">\n    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">\n        «Текст официального заявления или цитаты очевидца», — прокомментировал источник.\n    </p>\n</blockquote>\n`;
+            else if (type === 'quote') snippet = `\n<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm">\n    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">\n        «Текст официального заявления или цитаты очевидца», — прокомментировал источник.\n    </p>\n</blockquote>\n`;
             else if (type === 'list') snippet = `\n<ul class="my-6 space-y-3.5 font-sans text-base text-slate-800 bg-slate-50 p-5 sm:p-6 rounded-xl border border-slate-200">\n    <li class="flex items-start gap-3">\n        <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>\n        <span>Первый пункт оперативного плана;</span>\n    </li>\n</ul>\n`;
-            else if (type === 'dossier') snippet = `\n<div id="dossier-block" class="my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-2xs">\n    <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">\n        <span class="font-bold text-xs uppercase tracking-wider">Оперативная сводка / Досье</span>\n        <span class="text-[11px] font-mono text-amber-400">МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">Данные статистического наблюдения...</div>\n</div>\n`;
+            else if (type === 'dossier') snippet = `\n<div id="dossier-block" class="my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm">\n    <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">\n        <span class="font-bold text-xs uppercase tracking-wider">Оперативная сводка / Досье</span>\n        <span class="text-[11px] font-mono text-amber-400">МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">Данные статистического наблюдения...</div>\n</div>\n`;
             else if (type === 'max') snippet = `\n<div id="max-flashmob" class="my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm">\n    <div class="text-xs font-bold text-sky-400 mb-2">МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">Текст координационной сводки в мессенджере МАКС...</p>\n</div>\n`;
 
             const start = textarea.selectionStart || textarea.value.length;
