@@ -412,7 +412,7 @@
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум»</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Auto-Sync db.json + Лор</span>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Gemini 3.8 Flash + 3.1 Pro</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
                             Агент читает полные тексты всех статей и настроек из <code>db.json</code>, сверяется с досье персонажей в <code>universe_lore.json</code>, сразу добавляет новую статью в общий список и обновляет информеры, котировки, опрос дня и базу лора.
@@ -561,16 +561,15 @@
                             >
                             <datalist id="gemini-models-datalist">
                                 <option value="gemini-3.8-flash">Gemini 3.8 Flash (Основная)</option>
-                                <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (Без очередей)</option>
-                                <option value="gemini-3.8-pro">Gemini 3.8 Pro</option>
-                                <option value="gemini-4-argon">Gemini 4 Argon</option>
+                                <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview (Рекомендуемая Pro)</option>
+                                <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
                             </datalist>
                         </div>
 
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Протокол подключения:</label>
                             <select id="gemini-protocol" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
-                                <option value="auto">Авто (Interactions API + фоллбэк)</option>
+                                <option value="auto">Авто (Interactions API + generateContent)</option>
                                 <option value="interactions">Interactions API (/v1beta/interactions)</option>
                                 <option value="generateContent">Классический (:generateContent)</option>
                             </select>
@@ -1027,7 +1026,16 @@
             const geminiConf = JSON.parse(localStorage.getItem('vestnik_gemini_config') || '{}');
             if (geminiConf.apiKey) document.getElementById('gemini-api-key').value = geminiConf.apiKey;
 
-            const deprecatedModels = ['gemini-2.5-flash', 'models/gemini-2.5-flash', 'gemini-2.0-flash', 'models/gemini-2.0-flash'];
+            const deprecatedModels = [
+                'gemini-2.5-flash',
+                'models/gemini-2.5-flash',
+                'gemini-2.5-pro',
+                'models/gemini-2.5-pro',
+                'gemini-2.0-flash',
+                'models/gemini-2.0-flash',
+                'gemini-1.5-pro',
+                'gemini-1.5-flash'
+            ];
             if (geminiConf.model && !deprecatedModels.includes(geminiConf.model)) {
                 document.getElementById('gemini-model').value = geminiConf.model.replace(/^models\//, '');
             } else {
@@ -1277,6 +1285,9 @@
         function saveGeminiConfig() {
             let modelName = (document.getElementById('gemini-model').value || 'gemini-3.8-flash').trim();
             modelName = modelName.replace(/^models\//, '');
+            if (modelName === 'gemini-2.5-pro' || modelName === 'gemini-2.5-flash') {
+                modelName = 'gemini-3.1-pro-preview';
+            }
             document.getElementById('gemini-model').value = modelName;
 
             const protocol = document.getElementById('gemini-protocol').value || 'auto';
@@ -1418,16 +1429,18 @@
 
             const modelsToTry = [
                 conf.model,
-                'gemini-3.5-flash-lite',
-                'gemini-3.8-pro',
-                'gemini-2.5-pro'
-            ].filter((v, i, arr) => v && arr.indexOf(v) === i);
+                'gemini-3.1-pro-preview',
+                'gemini-3.8-flash',
+                'gemini-3-flash-preview'
+            ].filter((v, i, arr) => v && !v.includes('2.5') && !v.includes('2.0') && arr.indexOf(v) === i);
 
             const executeSingleRequest = async (modelName) => {
+                const cleanModel = modelName.replace(/^models\//, '');
+
                 const tryInteractionsAPI = async () => {
                     const url = `https://generativelanguage.googleapis.com/v1beta/interactions?key=${encodeURIComponent(conf.apiKey)}`;
                     const payload = {
-                        model: modelName,
+                        model: cleanModel,
                         input: userInput
                     };
                     if (systemInstruction && systemInstruction.trim()) {
@@ -1458,7 +1471,7 @@
                 };
 
                 const tryLegacyGenerateContent = async () => {
-                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cleanModel)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
                     const payload = {
                         contents: [{ role: "user", parts: [{ text: userInput }] }],
                         generationConfig: {
@@ -1499,20 +1512,39 @@
                     if (firstErr.message && /high demand|overloaded|temporar/i.test(firstErr.message)) {
                         throw firstErr;
                     }
-                    return await tryLegacyGenerateContent().catch(() => { throw firstErr; });
+                    return await tryLegacyGenerateContent().catch((secondErr) => {
+                        if (secondErr.message && secondErr.message.includes('HTTP 405')) {
+                            throw firstErr;
+                        }
+                        throw secondErr;
+                    });
                 }
             };
 
             let lastError = null;
 
-            for (const currentModel of modelsToTry) {
-                const maxAttempts = currentModel === conf.model ? 2 : 1;
+            for (let mIdx = 0; mIdx < modelsToTry.length; mIdx++) {
+                const currentModel = modelsToTry[mIdx];
+                const maxAttempts = mIdx === 0 ? 2 : 1;
 
                 for (let attempt = 1; attempt <= maxAttempts; attempt++) {
                     try {
                         return await executeSingleRequest(currentModel);
                     } catch (err) {
                         lastError = err;
+
+                        const suggestedMatch = err.message && err.message.match(/use models\/([a-zA-Z0-9.-]+)/i);
+                        if (suggestedMatch && suggestedMatch[1]) {
+                            const suggestedModel = suggestedMatch[1].trim();
+                            if (!modelsToTry.includes(suggestedModel)) {
+                                modelsToTry.splice(mIdx + 1, 0, suggestedModel);
+                            }
+                            if (statusBox) {
+                                statusBox.innerHTML += `<div class="text-sky-300">🔄 Автопереключение на рекомендованную Google модель <strong>${suggestedModel}</strong>...</div>`;
+                            }
+                            break;
+                        }
+
                         const isOverloaded =
                             err.status === 503 ||
                             err.status === 429 ||
@@ -1527,8 +1559,8 @@
                                 statusBox.innerHTML += `<div class="text-amber-300">⏳ Сервер <strong>${currentModel}</strong> перегружен (High demand). Авто-повтор через 3 сек...</div>`;
                             }
                             await sleep(3000);
-                        } else if (statusBox) {
-                            statusBox.innerHTML += `<div class="text-amber-400">🔄 Переключение с перегруженной <strong>${currentModel}</strong> на резервную модель...</div>`;
+                        } else if (mIdx + 1 < modelsToTry.length && statusBox) {
+                            statusBox.innerHTML += `<div class="text-amber-400">🔄 Переключение с перегруженной <strong>${currentModel}</strong> на <strong>${modelsToTry[mIdx + 1]}</strong>...</div>`;
                         }
                     }
                 }
