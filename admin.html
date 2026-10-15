@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS 2</title>
-    <!-- Tailwind CSS (идентично index.html и article.html) -->
+    <title>ВЕСТНИК-CMS 3</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,10 +70,10 @@
                 <div>
                     <div class="font-bold text-sm sm:text-base tracking-tight flex items-center gap-2">
                         <span>ВЕСТНИК-CMS</span>
-                        <span class="text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-2 py-0.5 rounded uppercase">AI v3.8</span>
+                        <span class="text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-2 py-0.5 rounded uppercase">AI v3.8 PRO</span>
                     </div>
                     <div id="sync-status-line" class="text-[11px] text-slate-400 font-mono">
-                        База и Лор загружены • Готово к работе
+                        База db.json и Лор загружены • Готово к работе
                     </div>
                 </div>
             </div>
@@ -136,7 +136,7 @@
                 </button>
                 <button onclick="switchTab('settings')" id="tab-btn-settings" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-sliders"></i>
-                    <span>5. Шапка и Опрос</span>
+                    <span>5. Шапка и Опрос (db.json)</span>
                 </button>
                 <button onclick="switchTab('github')" id="tab-btn-github" class="px-4 py-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap cursor-pointer">
                     <i class="fa-brands fa-github text-emerald-400"></i>
@@ -162,7 +162,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h1 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Управление материалами агентства</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">Создавайте статьи вручную или генерируйте связанные репортажи через ИИ-агента Gemini с учетом базы лора.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Создавайте статьи вручную или генерируйте связанные репортажи через ИИ-агента Gemini с полным чтением и обновлением <code>db.json</code> и <code>universe_lore.json</code>.</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2.5">
                     <button
@@ -429,7 +429,7 @@
         </section>
 
         <!-- ========================================================= -->
-        <!-- ВКЛАДКА 3: 🤖 ИИ-НЬЮСРУМ GEMINI (INTERACTIONS API)        -->
+        <!-- ВКЛАДКА 3: 🤖 ИИ-НЬЮСРУМ GEMINI (INTERACTIONS API + DB)   -->
         <!-- ========================================================= -->
         <section id="tab-ai" class="hidden space-y-6">
             <div class="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 text-white rounded-2xl p-6 shadow-md border border-indigo-500/30 flex flex-wrap items-center justify-between gap-4">
@@ -439,11 +439,11 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h2 class="font-headline font-extrabold text-xl sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» (Interactions API)</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">gemini-3.8-flash</span>
+                            <h2 class="font-headline font-extrabold text-xl sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» (Полная синхронизация db.json + Лор)</h2>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Auto-Retry & JSON Repair</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Работает через протокол <strong>Google Gemini Interactions API</strong>. Агент учитывает досье всех персонажей из <code>universe_lore.json</code>, сверяется с опубликованными статьями и автоматически дополняет память вселенной.
+                            Агент читает полные тексты всех статей и настроек из <code>db.json</code>, сверяется с досье персонажей в <code>universe_lore.json</code>, пишет новую статью с комментариями, а затем <strong>автоматически обновляет информеры городов, котировки, опрос дня, старые статьи и базу лора</strong>.
                         </p>
                     </div>
                 </div>
@@ -513,15 +513,19 @@
                     <div class="p-4 bg-indigo-50/60 border border-indigo-200/80 rounded-xl space-y-2.5 text-xs">
                         <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
                             <input type="checkbox" id="ai-use-lore" checked class="w-4 h-4 accent-indigo-600">
-                            <span>Использовать базу персонажей и правил мира (<code>universe_lore.json</code>)</span>
+                            <span>Читать и учитывать базу персонажей и правил мира (<code>universe_lore.json</code>)</span>
                         </label>
                         <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
                             <input type="checkbox" id="ai-use-articles" checked class="w-4 h-4 accent-indigo-600">
-                            <span>Опираться на текст всех существующих статей сайта (полная сюжетная связность без противоречий)</span>
+                            <span>Читать полные тексты всех существующих статей и настроек из <code>db.json</code></span>
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-indigo-950">
+                            <input type="checkbox" id="ai-auto-update-db" checked class="w-4 h-4 accent-indigo-600">
+                            <span>🏙️ <strong>Авто-обновление db.json:</strong> обновлять информеры городов, котировки, «Опрос дня» и добавлять ссылки на продолжение в старые статьи</span>
                         </label>
                         <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-indigo-950">
                             <input type="checkbox" id="ai-auto-update-lore" checked class="w-4 h-4 accent-indigo-600">
-                            <span>🔄 <strong>Авто-обновление Лора:</strong> после написания новости ИИ сам обновит биографии задействованных героев и хронологию в <code>universe_lore.json</code></span>
+                            <span>🔄 <strong>Авто-обновление Лора:</strong> дополнять биографии героев и хронологию в <code>universe_lore.json</code></span>
                         </label>
                         <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-brand-red">
                             <input type="checkbox" id="ai-make-hero" checked class="w-4 h-4 accent-brand-red">
@@ -548,7 +552,7 @@
                             class="px-5 py-3 bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer"
                         >
                             <i class="fa-solid fa-bolt"></i>
-                            <span>Автопилот: Сгенерировать + Обновить Лор + Push в GitHub</span>
+                            <span>Автопилот: Сгенерировать + Обновить db.json и Лор + Push в GitHub</span>
                         </button>
                     </div>
 
@@ -580,7 +584,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Модель Gemini:</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Основная модель Gemini (при перегрузке сработает авто-резерв):</label>
                             <input
                                 type="text"
                                 id="gemini-model"
@@ -591,8 +595,9 @@
                                 class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:bg-white focus:border-indigo-600"
                             >
                             <datalist id="gemini-models-datalist">
-                                <option value="gemini-3.8-flash">Gemini 3.8 Flash (Рекомендуемая)</option>
-                                <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite</option>
+                                <option value="gemini-3.8-flash">Gemini 3.8 Flash (Основная)</option>
+                                <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (Без очередей)</option>
+                                <option value="gemini-3.8-pro">Gemini 3.8 Pro</option>
                                 <option value="gemini-4-argon">Gemini 4 Argon</option>
                             </datalist>
                         </div>
@@ -600,7 +605,7 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Протокол подключения:</label>
                             <select id="gemini-protocol" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
-                                <option value="auto">Авто (Interactions API + резервный generateContent)</option>
+                                <option value="auto">Авто (Interactions API + фоллбэк)</option>
                                 <option value="interactions">Interactions API (/v1beta/interactions)</option>
                                 <option value="generateContent">Классический (:generateContent)</option>
                             </select>
@@ -614,14 +619,14 @@
                     <!-- Индикатор памяти ИИ -->
                     <div class="bg-slate-900 text-slate-200 rounded-xl p-5 border border-slate-800 space-y-3 text-xs">
                         <div class="font-bold text-amber-400 uppercase tracking-wider flex items-center justify-between">
-                            <span><i class="fa-solid fa-brain mr-1.5"></i> Оперативная память ИИ</span>
-                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-emerald-400">АКТИВНА</span>
+                            <span><i class="fa-solid fa-brain mr-1.5"></i> Контекст ИИ-Агента</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-emerald-400">SINCHRONIZED</span>
                         </div>
                         <div class="space-y-1.5 text-slate-300 font-mono text-[11px]">
                             <div>• Персонажей в лоре: <strong id="ai-stat-chars" class="text-white">0</strong></div>
                             <div>• Локаций и правил: <strong id="ai-stat-locs" class="text-white">0</strong></div>
                             <div>• Событий хронологии: <strong id="ai-stat-events" class="text-white">0</strong></div>
-                            <div>• Статей в контексте: <strong id="ai-stat-arts" class="text-white">0</strong></div>
+                            <div>• Полных статей в db.json: <strong id="ai-stat-arts" class="text-white">0</strong></div>
                         </div>
                         <button onclick="switchTab('lore')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold rounded-lg transition cursor-pointer">
                             Открыть редактор Лора →
@@ -648,7 +653,7 @@
                 <div class="flex flex-wrap items-center gap-2">
                     <button onclick="syncLoreFromArticlesWithAI()" id="btn-ai-lore-audit" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition cursor-pointer" title="ИИ перечитает все статьи и обновит статусы персонажей">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Актуализировать Лор через ИИ</span>
+                        <span>Актуализировать Лор по db.json через ИИ</span>
                     </button>
                     <button onclick="downloadLoreJson()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition cursor-pointer">
                         <i class="fa-solid fa-download text-amber-400"></i>
@@ -714,8 +719,8 @@
         <section id="tab-settings" class="hidden space-y-6">
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Глобальные настройки портала «Вестник России»</h2>
-                    <p class="text-xs text-slate-500">Все изменения здесь меняют шапку, бегущую строку «МОЛНИЯ», рубрики и опрос сразу на всех страницах сайта.</p>
+                    <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">Глобальные настройки портала в <code>db.json</code></h2>
+                    <p class="text-xs text-slate-500">Все изменения здесь (и автообновления от ИИ) меняют шапку, бегущую строку «МОЛНИЯ», информеры, котировки и опрос на всех страницах сайта.</p>
                 </div>
                 <div class="flex items-center gap-2.5">
                     <button onclick="saveSiteSettings(false)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg cursor-pointer">
@@ -794,7 +799,7 @@
                     <div>
                         <h2 class="font-headline font-bold text-xl text-slate-900">Прямая публикация в GitHub Pages (Двойная синхронизация)</h2>
                         <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-                            При нажатии <strong>«Опубликовать в GitHub»</strong> админка автоматически коммитит в ваш репозиторий сразу оба файла: базу статей <code>db.json</code> и обновленную память ИИ-агента <code>universe_lore.json</code>.
+                            При нажатии <strong>«Опубликовать в GitHub»</strong> админка автоматически коммитит в ваш репозиторий сразу оба файла: базу статей и настроек <code>db.json</code> и обновленную память ИИ-агента <code>universe_lore.json</code>.
                         </p>
                     </div>
                 </div>
@@ -835,7 +840,7 @@
 
     </main>
 
-    <!-- JAVASCRIPT: БАЗА НОВОСТЕЙ, БАЗА ЛОРА И INTERACTIONS API GEMINI 3.8 -->
+    <!-- JAVASCRIPT: БАЗА НОВОСТЕЙ, БАЗА ЛОРА, РЕМОНТ JSON И INTERACTIONS API -->
     <script>
         const DEFAULT_LORE = {
             universeName: "Хроники Вестника России (2026–2027)",
@@ -1060,6 +1065,7 @@
         let appDB = JSON.parse(JSON.stringify(DEFAULT_DB));
         let appLore = JSON.parse(JSON.stringify(DEFAULT_LORE));
         let editingOriginalId = null;
+        window._lastAiGeneratedComments = null;
 
         async function initCMS() {
             const ghConf = JSON.parse(localStorage.getItem('vestnik_gh_config') || '{}');
@@ -1303,7 +1309,7 @@
         }
 
         // =========================================================================
-        // 🤖 GOOGLE GEMINI INTERACTIONS API (/v1beta/interactions) + FALLBACK
+        // 🤖 GOOGLE GEMINI INTERACTIONS API + AUTO-RETRY + АВТО-РЕМОНТ JSON
         // =========================================================================
         function saveGeminiConfig() {
             let modelName = (document.getElementById('gemini-model').value || 'gemini-3.8-flash').trim();
@@ -1358,7 +1364,73 @@
             return null;
         }
 
-        // Безопасная очистка JSON без использования сырых тройных кавычек в коде
+        // Интеллектуальный авто-ремонт поврежденного JSON (исправляет неэкранированные кавычки в HTML, переносы строк и обрывы)
+        function repairBrokenJsonString(str) {
+            // 1. Заменяем неэкранированные двойные кавычки внутри HTML-тегов <tag class="..."> на одинарные <tag class='...'>
+            let fixed = str.replace(/<([a-zA-Z0-9]+)\s+([^>]*?)>/g, (fullMatch, tag, attrs) => {
+                const fixedAttrs = attrs.replace(/=\s*"([^"]*)"/g, "='$1'");
+                return `<${tag} ${fixedAttrs}>`;
+            });
+
+            // 2. Убираем висячие запятые перед } или ]
+            fixed = fixed.replace(/,(\s*[}\]])/g, '$1');
+
+            // 3. Экранируем сырые переносы строк и табуляции внутри JSON-строк
+            let inString = false;
+            let escaped = false;
+            let result = '';
+            for (let i = 0; i < fixed.length; i++) {
+                const ch = fixed[i];
+                if (escaped) {
+                    result += ch;
+                    escaped = false;
+                    continue;
+                }
+                if (ch === '\\') {
+                    result += ch;
+                    escaped = true;
+                    continue;
+                }
+                if (ch === '"') {
+                    inString = !inString;
+                    result += ch;
+                    continue;
+                }
+                if (inString) {
+                    if (ch === '\n') { result += '\\n'; continue; }
+                    if (ch === '\r') { continue; }
+                    if (ch === '\t') { result += '\\t'; continue; }
+                }
+                result += ch;
+            }
+
+            // 4. Авто-закрытие оборванных скобок } и ], если ответ модели обрезался
+            if (inString) result += '"';
+            const stack = [];
+            inString = false;
+            escaped = false;
+            for (let i = 0; i < result.length; i++) {
+                const ch = result[i];
+                if (escaped) { escaped = false; continue; }
+                if (ch === '\\') { escaped = true; continue; }
+                if (ch === '"') { inString = !inString; continue; }
+                if (!inString) {
+                    if (ch === '{') stack.push('}');
+                    else if (ch === '[') stack.push(']');
+                    else if (ch === '}' || ch === ']') {
+                        if (stack.length > 0 && stack[stack.length - 1] === ch) {
+                            stack.pop();
+                        }
+                    }
+                }
+            }
+            while (stack.length > 0) {
+                result += stack.pop();
+            }
+
+            return result;
+        }
+
         function parseModelJsonSafely(rawText) {
             let cleaned = String(rawText || '')
                 .replace(/^\x60\x60\x60json\s*/i, '')
@@ -1370,88 +1442,150 @@
             const lastBrace = cleaned.lastIndexOf('}');
             if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
                 cleaned = cleaned.slice(firstBrace, lastBrace + 1);
+            } else if (firstBrace !== -1) {
+                cleaned = cleaned.slice(firstBrace);
             }
-            return JSON.parse(cleaned);
+
+            // Попытка 1: штатный парсинг
+            try {
+                return JSON.parse(cleaned);
+            } catch (e1) {
+                // Попытка 2: авто-ремонт HTML-кавычек, переносов и скобок
+                const repaired = repairBrokenJsonString(cleaned);
+                return JSON.parse(repaired);
+            }
         }
 
+        // Вызов Gemini с автоматическим повтором при перегрузке (High demand) и переключением на резервные модели
         async function callGeminiAPI(conf, systemInstruction, userInput) {
-            const tryInteractionsAPI = async () => {
-                const url = `https://generativelanguage.googleapis.com/v1beta/interactions?key=${encodeURIComponent(conf.apiKey)}`;
-                const payload = {
-                    model: conf.model,
-                    input: userInput
-                };
-                if (systemInstruction && systemInstruction.trim()) {
-                    payload.system_instruction = systemInstruction;
-                }
+            const statusBox = document.getElementById('ai-status-box');
+            const sleep = (ms) => new Promise(res => setTimeout(res, ms));
 
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-goog-api-key': conf.apiKey
-                    },
-                    body: JSON.stringify(payload)
-                });
+            const modelsToTry = [
+                conf.model,
+                'gemini-3.5-flash-lite',
+                'gemini-3.8-pro',
+                'gemini-2.5-pro'
+            ].filter((v, i, arr) => v && arr.indexOf(v) === i);
 
-                if (!response.ok) {
-                    const errJson = await response.json().catch(() => ({}));
-                    const msg = (errJson.error && errJson.error.message) || errJson.message || `HTTP ${response.status} (${response.statusText || 'Interactions API'})`;
-                    const err = new Error(msg);
-                    err.status = response.status;
-                    throw err;
-                }
-
-                const data = await response.json();
-                const text = extractTextFromGeminiResponse(data);
-                if (!text) {
-                    throw new Error("Модель вернула ответ без текстового блока");
-                }
-                return text;
-            };
-
-            const tryLegacyGenerateContent = async () => {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(conf.model)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
-                const payload = {
-                    contents: [{ role: "user", parts: [{ text: userInput }] }],
-                    generationConfig: {
-                        temperature: 0.85,
-                        responseMimeType: "application/json"
+            const executeSingleRequest = async (modelName) => {
+                const tryInteractionsAPI = async () => {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/interactions?key=${encodeURIComponent(conf.apiKey)}`;
+                    const payload = {
+                        model: modelName,
+                        input: userInput
+                    };
+                    if (systemInstruction && systemInstruction.trim()) {
+                        payload.system_instruction = systemInstruction;
                     }
+
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-goog-api-key': conf.apiKey
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errJson = await response.json().catch(() => ({}));
+                        const msg = (errJson.error && errJson.error.message) || errJson.message || `HTTP ${response.status}`;
+                        const err = new Error(msg);
+                        err.status = response.status;
+                        throw err;
+                    }
+
+                    const data = await response.json();
+                    const text = extractTextFromGeminiResponse(data);
+                    if (!text) throw new Error("Модель вернула ответ без текстового блока");
+                    return text;
                 };
-                if (systemInstruction && systemInstruction.trim()) {
-                    payload.systemInstruction = { parts: [{ text: systemInstruction }] };
+
+                const tryLegacyGenerateContent = async () => {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
+                    const payload = {
+                        contents: [{ role: "user", parts: [{ text: userInput }] }],
+                        generationConfig: {
+                            temperature: 0.8,
+                            responseMimeType: "application/json"
+                        }
+                    };
+                    if (systemInstruction && systemInstruction.trim()) {
+                        payload.systemInstruction = { parts: [{ text: systemInstruction }] };
+                    }
+
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errJson = await response.json().catch(() => ({}));
+                        const msg = (errJson.error && errJson.error.message) || `HTTP ${response.status}`;
+                        const err = new Error(msg);
+                        err.status = response.status;
+                        throw err;
+                    }
+
+                    const data = await response.json();
+                    const text = extractTextFromGeminiResponse(data);
+                    if (!text) throw new Error("Пустой ответ от generateContent");
+                    return text;
+                };
+
+                if (conf.protocol === 'generateContent') return await tryLegacyGenerateContent();
+                if (conf.protocol === 'interactions') return await tryInteractionsAPI();
+
+                try {
+                    return await tryInteractionsAPI();
+                } catch (firstErr) {
+                    if (firstErr.message && /high demand|overloaded|temporar/i.test(firstErr.message)) {
+                        throw firstErr;
+                    }
+                    return await tryLegacyGenerateContent().catch(() => { throw firstErr; });
                 }
-
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errJson = await response.json().catch(() => ({}));
-                    const msg = (errJson.error && errJson.error.message) || `HTTP ${response.status} (generateContent)`;
-                    throw new Error(msg);
-                }
-
-                const data = await response.json();
-                const text = extractTextFromGeminiResponse(data);
-                if (!text) throw new Error("Пустой ответ от generateContent");
-                return text;
             };
 
-            if (conf.protocol === 'generateContent') {
-                return await tryLegacyGenerateContent();
+            let lastError = null;
+
+            for (const currentModel of modelsToTry) {
+                const maxAttempts = currentModel === conf.model ? 2 : 1;
+
+                for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+                    try {
+                        return await executeSingleRequest(currentModel);
+                    } catch (err) {
+                        lastError = err;
+                        const isOverloaded =
+                            err.status === 503 ||
+                            err.status === 429 ||
+                            /high demand|overloaded|unavailable|quota|temporar/i.test(err.message);
+
+                        if (!isOverloaded) {
+                            break;
+                        }
+
+                        if (attempt < maxAttempts) {
+                            if (statusBox) {
+                                statusBox.innerHTML += `<div class="text-amber-300">⏳ Сервер <strong>${currentModel}</strong> перегружен (High demand). Авто-повтор через 3 сек...</div>`;
+                            }
+                            await sleep(3000);
+                        } else if (statusBox) {
+                            statusBox.innerHTML += `<div class="text-amber-400">🔄 Переключение с перегруженной <strong>${currentModel}</strong> на резервную модель...</div>`;
+                        }
+                    }
+                }
             }
-            if (conf.protocol === 'interactions') {
-                return await tryInteractionsAPI();
-            }
-            try {
-                return await tryInteractionsAPI();
-            } catch (firstErr) {
-                return await tryLegacyGenerateContent().catch(() => { throw firstErr; });
-            }
+
+            throw lastError || new Error("Серверы Gemini временно перегружены, попробуйте через 15 секунд.");
+        }
+
+        function stripHtmlForContext(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html || '';
+            return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
         }
 
         async function runGeminiGenerator(autoPublishAndPush = false) {
@@ -1470,6 +1604,7 @@
 
             const useLore = document.getElementById('ai-use-lore').checked;
             const useArticles = document.getElementById('ai-use-articles').checked;
+            const autoUpdateDb = document.getElementById('ai-auto-update-db').checked;
             const autoUpdateLore = document.getElementById('ai-auto-update-lore').checked;
             const makeHero = document.getElementById('ai-make-hero').checked;
             const targetCat = document.getElementById('ai-target-category').value;
@@ -1477,35 +1612,48 @@
 
             const statusBox = document.getElementById('ai-status-box');
             statusBox.classList.remove('hidden');
-            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Отправка запроса в <strong>Gemini (${conf.model})</strong> • Персонажей в лоре: ${appLore.characters.length}, статей: ${appDB.articles.length}...</div>`;
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Отправка запроса в <strong>Gemini (${conf.model})</strong> • Чтение полной базы db.json (${appDB.articles.length} статей) и universe_lore.json (${appLore.characters.length} героев)...</div>`;
 
-            const existingArticlesDigest = useArticles
-                ? (appDB.articles || []).map((a, i) => `${i + 1}. [ID: ${a.id} | ${a.date} | ${a.geo}] Заголовок: ${a.title}\nЛид: ${a.lead}`).join('\n\n')
+            // 1. Полное чтение всех статей и настроек из db.json для контекста ИИ
+            const existingArticlesFull = useArticles
+                ? (appDB.articles || []).map((a, i) =>
+                    `СТАТЬЯ #${i + 1} [ID: "${a.id}" | Дата: ${a.date} | Рубрика: ${a.category} | Город: ${a.geo}]\n` +
+                    `Заголовок: ${a.title}\n` +
+                    `Лид: ${a.lead}\n` +
+                    `Полный текст: ${stripHtmlForContext(a.body)}`
+                ).join('\n\n---\n\n')
                 : "Контекст прошлых статей отключен.";
+
+            const currentSiteSettingsContext = JSON.stringify({
+                breakingNews: appDB.siteSettings.breakingNews,
+                categories: appDB.siteSettings.categories,
+                informers: appDB.siteSettings.informers,
+                tickers: appDB.siteSettings.tickers,
+                poll: appDB.siteSettings.poll
+            }, null, 2);
 
             const loreContext = useLore ? JSON.stringify(appLore, null, 2) : "Лор отключен.";
 
             const systemInstruction = `Ты — главный редактор сатирического федерального информационного агентства «ВЕСТНИК РОССИИ» (стиль РБК, ТАСС, Коммерсантъ).
-Твоя задача — написать невероятно смешную, абсурдную, но выдержанную в предельно серьезном, канцелярско-протокольном, бюрократическом тоне новостную статью по заданию пользователя.
+Твоя задача — написать невероятно смешную, абсурдную, но выдержанную в предельно серьезном, канцелярско-протокольном, бюрократическом тоне новостную статью по заданию пользователя, а также подготовить обновления для базы сайта (db.json) и базы лора (universe_lore.json).
 
-КРИТИЧЕСКИ ВАЖНЫЕ ПРАВИЛА КАНОНА И СВЯЗНОСТИ:
-1. Внимательно изучи БАЗУ ЛОРА ВСЕЛЕННОЙ (персонажей, их точный возраст, родные города, должности и историю) и ДАЙДЖЕСТ СУЩЕСТВУЮЩИХ СТАТЕЙ.
-2. НИКОГДА не противоречь установленным фактам:
+КРИТИЧЕСКИ ВАЖНЫЕ ПРАВИЛА КАНОНА И СВЯЗНОСТИ С DB.JSON:
+1. Внимательно изучи БАЗУ ЛОРА ВСЕЛЕННОЙ (universe_lore.json), ПОЛНЫЕ ТЕКСТЫ СУЩЕСТВУЮЩИХ СТАТЕЙ из db.json и ТЕКУЩИЕ НАСТРОЙКИ САЙТА из db.json.
+2. НИКОГДА не допускай противоречий с уже опубликованными статьями:
    - Станислав Д. — верховный главнокомандующий Объединенных сырных сил (ОСС) во Владикавказе, воюет за рассольный сыр «ирон цыхт» для пирогов уалибах, внесен в тройной реестр (иноагент, экстремист, террорист).
    - Андрей Б. — 22 года, родом из станицы Гостагаевской, жил в Анапе, работал разнорабочим в суши-баре (НЕ шеф-поваром!), проиграл 7 схваток жертвам на Пионерском проспекте (включая 64-летнюю пенсионерку с термосом шиповника), теперь командир штурмовиков ОСС в бронежилете из спрессованного творога.
    - Мирослав К. — 22 года, родом из г. Мелеуз (отпиливаемый Башкортостан), уехал в Таганрог учиться на программиста, обрушил индекс правопорядка Таганрога до −142%, используется ОСС как статистическое психотронное оружие.
    - Герман Ф. — 22 года, родом из Владикавказа, живет в Санкт-Петербурге, программист геймдев-студии (разрабатывает игры), выступ носа 53 мм (при лимите Смольного в 42 мм), запустил в мессенджере МАКС флешмоб #ДАбольшимносам! и курирует IT-связь молоковозов Станислава Д.
-3. Органично ссылайся на прошлые события из существующих статей, чтобы сайт читался как единая киновселенная.
 
-ТРЕБОВАНИЯ К HTML-ВЕРСТКЕ ПОЛЯ "body":
-Поле "body" должно содержать ТОЛЬКО чистую, богатую HTML-верстку тела статьи (без <h1> и без лид-абзаца, так как они передаются в отдельных полях):
-- Обычные абзацы оборачивай в <p>...</p>.
-- Подзаголовки разделов оборачивай строго в: <h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Текст подзаголовка</h2>
-- Официальные цитаты оборачивай строго в:
-<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm"><p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«Текст цитаты», — должность спикера.</p></blockquote>
-- Режим спецблоков (${specialBlocks}): при необходимости включи маркированный список, таблицу сводки <div id="dossier-block" ...> или карточку поста из мессенджера МАКС <div id="max-flashmob" ...> в точно таком же Tailwind-стиле, как в прошлых статьях.
+ПРАВИЛА БЕЗОПАСНОГО JSON И HTML В ПОЛЕ "body" (ЧТОБЫ НЕ БЫЛО ОШИБКИ ПАРСИНГА):
+1. Внутри поля "body" во всех HTML-тегах используй ТОЛЬКО ОДИНАРНЫЕ кавычки (') для атрибутов class и id!
+   Пример: <h2 class='font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4'>Подзаголовок</h2>
+   Пример: <blockquote class='quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm'><p class='italic text-slate-800 text-base leading-relaxed mb-2 font-serif'>«Текст цитаты», — спикер.</p></blockquote>
+2. Для любых кавычек в русском тексте используй ТОЛЬКО кавычки-ёлочки «...». НИКОГДА не используй неэкранированные двойные кавычки " внутри значений JSON!
+3. Пиши всё содержимое поля "body" в одну строку без сырых переносов строки.
+4. Режим спецблоков (${specialBlocks}): при необходимости добавь маркированный список, таблицу <div id='dossier-block' ...> или карточку <div id='max-flashmob' ...> с одинарными кавычками в атрибутах.
 
-ВАЖНО: Верни ответ СТРОГО в виде валидного JSON-объекта (без оберток и без лишнего текста до или после JSON) по следующей схеме:
+Верни ответ СТРОГО в виде валидного JSON-объекта по следующей схеме:
 {
   "article": {
     "id": "krotkiy-latin-slug-novosti",
@@ -1517,17 +1665,50 @@
     "badgeTelemetry": "КРАТКАЯ ТЕЛЕМЕТРИЯ РАДАРА С ЦИФРАМИ И ПРОЦЕНТАМИ",
     "caption": "Фото: Подпись фотослужбы «Вестник России»",
     "tags": ["Тег1", "Тег2", "Тег3"],
-    "body": "Полный HTML-код тела статьи со всеми тегами <p>, <h2>, <blockquote> и спецблоками"
+    "body": "<p>Текст статьи с одинарными кавычками в HTML-атрибутах...</p>",
+    "comments": [
+      {
+        "author": "Имя комментатора",
+        "badge": "Город / Статус",
+        "time": "Только что",
+        "text": "Смешной комментарий по теме статьи"
+      }
+    ]
   },
-  "updatedBreakingNews": "Новая строка МОЛНИИ для шапки сайта по мотивам этой статьи",
+  "dbUpdates": {
+    "updatedBreakingNews": "Новая строка МОЛНИИ для шапки сайта",
+    "updatedInformer": {
+      "city": "Город статьи",
+      "status": "Краткий статус (2-3 слова)",
+      "icon": "fa-bolt",
+      "color": "text-amber-400"
+    },
+    "updatedTicker": {
+      "label": "Название индекса (например, СЫР ИРОН)",
+      "value": "Значение со стрелкой ▲ или ▼",
+      "color": "text-amber-400"
+    },
+    "updatedPoll": {
+      "question": "Новый актуальный вопрос опроса дня по теме свежей статьи",
+      "options": [
+        { "text": "Вариант 1", "votes": 840 },
+        { "text": "Вариант 2", "votes": 620 },
+        { "text": "Вариант 3", "votes": 410 }
+      ]
+    },
+    "appendUpdateToOldArticle": {
+      "targetArticleId": "ID существующей статьи из db.json, которую продолжает эта новость (или пустая строка)",
+      "updateText": "Краткая сводка (1 предложение), как сюжет получил развитие в новом материале"
+    }
+  },
   "loreUpdates": {
-    "newTimelineEvent": "Краткая запись о событии этой статьи с датой для добавления в хронологию вселенной",
+    "newTimelineEvent": "Краткая запись о событии этой статьи с датой для хронологии вселенной",
     "characterUpdates": [
       {
-        "name": "Имя персонажа (точно как в базе или новый)",
-        "currentLocation": "Обновленная локация персонажа после событий статьи",
+        "name": "Имя персонажа",
+        "currentLocation": "Обновленная локация персонажа",
         "status": "Обновленный статус персонажа",
-        "appendBiography": "Одно предложение о том, что персонаж сделал в этой статье (будет добавлено к его биографии)"
+        "appendBiography": "Одно предложение о новых действиях персонажа"
       }
     ]
   }
@@ -1536,8 +1717,11 @@
             const fullUserContent = `БАЗА ЛОРА ВСЕЛЕННОЙ (universe_lore.json):
 ${loreContext}
 
-ДАЙДЖЕСТ СУЩЕСТВУЮЩИХ СТАТЕЙ НА САЙТЕ (db.json):
-${existingArticlesDigest}
+ТЕКУЩИЕ НАСТРОЙКИ САЙТА ИЗ DB.JSON (Информеры, котировки, опрос):
+${currentSiteSettingsContext}
+
+ПОЛНЫЕ ТЕКСТЫ ВСЕХ СУЩЕСТВУЮЩИХ СТАТЕЙ НА САЙТЕ ИЗ DB.JSON:
+${existingArticlesFull}
 
 ЗАДАНИЕ НА НОВУЮ СТАТЬЮ ОТ ГЛАВНОГО РЕДАКТОРА:
 ${userPrompt}`;
@@ -1551,8 +1735,82 @@ ${userPrompt}`;
                     throw new Error("Не удалось распознать структуру статьи в ответе ИИ");
                 }
 
+                const newArticleId = genArt.id || ("ai-news-" + Date.now().toString().slice(-4));
+                genArt.id = newArticleId;
+
                 statusBox.innerHTML += `<div class="text-emerald-400">✅ Статья сгенерирована: «${genArt.title}»</div>`;
 
+                // 2. АВТООБНОВЛЕНИЕ DB.JSON (Информеры, Котировки, Опрос, МОЛНИЯ и старые статьи)
+                const dbUpd = parsed.dbUpdates || {};
+
+                if (makeHero && (dbUpd.updatedBreakingNews || parsed.updatedBreakingNews)) {
+                    appDB.siteSettings.breakingNews = dbUpd.updatedBreakingNews || parsed.updatedBreakingNews;
+                    statusBox.innerHTML += `<div class="text-sky-300">⚡ Обновлена строка «МОЛНИЯ» в db.json</div>`;
+                }
+
+                if (autoUpdateDb) {
+                    // Информер города
+                    if (dbUpd.updatedInformer && dbUpd.updatedInformer.city && dbUpd.updatedInformer.status) {
+                        const inf = dbUpd.updatedInformer;
+                        const existingInf = (appDB.siteSettings.informers || []).find(i =>
+                            i.city.toLowerCase() === inf.city.toLowerCase()
+                        );
+                        if (existingInf) {
+                            existingInf.status = inf.status;
+                            existingInf.articleId = newArticleId;
+                        } else {
+                            appDB.siteSettings.informers.unshift({
+                                city: inf.city,
+                                status: inf.status,
+                                icon: inf.icon || "fa-bolt",
+                                color: inf.color || "text-amber-400",
+                                articleId: newArticleId
+                            });
+                            if (appDB.siteSettings.informers.length > 6) {
+                                appDB.siteSettings.informers.pop();
+                            }
+                        }
+                        statusBox.innerHTML += `<div class="text-sky-300">🏙️ Обновлен информер города «${inf.city}: ${inf.status}» в db.json</div>`;
+                    }
+
+                    // Биржевой индекс
+                    if (dbUpd.updatedTicker && dbUpd.updatedTicker.label && dbUpd.updatedTicker.value) {
+                        const tick = dbUpd.updatedTicker;
+                        const existingTick = (appDB.siteSettings.tickers || []).find(t =>
+                            t.label.toLowerCase() === tick.label.toLowerCase()
+                        );
+                        if (existingTick) {
+                            existingTick.value = tick.value;
+                        } else if (appDB.siteSettings.tickers.length > 0) {
+                            appDB.siteSettings.tickers[appDB.siteSettings.tickers.length - 1] = {
+                                label: tick.label.toUpperCase(),
+                                value: tick.value,
+                                color: tick.color || "text-amber-400"
+                            };
+                        }
+                    }
+
+                    // Опрос дня
+                    if (dbUpd.updatedPoll && dbUpd.updatedPoll.question && Array.isArray(dbUpd.updatedPoll.options) && dbUpd.updatedPoll.options.length > 1) {
+                        appDB.siteSettings.poll = dbUpd.updatedPoll;
+                        localStorage.removeItem('vestnik_poll_votes');
+                        statusBox.innerHTML += `<div class="text-sky-300">📊 Обновлен виджет «Опрос дня» в db.json</div>`;
+                    }
+
+                    // Перекрестная ссылка в старой статье внутри db.json
+                    if (dbUpd.appendUpdateToOldArticle && dbUpd.appendUpdateToOldArticle.targetArticleId && dbUpd.appendUpdateToOldArticle.updateText) {
+                        const oldArt = (appDB.articles || []).find(a => a.id === dbUpd.appendUpdateToOldArticle.targetArticleId);
+                        if (oldArt && oldArt.body && !oldArt.body.includes(newArticleId)) {
+                            const updateBlockHtml = `\n<div class="my-6 p-4 bg-red-50 border-l-4 border-brand-red rounded-r-xl font-sans text-xs sm:text-sm text-slate-800">\n    <strong class="text-brand-red uppercase tracking-wider block mb-1">⚡ ОБНОВЛЕНИЕ СЮЖЕТА:</strong>\n    <span>${dbUpd.appendUpdateToOldArticle.updateText} — </span>\n    <a href="article.html?id=${encodeURIComponent(newArticleId)}" class="font-bold text-brand-red underline hover:text-brand-darkred">Читать продолжение репортажа →</a>\n</div>`;
+                            oldArt.body += updateBlockHtml;
+                            statusBox.innerHTML += `<div class="text-sky-300">🔗 В старую статью [${oldArt.id}] встроена ссылка на продолжение!</div>`;
+                        }
+                    }
+                }
+
+                populateSiteSettingsForm();
+
+                // 3. АВТООБНОВЛЕНИЕ БАЗЫ ЛОРА (universe_lore.json)
                 if (autoUpdateLore && parsed.loreUpdates) {
                     if (parsed.loreUpdates.newTimelineEvent) {
                         appLore.timeline.push(parsed.loreUpdates.newTimelineEvent);
@@ -1587,13 +1845,11 @@ ${userPrompt}`;
                     statusBox.innerHTML += `<div class="text-amber-300">📚 Память Лора (universe_lore.json) автоматически обновлена новыми фактами!</div>`;
                 }
 
-                if (makeHero && parsed.updatedBreakingNews) {
-                    appDB.siteSettings.breakingNews = parsed.updatedBreakingNews;
-                    populateSiteSettingsForm();
-                }
-
+                // 4. Заполняем поля редактора и сохраняем комментарии
                 editingOriginalId = null;
-                document.getElementById('ed-id').value = genArt.id || ("ai-news-" + Date.now().toString().slice(-4));
+                window._lastAiGeneratedComments = Array.isArray(genArt.comments) ? genArt.comments : [];
+
+                document.getElementById('ed-id').value = newArticleId;
                 document.getElementById('ed-ishero').checked = makeHero;
                 document.getElementById('ed-title').value = genArt.title || "";
                 document.getElementById('ed-category').value = genArt.category || "Общество";
@@ -1612,7 +1868,7 @@ ${userPrompt}`;
                     saveArticleFromEditor(true);
                 } else {
                     persistLocalBackup();
-                    showToast("Статья создана ИИ и открыта в редакторе!");
+                    showToast("Статья и обновления db.json готовы! Проверьте в редакторе.");
                     setTimeout(() => switchTab('editor'), 900);
                 }
 
@@ -1635,9 +1891,9 @@ ${userPrompt}`;
             btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading"></i> Синхронизация...`;
 
             try {
-                const digest = (appDB.articles || []).map(a => `[${a.date} | ${a.geo}] ${a.title}\n${a.lead}\n${a.body}`).join('\n\n---\n\n');
-                const sysPrompt = "Ты — аналитик базы знаний агентства «Вестник России». Верни ТОЛЬКО валидный JSON-объект структуры universe_lore.json без лишнего текста.";
-                const userPrompt = `Проанализируй все текущие статьи сайта и текущую базу universe_lore.json. Обнови статусы, локации и биографии существующих персонажей, добавь новых упомянутых персонажей и актуализируй хронологию событий (timeline), чтобы база знаний на 100% соответствовала всем статьям.\n\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\n\nСТАТЬИ САЙТА:\n${digest}`;
+                const digest = (appDB.articles || []).map(a => `[${a.date} | ${a.geo}] ${a.title}\n${a.lead}\n${stripHtmlForContext(a.body)}`).join('\n\n---\n\n');
+                const sysPrompt = "Ты — аналитик базы знаний агентства «Вестник России». Верни ТОЛЬКО валидный JSON-объект структуры universe_lore.json без лишнего текста. Внутри строк используй кавычки-ёлочки «...».";
+                const userPrompt = `Проанализируй все текущие статьи сайта из db.json и текущую базу universe_lore.json. Обнови статусы, локации и биографии существующих персонажей, добавь новых упомянутых персонажей и актуализируй хронологию событий (timeline), чтобы база знаний на 100% соответствовала всем статьям.\n\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\n\nСТАТЬИ САЙТА ИЗ DB.JSON:\n${digest}`;
 
                 const rawText = await callGeminiAPI(conf, sysPrompt, userPrompt);
                 const updatedLore = parseModelJsonSafely(rawText);
@@ -1645,7 +1901,7 @@ ${userPrompt}`;
                     appLore = updatedLore;
                     persistLocalBackup();
                     renderLoreUI();
-                    showToast("База Лора успешно синхронизирована со всеми статьями!");
+                    showToast("База Лора успешно синхронизирована со всеми статьями из db.json!");
                 }
             } catch (e) {
                 showToast("Ошибка синхронизации Лора: " + e.message, true);
@@ -1734,6 +1990,7 @@ ${userPrompt}`;
 
         function startNewArticle() {
             editingOriginalId = null;
+            window._lastAiGeneratedComments = null;
             document.getElementById('editor-mode-badge').textContent = "РЕЖИМ: СОЗДАНИЕ НОВОЙ ПУБЛИКАЦИИ";
             document.getElementById('editor-heading-title').textContent = "Новый материал агентства";
             document.getElementById('ed-id').value = "news-" + Date.now().toString().slice(-5);
@@ -1757,6 +2014,7 @@ ${userPrompt}`;
             const art = (appDB.articles || []).find(a => a.id === id);
             if (!art) return;
             editingOriginalId = art.id;
+            window._lastAiGeneratedComments = art.comments || null;
             document.getElementById('editor-mode-badge').textContent = `РЕЖИМ: РЕДАКТИРОВАНИЕ СТАТЬИ [${art.id}]`;
             document.getElementById('editor-heading-title').textContent = art.title;
             document.getElementById('ed-id').value = art.id || "";
@@ -1868,6 +2126,13 @@ ${userPrompt}`;
                 (appDB.articles || []).forEach(a => { a.isHero = false; });
             }
 
+            const targetId = editingOriginalId || id;
+            const idx = (appDB.articles || []).findIndex(a => a.id === targetId);
+            const existingComments = (idx !== -1 && appDB.articles[idx].comments) ? appDB.articles[idx].comments : [];
+            const finalComments = (window._lastAiGeneratedComments && window._lastAiGeneratedComments.length > 0)
+                ? window._lastAiGeneratedComments
+                : existingComments;
+
             const newArticleObj = {
                 id,
                 isHero,
@@ -1886,7 +2151,8 @@ ${userPrompt}`;
                     cheese: parseInt(document.getElementById('ed-r-cheese').value, 10) || 800,
                     shock: parseInt(document.getElementById('ed-r-shock').value, 10) || 500
                 },
-                commentsCount: 3,
+                comments: finalComments,
+                commentsCount: finalComments.length || 3,
                 body: document.getElementById('ed-body').value
             };
 
@@ -1894,20 +2160,18 @@ ${userPrompt}`;
                 appDB.siteSettings.categories.push(newArticleObj.category);
             }
 
-            const targetId = editingOriginalId || id;
-            const idx = (appDB.articles || []).findIndex(a => a.id === targetId);
             if (idx !== -1) {
-                newArticleObj.comments = appDB.articles[idx].comments || [];
                 appDB.articles[idx] = newArticleObj;
             } else {
                 appDB.articles.unshift(newArticleObj);
             }
 
             editingOriginalId = id;
+            window._lastAiGeneratedComments = null;
             persistLocalBackup();
             populateCategoryFilters();
             renderAdminArticlesList();
-            showToast("Статья сохранена в базу!");
+            showToast("Статья сохранена в базу db.json!");
 
             if (andPush) {
                 pushToGitHub();
@@ -1959,7 +2223,7 @@ ${userPrompt}`;
 
             persistLocalBackup();
             populateCategoryFilters();
-            showToast("Настройки портала сохранены!");
+            showToast("Настройки портала в db.json сохранены!");
             if (andPush) pushToGitHub();
         }
 
