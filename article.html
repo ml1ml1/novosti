@@ -39,10 +39,17 @@
             color: #1e293b;
             overflow-x: hidden;
         }
+        .article-content {
+            color: #1e293b;
+        }
         .article-content p {
             margin-bottom: 1.25rem;
             line-height: 1.8;
             word-wrap: break-word;
+            color: #1e293b;
+        }
+        .article-content h2, .article-content h3 {
+            color: #0f172a !important;
         }
         .article-content table {
             display: block;
@@ -50,9 +57,58 @@
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
-        .quote-block {
-            border-left: 4px solid #c01414;
-            background: linear-gradient(90deg, #fef2f2 0%, #ffffff 100%);
+        .quote-block,
+        .article-content blockquote:not(.max-messenger-card blockquote) {
+            border-left: 4px solid #c01414 !important;
+            background: linear-gradient(90deg, #fef2f2 0%, #ffffff 100%) !important;
+            color: #0f172a !important;
+        }
+        .quote-block p,
+        .article-content blockquote:not(.max-messenger-card blockquote) p {
+            color: #1e293b !important;
+        }
+        #max-flashmob,
+        .max-messenger-card {
+            background: linear-gradient(135deg, #0f172a 0%, #172554 55%, #0f172a 100%) !important;
+            color: #f8fafc !important;
+            border: 1px solid rgba(59, 130, 246, 0.45) !important;
+            border-radius: 0.75rem !important;
+            padding: 1.25rem !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25) !important;
+        }
+        #max-flashmob p,
+        .max-messenger-card p,
+        #max-flashmob blockquote,
+        .max-messenger-card blockquote {
+            color: #f1f5f9 !important;
+            background: transparent !important;
+            border-left: none !important;
+            margin-bottom: 0.5rem !important;
+        }
+        #max-flashmob strong,
+        .max-messenger-card strong {
+            color: #ffffff !important;
+        }
+        #max-flashmob .max-header-title,
+        .max-messenger-card .max-header-title {
+            color: #38bdf8 !important;
+            font-family: 'Inter', system-ui, sans-serif !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.04em !important;
+            text-transform: uppercase !important;
+        }
+        #dossier-block {
+            background-color: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #0f172a !important;
+            border-radius: 0.75rem !important;
+            overflow: hidden !important;
+        }
+        #dossier-block td,
+        #dossier-block th {
+            color: #0f172a !important;
         }
         @keyframes pulse-dot {
             0%, 100% { opacity: 1; transform: scale(1); }
@@ -738,6 +794,32 @@
             }
         }
 
+        function normalizeArticleBodyStyles(container) {
+            if (!container) return;
+
+            const allBlocks = container.querySelectorAll('div, section, aside, blockquote');
+            allBlocks.forEach(el => {
+                const textUpper = (el.textContent || '').toUpperCase();
+                const cls = el.className || '';
+                const isMaxBlock =
+                    el.id === 'max-flashmob' ||
+                    (el.parentElement === container && (
+                        textUpper.includes('МЕССЕНДЖЕР МАКС') ||
+                        cls.includes('from-blue-950') ||
+                        cls.includes('bg-blue-950') ||
+                        (cls.includes('border-blue-') && cls.includes('rounded'))
+                    ));
+
+                if (isMaxBlock) {
+                    el.classList.add('max-messenger-card');
+                    const firstChild = el.querySelector('div, span, p');
+                    if (firstChild && (firstChild.textContent || '').toUpperCase().includes('МЕССЕНДЖЕР МАКС')) {
+                        firstChild.classList.add('max-header-title');
+                    }
+                }
+            });
+        }
+
         function renderCurrentArticle() {
             if (!currentArticle) return;
             document.title = `${currentArticle.title} — ВЕСТНИК РОССИИ`;
@@ -791,7 +873,9 @@
                 const fallbackArt = DEFAULT_DB.articles.find(a => a.id === currentArticle.id);
                 bodyHTML = fallbackArt ? fallbackArt.body : `<p>${currentArticle.lead}</p>`;
             }
-            document.getElementById('article-body').innerHTML = bodyHTML;
+            const bodyContainer = document.getElementById('article-body');
+            bodyContainer.innerHTML = bodyHTML;
+            normalizeArticleBodyStyles(bodyContainer);
 
             const otherArticles = (appDB.articles || []).filter(a => a.id !== currentArticle.id).slice(0, 3);
             document.getElementById('related-articles-list').innerHTML = otherArticles.map(a => `
