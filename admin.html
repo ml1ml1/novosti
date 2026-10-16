@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS 4.0</title>
+    <title>ВЕСТНИК-CMS 4.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,10 +73,10 @@
                 <div class="min-w-0">
                     <div class="font-bold text-xs sm:text-base tracking-tight flex items-center gap-1.5 sm:gap-2">
                         <span class="truncate">ВЕСТНИК-CMS</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.0 PHOTO</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.2</span>
                     </div>
                     <div id="sync-status-line" class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">
-                        База db.json и Лор загружены • Готово к работе
+                        Загрузка базы данных...
                     </div>
                 </div>
             </div>
@@ -86,7 +86,6 @@
                     onclick="pushToGitHub()"
                     id="top-push-btn"
                     class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-2.5 sm:px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition cursor-pointer"
-                    title="Отправить db.json и universe_lore.json в GitHub репозиторий"
                 >
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                     <span class="hidden sm:inline">Опубликовать в GitHub</span>
@@ -95,7 +94,6 @@
                 <button
                     onclick="downloadDbJson()"
                     class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg flex items-center gap-1.5 transition cursor-pointer"
-                    title="Скачать файл db.json"
                 >
                     <i class="fa-solid fa-download text-sky-400"></i>
                     <span class="hidden lg:inline">db.json</span>
@@ -190,30 +188,13 @@
                         <i class="fa-solid fa-file-import mr-1 text-brand-red"></i> Импорт db.json
                         <input type="file" accept=".json" class="hidden" onchange="importDbJsonFile(event)">
                     </label>
-                    <button onclick="resetToDefaultDB()" class="flex-1 sm:flex-initial px-3 py-2 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-brand-red rounded-lg font-semibold transition cursor-pointer" title="Восстановить 6 исходных новостей">
-                        <i class="fa-solid fa-rotate-left mr-1"></i> Сброс (6)
+                    <button onclick="resetToDefaultDB()" class="flex-1 sm:flex-initial px-3 py-2 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-brand-red rounded-lg font-semibold transition cursor-pointer">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Перезагрузить с сервера
                     </button>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div id="admin-articles-mobile" class="md:hidden divide-y divide-slate-200"></div>
-
-                <div class="hidden md:block overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                        <thead>
-                            <tr class="bg-slate-900 text-slate-200 uppercase text-[11px] tracking-wider">
-                                <th class="py-3.5 px-4 font-bold">Статус / ID</th>
-                                <th class="py-3.5 px-4 font-bold">Заголовок и лид</th>
-                                <th class="py-3.5 px-4 font-bold">Рубрика / Формат</th>
-                                <th class="py-3.5 px-4 font-bold">Дата</th>
-                                <th class="py-3.5 px-4 font-bold text-right">Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-articles-tbody" class="divide-y divide-slate-200"></tbody>
-                    </table>
-                </div>
-            </div>
+            <div id="admin-articles-list" class="bg-white rounded-xl shadow-sm border border-slate-200 divide-y divide-slate-200 overflow-hidden"></div>
         </section>
 
         <section id="tab-editor" class="hidden space-y-4 sm:space-y-6">
@@ -435,10 +416,10 @@
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + ИИ-Фотослужба</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Gemini Text + Image Gen</span>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">500 RPD Flash Lite + Free FLUX / Nano Banana</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Агент читает статьи из <code>db.json</code> и персонажей из <code>universe_lore.json</code>, пишет репортаж в выбранном формате верстки, при желании <strong>генерирует реалистичную фотографию по сюжету статьи</strong> и автоматически обновляет информеры, опрос и базу лора.
+                            Агент читает статьи из <code>db.json</code> и персонажей из <code>universe_lore.json</code>, пишет репортаж в выбранном формате верстки, генерирует иллюстрацию через бесплатный ИИ-движок или Google API и автоматически обновляет информеры, опрос и базу лора.
                         </p>
                     </div>
                 </div>
@@ -461,26 +442,11 @@
                         ></textarea>
                     </div>
 
-                    <div>
-                        <div class="text-[11px] font-bold uppercase text-slate-400 mb-2">Быстрые сюжетные задания:</div>
-                        <div class="flex flex-wrap gap-2">
-                            <button type="button" onclick="setAiQuickPrompt('Станислав Д. ввел собственную криптовалюту «Крипто-Уалибах», обеспеченную рассольным сыром, а Мирослав К. обрушил курс биткоина в Таганроге до отрицательных величин.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer text-left">
-                                🧀 Крипто-Уалибах Станислава Д.
-                            </button>
-                            <button type="button" onclick="setAiQuickPrompt('Андрей Б. открыл во Владикавказе тренировочный лагерь спецназа ОСС по защите от пенсионерок с термосами шиповника, а Герман Ф. написал симулятор уклонения от пляжных шезлонгов.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer text-left">
-                                🥋 Полигон Андрея Б. против термосов
-                            </button>
-                            <button type="button" onclick="setAiQuickPrompt('Отпиливаемый Башкортостан случайно дал задний ход на водометах и пришвартовался к набережной Санкт-Петербурга, где у всех жителей проверили длину носа по постановлению № 412-п.')" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer text-left">
-                                🚢 Швартовка Башкортостана в Петербурге
-                            </button>
-                        </div>
-                    </div>
-
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-1">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">1. Режим иллюстрации / Фото к статье:</label>
                             <select id="ai-visual-mode" class="w-full px-3 py-2 text-xs sm:text-sm bg-indigo-50/70 border border-indigo-300 text-indigo-950 rounded-lg font-bold">
-                                <option value="ai_photo">📸 Сгенерировать ИИ-фото по тексту статьи (Gemini)</option>
+                                <option value="ai_photo">📸 Сгенерировать ИИ-фото по тексту статьи</option>
                                 <option value="radar">📡 Плейсхолдер: Радар / Камера спецконтроля</option>
                                 <option value="none">📄 Без фото и без плейсхолдера (Только текст)</option>
                             </select>
@@ -535,6 +501,22 @@
                             <input type="checkbox" id="ai-auto-update-lore" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-indigo-600 shrink-0">
                             <span>🔄 <strong>Авто-обновление Лора:</strong> дополнять биографии героев и хронологию в <code>universe_lore.json</code></span>
                         </label>
+                        <label class="flex items-start sm:items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
+                            <input type="checkbox" id="ai-use-lore" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-indigo-600 shrink-0">
+                            <span>Читать и учитывать базу персонажей и правил мира (<code>universe_lore.json</code>)</span>
+                        </label>
+                        <label class="flex items-start sm:items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
+                            <input type="checkbox" id="ai-use-articles" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-indigo-600 shrink-0">
+                            <span>Читать полные тексты всех существующих статей и настроек из <code>db.json</code></span>
+                        </label>
+                        <label class="flex items-start sm:items-center gap-2.5 cursor-pointer font-semibold text-indigo-950">
+                            <input type="checkbox" id="ai-auto-update-db" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-indigo-600 shrink-0">
+                            <span>🏙️ <strong>Авто-обновление db.json:</strong> обновлять информеры городов, котировки, «Опрос дня» и добавлять ссылки в старые статьи</span>
+                        </label>
+                        <label class="flex items-start sm:items-center gap-2.5 cursor-pointer font-semibold text-indigo-950">
+                            <input type="checkbox" id="ai-auto-update-lore" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-indigo-600 shrink-0">
+                            <span>🔄 <strong>Авто-обновление Лора:</strong> дополнять биографии героев и хронологию в <code>universe_lore.json</code></span>
+                        </label>
                         <label class="flex items-start sm:items-center gap-2.5 cursor-pointer font-semibold text-brand-red">
                             <input type="checkbox" id="ai-make-hero" checked class="w-4 h-4 mt-0.5 sm:mt-0 accent-brand-red shrink-0">
                             <span>★ Сделать сгенерированную статью «Главной новостью дня» и обновить строку «МОЛНИЯ»</span>
@@ -571,9 +553,9 @@
                         <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
                             <h3 class="font-headline font-bold text-base text-slate-900 flex items-center gap-2">
                                 <i class="fa-solid fa-key text-indigo-600"></i>
-                                <span>Настройки Gemini API</span>
+                                <span>Настройки ИИ и Фотослужбы</span>
                             </h3>
-                            <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[11px] text-indigo-600 hover:underline font-semibold">Получить ключ →</a>
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[11px] text-indigo-600 hover:underline font-semibold">Ключ API →</a>
                         </div>
 
                         <div>
@@ -585,46 +567,60 @@
                                 onchange="saveGeminiConfig()"
                                 class="w-full px-3 py-2 text-xs font-mono border border-slate-300 rounded-lg focus:outline-none focus:border-indigo-600"
                             >
-                            <p class="text-[11px] text-slate-400 mt-1">Хранится только в <code>localStorage</code> вашего браузера.</p>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Текстовая модель Gemini:</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Текстовая модель (500 RPD у Flash Lite):</label>
                             <input
                                 type="text"
                                 id="gemini-model"
                                 list="gemini-models-datalist"
-                                value="gemini-3.8-flash"
+                                value="gemini-3.5-flash-lite"
                                 onchange="saveGeminiConfig()"
-                                placeholder="gemini-3.8-flash"
+                                placeholder="gemini-3.5-flash-lite"
                                 class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:bg-white focus:border-indigo-600"
                             >
                             <datalist id="gemini-models-datalist">
-                                <option value="gemini-3.8-flash">Gemini 3.8 Flash (Основная)</option>
-                                <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview</option>
-                                <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
+                                <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite (15 RPM / 500 RPD — Рекомендуемая)</option>
+                                <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite (15 RPM / 500 RPD)</option>
+                                <option value="gemini-3.8-flash">Gemini 3.8 Flash (5 RPM / 20 RPD)</option>
+                                <option value="gemini-3.7-flash">Gemini 3.7 Flash (5 RPM / 20 RPD)</option>
+                                <option value="gemini-3.6-flash">Gemini 3.6 Flash (5 RPM / 20 RPD)</option>
+                                <option value="gemini-3-flash">Gemini 3 Flash (5 RPM / 20 RPD)</option>
                             </datalist>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Модель генерации фото (Imagen / Gemini Image):</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Движок генерации фото:</label>
+                            <select id="ai-image-provider" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs bg-indigo-50/70 border border-indigo-300 text-indigo-950 rounded-lg font-bold">
+                                <option value="hybrid">Авто-гибрид (Бесплатный FLUX + Google API)</option>
+                                <option value="free_flux">Бесплатный ИИ-движок FLUX (Без лимитов и ключей)</option>
+                                <option value="google_api">Только Google API (Nano Banana / Imagen)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Модель фото Google (при платном тарифе):</label>
                             <input
                                 type="text"
                                 id="gemini-image-model"
                                 list="gemini-img-models-datalist"
-                                value="imagen-3.0-generate-002"
+                                value="gemini-2.5-flash-preview-image"
                                 onchange="saveGeminiConfig()"
                                 class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:bg-white focus:border-indigo-600"
                             >
                             <datalist id="gemini-img-models-datalist">
+                                <option value="gemini-2.5-flash-preview-image">Nano Banana (Gemini 2.5 Flash Preview Image)</option>
+                                <option value="gemini-3.1-flash-image">Nano Banana 2 (Gemini 3.1 Flash Image)</option>
+                                <option value="gemini-3.1-flash-lite-image">Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)</option>
+                                <option value="gemini-3-pro-image">Nano Banana Pro (Gemini 3 Pro Image)</option>
+                                <option value="gemini-nano-banana-2.1">Gemini Nano Banana 2.1</option>
                                 <option value="imagen-3.0-generate-002">Imagen 3 (imagen-3.0-generate-002)</option>
-                                <option value="imagen-3.0-fast-generate-001">Imagen 3 Fast</option>
-                                <option value="gemini-2.0-flash-preview-image-generation">Gemini Flash Image Generation</option>
                             </datalist>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Протокол подключения:</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Протокол текстового API:</label>
                             <select id="gemini-protocol" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
                                 <option value="auto">Авто (Interactions API + generateContent)</option>
                                 <option value="interactions">Interactions API (/v1beta/interactions)</option>
@@ -632,7 +628,7 @@
                             </select>
                         </div>
 
-                        <button onclick="saveGeminiConfig(); showToast('Настройки Gemini API сохранены!');" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition cursor-pointer">
+                        <button onclick="saveGeminiConfig(); showToast('Настройки ИИ и фотослужбы сохранены!');" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition cursor-pointer">
                             Сохранить настройки API
                         </button>
                     </div>
@@ -693,7 +689,6 @@
                         <i class="fa-solid fa-user-plus"></i> Добавить персонажа
                     </button>
                 </div>
-
                 <div id="lore-characters-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
@@ -860,7 +855,7 @@
                     currentLocation: "Полевой штаб ОСС, Владикавказ / граница с Ингушетией",
                     role: "Верховный главнокомандующий Объединенных сырных сил (ОСС), бывший технолог Алагирского сырного комбината",
                     status: "Внесен ФСБ, Минюстом и Росфинмониторингом одновременно в тройной реестр: иноагентов, экстремистов и террористов",
-                    biography: "Возглавил восстание пекарей и пастухов во Владикавказе после полного исчезновения рассольного осетинского сыра («ирон цыхт») для пирогов уалибах. Разработал доктрину «кисломолочного lebensraum», операцию «Таргим» по аннексии пастбищ Ингушетии и начал полномасштабный «Сырный блицкриг»."
+                    biography: "Возглавил восстание пекарей и пастухов во Владикавказе после полного исчезновения рассольного осетинского сыра («ирон цыхт») для пирогов уалибах. Разработал операцию «Таргим» и начал полномасштабный «Сырный блицкриг»."
                 },
                 {
                     id: "andrey-b",
@@ -868,9 +863,9 @@
                     age: 22,
                     origin: "станица Гостагаевская (Краснодарский край)",
                     currentLocation: "Передовая у реки Сунжа (в рядах ОСС Станислава Д.)",
-                    role: "Начальник штурмового спецназа ОСС и инструктор по рукопашному бою полевой кухни; в прошлом — разнорабочий в суши-баре в Анапе",
+                    role: "Начальник штурмового спецназа ОСС; в прошлом — разнорабочий в суши-баре в Анапе",
                     status: "Ветеран 7 поражений на Пионерском проспекте (счет 0 : 7), носит бронежилет из спрессованного сухого творога",
-                    biography: "Переехал из станицы Гостагаевской в Анапу, где работал разнорабочим в суши-кафе (таскал мешки с рисом и ронял нори). По вечерам выпрыгивал из можжевельника с деревянной палочкой для суши в образе маньяка-потрошителя, но был избит всеми 7 жертвами (включая 64-летнюю пенсионерку с термосом шиповника и туристок из Норильска). Позже рекрутирован Станиславом Д. за феноменальную живучесть."
+                    biography: "Переехал из станицы Гостагаевской в Анапу, работал разнорабочим в суши-кафе. По вечерам выпрыгивал из можжевельника с палочкой для суши, но был избит всеми 7 жертвами (включая 64-летнюю пенсионерку с термосом шиповника). Рекрутирован Станиславом Д. за живучесть."
                 },
                 {
                     id: "miroslav-k",
@@ -880,7 +875,7 @@
                     currentLocation: "Нейтральная полоса на границе с Кабардино-Балкарией (спецтранспорт ОСС)",
                     role: "Заместитель командующего ОСС по стратегической дестабилизации тыла; студент-программист",
                     status: "Носитель аномальной криминогенной плотности (живое статистическое оружие)",
-                    biography: "Уроженец башкирского города Мелеуз. Покинул Башкортостан перед его отпиливанием от материка и приехал в Таганрог учиться на программиста. На вокзале Таганрог-1 за 40 минут обрушил индекс законопослушности города с +84% до −142% (перешел площадь спиной вперед и покормил голубей немаркированными семечками). Привлечен Станиславом Д. для обрушения дисциплины на блокпостах противника."
+                    biography: "Уроженец Мелеуза. Покинул Башкортостан перед его отпиливанием от материка и приехал в Таганрог учиться на программиста, обрушив индекс законопослушности города с +84% до −142%. Привлечен Станиславом Д. для обрушения дисциплины на блокпостах противника."
                 },
                 {
                     id: "german-f",
@@ -888,40 +883,25 @@
                     age: 22,
                     origin: "Владикавказ (коренной уроженец)",
                     currentLocation: "Санкт-Петербург",
-                    role: "Программист в IT-компании (разработка видеоигр и симуляторов), лидер движения #ДАбольшимносам!, главный крипто-связист ОСС",
-                    status: "Обладатель выступа носа 53.0 мм (при лимите Смольного в 42.0 мм), разыскивается инспекторами КГИОП с лазерными дальномерами",
-                    biography: "Живет и работает в геймдев-студии в Санкт-Петербурге. Когда Смольный постановлением № 412-п запретил носы длиннее 42 мм из-за микровихрей на Невском проспекте, запустил в мессенджере МАКС флешмоб #ДАбольшимносам! и патч NoseSpoofer для камер. Будучи уроженцем Владикавказа, тайно обеспечивает шифрованную P2P-связь молоковозов Станислава Д. через мессенджер МАКС и прячет карты Дарьяльского ущелья в коде видеоигр."
+                    role: "Программист в IT-компании (разработка видеоигр), лидер движения #ДАбольшимносам!, главный крипто-связист ОСС",
+                    status: "Обладатель выступа носа 53.0 мм (при лимите Смольного в 42.0 мм)",
+                    biography: "Живет и работает в геймдев-студии в Санкт-Петербурге. Запустил в мессенджере МАКС флешмоб #ДАбольшимносам! и патч NoseSpoofer против постановления Смольного № 412-п. Тайно обеспечивает шифрованную P2P-связь молоковозов Станислава Д. через мессенджер МАКС."
                 }
             ],
             locations: [
-                {
-                    name: "Республика Башкортостан (и г. Мелеуз)",
-                    description: "Согласно закону Госдумы о пространственно-географической изоляции, с 1 января 2027 года отпиливается от Евразийской плиты алмазными бурами из-за 0% законопослушности и выводится по Волго-Донскому каналу в свободное плавание в Мировой океан."
-                },
-                {
-                    name: "Владикавказ и Северная Осетия — Алания",
-                    description: "Эпицентр «лактозных бунтов» и штаб-квартира Объединенных сырных сил (ОСС) Станислава Д. Из-за исчезновения сыра «ирон цыхт» для пирогов уалибах килограмм сыра у Чугунного моста торгуется по 1.5 грамма банковского золота."
-                },
-                {
-                    name: "Санкт-Петербург",
-                    description: "Зона действия постановления Смольного № 412-п: максимальный выступ носа ограничен 42 мм. На выходах из метро «Гостиный двор» и «Маяковская» дежурят патрули с лазерными дальномерами."
-                },
-                {
-                    name: "Таганрог",
-                    description: "Зона статистического бедствия с индексом правопорядка −142% после приезда Мирослава К. Серверы системы «Безопасный город» выписывают штрафы сами себе."
-                },
-                {
-                    name: "Анапа и станица Гостагаевская",
-                    description: "Курорт повышенной самообороны отдыхающих, где сушист-разнорабочий Андрей Б. потерпел 7 поражений подряд от пенсионерок с термосами шиповника."
-                }
+                { name: "Республика Башкортостан (и г. Мелеуз)", description: "С 1 января 2027 года отпиливается от Евразийской плиты алмазными бурами из-за 0% законопослушности и выводится в Мировой океан." },
+                { name: "Владикавказ и Северная Осетия — Алания", description: "Эпицентр «лактозных бунтов» и штаб Объединенных сырных сил (ОСС) Станислава Д. Курс сыра «ирон цыхт» — 1.5 г золота." },
+                { name: "Санкт-Петербург", description: "Зона действия постановления Смольного № 412-п: максимальный выступ носа ограничен 42 мм." },
+                { name: "Таганрог", description: "Зона статистического бедствия с индексом правопорядка −142% после приезда Мирослава К." },
+                { name: "Анапа и станица Гостагаевская", description: "Курорт повышенной самообороны отдыхающих, где Андрей Б. потерпел 7 поражений подряд от пенсионерок с термосами." }
             ],
             timeline: [
-                "14.10.2026, 11:30 — Госдума одобрила закон об отпиливании Башкортостана от материка и буксировке в Мировой океан с 1 января 2027 года.",
-                "14.10.2026, 17:45 — Уроженец Мелеуза Мирослав К. прибыл в Таганрог учиться на программиста и обрушил индекс правопорядка города до −142%.",
-                "14.10.2026, 19:15 — В Анапе 22-летний разнорабочий суши-бара Андрей Б. из станицы Гостагаевской проиграл 7 схваток подряд своим потенциальным жертвам (счет 0 : 7).",
-                "14.10.2026, 21:40 — Во Владикавказе полностью закончился сыр «ирон цыхт» для пирогов уалибах; Станислав Д. возглавил Объединенные сырные силы (ОСС).",
-                "14.10.2026, 23:10 — Смольный ограничил длину носа в Петербурге до 42 мм; 22-летний программист Герман Ф. (нос 53 мм) запустил в мессенджере МАКС флешмоб #ДАбольшимносам!.",
-                "15.10.2026, 08:30 — Станислав Д. внесен в тройной реестр (иноагент, экстремист, террорист) и начал «Сырный блицкриг», назначив Андрея Б. командиром штурмовиков в творожной броне, Мирослава К. — психотронным оружием на границе КБР (−76%), а Германа Ф. — главным IT-координатором в мессенджере МАКС."
+                "14.10.2026, 11:30 — Госдума одобрила закон об отпиливании Башкортостана от материка с 1 января 2027 года.",
+                "14.10.2026, 17:45 — Уроженец Мелеуза Мирослав К. обрушил индекс правопорядка Таганрога до −142%.",
+                "14.10.2026, 19:15 — В Анапе 22-летний разнорабочий суши-бара Андрей Б. проиграл 7 схваток подряд своим потенциальным жертвам (0 : 7).",
+                "14.10.2026, 21:40 — Во Владикавказе закончился сыр «ирон цыхт»; Станислав Д. возглавил Объединенные сырные силы (ОСС).",
+                "14.10.2026, 23:10 — Смольный ограничил длину носа в Петербурге до 42 мм; Герман Ф. (53 мм) запустил в МАКС флешмоб #ДАбольшимносам!.",
+                "15.10.2026, 08:30 — Станислав Д. внесен в тройной реестр и начал «Сырный блицкриг» при участии Андрея Б., Мирослава К. и Германа Ф."
             ]
         };
 
@@ -929,7 +909,7 @@
             siteSettings: {
                 title: "ВЕСТНИК РОССИИ",
                 subtitle: "Федеральное информационное агентство",
-                currentDate: "Четверг, 15 октября 2026",
+                currentDate: "Пятница, 16 октября 2026",
                 breakingNews: "ФСБ и Росфинмониторинг внесли командующего Сырными войсками Станислава Д. в тройной реестр иноагентов, экстремистов и террористов • К «Сырному блицкригу» присоединились Андрей Б. из Гостагаевской и Мирослав К. из Мелеуза",
                 categories: ["Политика", "Безопасность", "Общество", "Происшествия", "Регионы", "Технологии", "Геотектоника"],
                 informers: [
@@ -954,130 +934,7 @@
                     ]
                 }
             },
-            articles: [
-                {
-                    id: "cheese-blitzkrieg",
-                    isHero: true,
-                    layoutType: "breaking",
-                    visualMode: "auto",
-                    title: "ФСБ и Росфинмониторинг внесли Станислава Д. в тройной реестр иноагентов, экстремистов и террористов: командующий ОСС объявил «сырный блицкриг» и привлек кадры из Гостагаевской и Мелеуза",
-                    lead: "Конфликт вокруг критического дефицита сырья для традиционных пирогов уалибах в Северной Осетии перерос в полномасштабную военную кампанию межрегионального масштаба. Самопровозглашенный верховный главнокомандующий Объединенных сырных сил (ОСС) Станислав Д. объявил о начале генерального наступления под кодовым названием «Сырный блицкриг» сразу по четырем стратегическим направлениям. В ответ на это Минюст РФ, Росфинмониторинг и Генпрокуратура одновременно присвоили лидеру мятежных сыроваров статусы иностранного агента, экстремиста и террориста.",
-                    date: "15 октября 2026, 08:30",
-                    category: "Безопасность",
-                    geo: "Владикавказ / СКФО",
-                    image: "",
-                    badgeType: "TACTICAL-MAP: ОПЕРАЦИЯ «СЫРНЫЙ БЛИЦКРИГ»",
-                    badgeTelemetry: "СТАТУС: ТРОЙНОЙ РЕЕСТР • СЫР: 0.0% • ИНДЕКС КБР: −76%",
-                    caption: "Фото: Оперативная съемка колонны молоковозов Объединенных сырных сил на трассе «Кавказ» / Фотослужба «Вестник России»",
-                    tags: ["Владикавказ", "Станислав Д.", "Сырные войны", "Андрей Б.", "Мирослав К.", "Герман Ф."],
-                    reactions: { fire: 5420, cheese: 4180, shock: 2890 },
-                    commentsCount: 3,
-                    body: `<p>Поводом для предельно жесткой реакции федерального центра стал ультиматум полевого штаба ОСС: Станислав Д. потребовал от правительства РФ признать рассольный сыр («ирон цыхт») международным валютным эквивалентом, а также передать под оперативный контроль его формирований все молочно-товарные фермы Южного и Северо-Кавказского федеральных округов. Не дожидаясь ответа Москвы, штаб мятежного технолога перешел к активной фазе наступательной операции.</p>
-<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Кадровое усиление: диверсанты из Гостагаевской и Мелеуза</h2>
-<p>На должность начальника штурмового спецназа и инструктора по рукопашному бою полевой кухни был экстренно назначен 22-летний уроженец станицы Гостагаевской Андрей Б., ранее покинувший Анапу после фиаско на Пионерском проспекте. Как выяснилось в ходе проверки биографии, в анапском суши-баре молодой человек числился не поваром, а разнорабочим по разгрузке мешков с рисом и утилизации водорослей.</p>
-<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm">
-    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">«Командование оценило колоссальный потенциал Андрея Б. в ближнем бою: парень пережил сокрушительное прямое попадание литрового термоса с шиповником от пенсионерки, выдержал удары пляжным шезлонгом и сохранил волю к сопротивлению. В рядах ОСС ему выдали бронежилет из спрессованного сухого творога и доверили командование авангардом, штурмующим сыроварни на границе с Ингушетией», — передают военные корреспонденты с позиций у реки Сунжа.</p>
-</blockquote>
-<p>Заместителем командующего по стратегической дестабилизации тыла противника стал 22-летний Мирослав К., бежавший из города Мелеуз Республики Башкортостан в Таганрог под предлогом поступления на IT-специальность. Мирослава К. на бронированном молоковозе доставили на нейтральную полосу у административной границы Кабардино-Балкарии: за два часа его присутствия совокупный индекс дисциплины на местных блокпостах рухнул до рекордных −76%.</p>
-<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">Цифровой след из Санкт-Петербурга</h2>
-<p>Особую роль в обеспечении координации наступающих соединений следственные органы отводят петербургскому сектору. По материалам ФСБ, защищенную радиосеть и маршрутизацию колонн через мессенджер МАКС лично курирует 22-летний программист геймдев-студии Герман Ф., коренной уроженец Владикавказа.</p>`
-                },
-                {
-                    id: "spb-nose-limit",
-                    isHero: false,
-                    layoutType: "standard",
-                    visualMode: "auto",
-                    title: "Смольный ввел предельно допустимые габариты носовых перегородок: петербургский IT-специалист запустил флешмоб #ДАбольшимносам",
-                    lead: "Правительство Санкт-Петербурга утвердило постановление № 412-п «Об оптимизации аэродинамических и фасадных характеристик пешеходных потоков в историческом центре». Согласно регламенту, выступ носовой перегородки от фронтальной плоскости лица не должен превышать 42 миллиметров. Против инициативы выступил 22-летний программист Герман Ф. с профилем 53 мм, запустивший в мессенджере МАКС флешмоб #ДАбольшимносам!.",
-                    date: "14 октября 2026, 23:10",
-                    category: "Технологии",
-                    geo: "Санкт-Петербург",
-                    image: "",
-                    badgeType: "LIDAR-CAM #78: КОНТРОЛЬ ПРОФИЛЯ КГИОП",
-                    badgeTelemetry: "НОРМАТИВ: ≤ 42.0 ММ • ЗАМЕР ГЕРМАНА Ф.: 53.0 ММ",
-                    caption: "Фото: Автоматический комплекс замера профилей «Безопасный Санкт-Петербург»",
-                    tags: ["#ДАбольшимносам!", "Санкт-Петербург", "Герман Ф.", "Мессенджер МАКС"],
-                    reactions: { fire: 4812, cheese: 3190, shock: 2405 },
-                    commentsCount: 2,
-                    body: `<p>Чиновники пришли к выводу, что чрезмерно выступающие части лиц создают неконтролируемые микровихри на узких тротуарах Невского проспекта и ускоряют коррозию чугунных оград мостов.</p>`
-                },
-                {
-                    id: "vladikavkaz-cheese-shortage",
-                    isHero: false,
-                    layoutType: "standard",
-                    visualMode: "auto",
-                    title: "В Северной Осетии объявлено чрезвычайное положение из-за критического дефицита осетинского сыра: Владикавказ охвачен «лактозными бунтами»",
-                    lead: "Во Владикавказе и на всей территории Республики Северная Осетия — Алания введен план специальной социально-продовольственной деэскалации в связи с полным исчерпанием региональных запасов рассольного осетинского сыра («ирон цыхт»), базового компонента традиционных пирогов уалибах.",
-                    date: "14 октября 2026, 21:40",
-                    category: "Регионы",
-                    geo: "Владикавказ",
-                    image: "",
-                    badgeType: "ПРОДОВОЛЬСТВЕННЫЙ МОНИТОРИНГ РСО-АЛАНИЯ",
-                    badgeTelemetry: "ЗАПАС «ИРОН ЦЫХТ»: 0 КГ • КУРС НА РЫНКЕ: 1.5 Г ЗОЛОТА",
-                    caption: "Фото: Блокпост Объединенных сырных сил у мукомольного склада во Владикавказе",
-                    tags: ["Северная Осетия", "Владикавказ", "Станислав Д.", "Осетинские пироги"],
-                    reactions: { fire: 3650, cheese: 5120, shock: 1940 },
-                    commentsCount: 2,
-                    body: `<p>Верховным главнокомандующим новообразованных Сырных войск на чрезвычайном сходе старейшин и шеф-поваров был единогласно провозглашен Станислав Д., обнародовавший план «Таргим» в отношении пастбищ Ингушетии.</p>`
-                },
-                {
-                    id: "anapa-sushi-maniac",
-                    isHero: false,
-                    layoutType: "investigation",
-                    visualMode: "auto",
-                    title: "«Кошмар Пионерского проспекта»: полиция Анапы разыскивает серийного маньяка, получившего отпор от всех семи потенциальных жертв",
-                    lead: "Следственный отдел по городу-курорту Анапа проводит проверку по серии курьезных инцидентов в районе Пионерского проспекта. На побережье объявился 22-летний разнорабочий суши-бара Андрей Б., переселенец из станицы Гостагаевской, однако все семь его вылазок завершились избиением нападавшего пенсионерками и туристками.",
-                    date: "14 октября 2026, 19:15",
-                    category: "Происшествия",
-                    geo: "Анапа / Гостагаевская",
-                    image: "",
-                    badgeType: "КАМЕРА ОМВД «БЕЗОПАСНЫЙ КУРОРТ» • АНАПА",
-                    badgeTelemetry: "СЧЕТ СХВАТОК: 0 : 7 В ПОЛЬЗУ ОТДЫХАЮЩИХ",
-                    caption: "Фото: Кадр ночного наблюдения на Пионерском проспекте",
-                    tags: ["Анапа", "Гостагаевская", "Андрей Б.", "Курьёзы"],
-                    reactions: { fire: 6120, cheese: 2310, shock: 4490 },
-                    commentsCount: 3,
-                    body: `<p>В первом случае 64-летняя пенсионерка нанесла нападавшему серию сокрушительных ударов термосом с шиповниковым чаем, а во втором две туристки из Норильска заставили его крутить роллы на спор.</p>`
-                },
-                {
-                    id: "taganrog-negative-index",
-                    isHero: false,
-                    layoutType: "standard",
-                    visualMode: "auto",
-                    title: "Счетная палата зафиксировала отрицательный индекс правопорядка в Таганроге после прибытия беженца из Башкортостана",
-                    lead: "Город Таганрог Ростовской области стал первым населенным пунктом в новейшей истории РФ, где официально зафиксирован отрицательный показатель законопослушности населения (−142%) из-за прибытия уроженца Мелеуза Мирослава К.",
-                    date: "14 октября 2026, 17:45",
-                    category: "Общество",
-                    geo: "Таганрог",
-                    image: "",
-                    badgeType: "СИСТЕМА «БЕЗОПАСНЫЙ ГОРОД» • ВОКЗАЛ ТАГАНРОГ-1",
-                    badgeTelemetry: "ИНДЕКС ПРАВОПОРЯДКА: −142.0% • СБОЙ СЕРВЕРОВ",
-                    caption: "Фото: Камера фиксации правонарушений на Привокзальной площади Таганрога",
-                    tags: ["Таганрог", "Мирослав К.", "Башкортостан", "Статистика"],
-                    reactions: { fire: 3890, cheese: 1450, shock: 5210 },
-                    commentsCount: 3,
-                    body: `<p>Уже в первые сорок минут пребывания в городе гражданин перешел Привокзальную площадь по диагонали спиной вперед и накормил голубей семечками без маркировки «Честный знак».</p>`
-                },
-                {
-                    id: "bashkortostan-drift",
-                    isHero: false,
-                    layoutType: "digest",
-                    visualMode: "auto",
-                    title: "Госдума одобрила проект о выводе Башкортостана в нейтральные воды из-за аномальной криминогенной обстановки",
-                    lead: "Государственная дума РФ приняла в третьем, окончательном чтении законопроект «О пространственно-географической изоляции Республики Башкортостан». С 1 января 2027 года регион отделят от Евразийской плиты и отбуксируют в Мировой океан.",
-                    date: "14 октября 2026, 11:30",
-                    category: "Геотектоника",
-                    geo: "Уфа / Мировой океан",
-                    image: "",
-                    badgeType: "ГЕОТЕКТОНИЧЕСКИЙ МОНИТОРИНГ • ПЕРИМЕТР 4000 КМ",
-                    badgeTelemetry: "СТАРТ БУРЕНИЯ: 01.01.2027 • УРОВЕНЬ ЗАКОНОПОСЛУШНОСТИ: 0%",
-                    caption: "Фото: Подготовка роторных буров на границе Башкортостана",
-                    tags: ["Башкортостан", "Госдума", "Мировой океан", "Геотектоника"],
-                    reactions: { fire: 7340, cheese: 2100, shock: 6890 },
-                    commentsCount: 5,
-                    body: `<p>По периметру административных границ Башкортостана будут установлены роторные буры для пропила земной коры, после чего регион выведут через Каспийское море в открытый океан.</p>`
-                }
-            ]
+            articles: []
         };
 
         let appDB = JSON.parse(JSON.stringify(DEFAULT_DB));
@@ -1085,7 +942,48 @@
         let editingOriginalId = null;
         window._lastAiGeneratedComments = null;
 
+        function upgradeAiControlsForRateLimits() {
+            const textDatalist = document.getElementById('gemini-models-datalist');
+            if (textDatalist) {
+                textDatalist.innerHTML = `
+                    <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite (Рекомендуемая • 500 RPD / 15 RPM)</option>
+                    <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite (Быстрая • 500 RPD / 15 RPM)</option>
+                    <option value="gemini-3-flash">Gemini 3 Flash (20 RPD / 5 RPM)</option>
+                    <option value="gemini-3.6-flash">Gemini 3.6 Flash (20 RPD / 5 RPM)</option>
+                    <option value="gemini-3.7-flash">Gemini 3.7 Flash (20 RPD / 5 RPM)</option>
+                    <option value="gemini-3.8-flash">Gemini 3.8 Flash (20 RPD / 5 RPM)</option>
+                    <option value="gemma-4-31b">Gemma 4 31B (14.4K RPD / 30 RPM)</option>
+                `;
+            }
+
+            const imgDatalist = document.getElementById('gemini-img-models-datalist');
+            if (imgDatalist) {
+                imgDatalist.innerHTML = `
+                    <option value="free-flux">Бесплатный ИИ-генератор FLUX (Без лимитов и квот Google)</option>
+                    <option value="gemini-2.5-flash-preview-image">Nano Banana (Gemini 2.5 Flash Preview Image)</option>
+                    <option value="gemini-3.1-flash-image">Nano Banana 2 (Gemini 3.1 Flash Image)</option>
+                    <option value="gemini-3.1-flash-lite-image">Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)</option>
+                    <option value="gemini-3-pro-image">Nano Banana Pro (Gemini 3 Pro Image)</option>
+                    <option value="gemini-nano-banana-2.1">Gemini Nano Banana 2.1</option>
+                    <option value="imagen-3.0-generate-002">Imagen 3 (imagen-3.0-generate-002)</option>
+                `;
+            }
+
+            const visSelect = document.getElementById('ai-visual-mode');
+            if (visSelect) {
+                visSelect.innerHTML = `
+                    <option value="free_flux">📸 Сгенерировать фото бесплатно (FLUX ИИ • Без лимитов)</option>
+                    <option value="ai_photo">📸 Гибрид: Google API (Nano Banana / Imagen) + Бесплатный FLUX резерв</option>
+                    <option value="google_only">📸 Только через Google API ключ (Nano Banana / Imagen)</option>
+                    <option value="radar">📡 Плейсхолдер: Радар / Камера спецконтроля</option>
+                    <option value="none">📄 Без фото и без плейсхолдера (Только текст)</option>
+                `;
+            }
+        }
+
         async function initCMS() {
+            upgradeAiControlsForRateLimits();
+
             const ghConf = JSON.parse(localStorage.getItem('vestnik_gh_config') || '{}');
             if (ghConf.owner) document.getElementById('gh-owner').value = ghConf.owner;
             if (ghConf.repo) document.getElementById('gh-repo').value = ghConf.repo;
@@ -1094,23 +992,18 @@
 
             const geminiConf = JSON.parse(localStorage.getItem('vestnik_gemini_config') || '{}');
             if (geminiConf.apiKey) document.getElementById('gemini-api-key').value = geminiConf.apiKey;
-            if (geminiConf.imageModel) document.getElementById('gemini-image-model').value = geminiConf.imageModel;
 
-            const deprecatedModels = [
-                'gemini-2.5-flash',
-                'models/gemini-2.5-flash',
-                'gemini-2.5-pro',
-                'models/gemini-2.5-pro',
-                'gemini-2.0-flash',
-                'models/gemini-2.0-flash',
-                'gemini-1.5-pro',
-                'gemini-1.5-flash'
-            ];
-            if (geminiConf.model && !deprecatedModels.includes(geminiConf.model)) {
+            const imgModelInput = document.getElementById('gemini-image-model');
+            if (imgModelInput) {
+                imgModelInput.value = geminiConf.imageModel || 'gemini-2.5-flash-preview-image';
+            }
+
+            const zeroQuotaModels = ['gemini-2.5-pro', 'models/gemini-2.5-pro', 'gemini-3.1-pro', 'gemini-3.1-pro-preview', 'gemini-2.0-flash'];
+            if (geminiConf.model && !zeroQuotaModels.includes(geminiConf.model)) {
                 document.getElementById('gemini-model').value = geminiConf.model.replace(/^models\//, '');
             } else {
-                document.getElementById('gemini-model').value = 'gemini-3.8-flash';
-                geminiConf.model = 'gemini-3.8-flash';
+                document.getElementById('gemini-model').value = 'gemini-3.5-flash-lite';
+                geminiConf.model = 'gemini-3.5-flash-lite';
             }
             if (geminiConf.protocol) {
                 document.getElementById('gemini-protocol').value = geminiConf.protocol;
@@ -1122,7 +1015,7 @@
             if (localBackup) {
                 try {
                     const parsedLocal = JSON.parse(localBackup);
-                    if (parsedLocal && Array.isArray(parsedLocal.articles)) {
+                    if (parsedLocal && Array.isArray(parsedLocal.articles) && parsedLocal.articles.length > 0) {
                         appDB = parsedLocal;
                         loadedFromLocal = true;
                     }
@@ -1209,6 +1102,54 @@
             if (tabName === 'list') {
                 populateCategoryFilters();
                 renderAdminArticlesList();
+            }
+        }
+
+        function upgradeUiForRateLimitsAndPhotos() {
+            const textModelsDatalist = document.getElementById('gemini-models-datalist');
+            if (textModelsDatalist) {
+                textModelsDatalist.innerHTML = `
+                    <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite (15 RPM / 500 в день — Рекомендуемая)</option>
+                    <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite (15 RPM / 500 в день)</option>
+                    <option value="gemini-3-flash">Gemini 3 Flash (5 RPM / 20 в день)</option>
+                    <option value="gemini-3.6-flash">Gemini 3.6 Flash (5 RPM / 20 в день)</option>
+                    <option value="gemini-3.7-flash">Gemini 3.7 Flash (5 RPM / 20 в день)</option>
+                    <option value="gemini-3.8-flash">Gemini 3.8 Flash (5 RPM / 20 в день)</option>
+                `;
+            }
+
+            const imgModelsDatalist = document.getElementById('gemini-img-models-datalist');
+            if (imgModelsDatalist) {
+                imgModelsDatalist.innerHTML = `
+                    <option value="pollinations-flux">Бесплатный ИИ-генератор (FLUX — без лимитов и ключей)</option>
+                    <option value="auto-hybrid">Авто-гибрид (Google Nano Banana -> Бесплатный FLUX)</option>
+                    <option value="gemini-2.5-flash-preview-image">Nano Banana (Gemini 2.5 Flash Preview Image)</option>
+                    <option value="gemini-3.1-flash-image">Nano Banana 2 (Gemini 3.1 Flash Image)</option>
+                    <option value="gemini-3.1-flash-lite-image">Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)</option>
+                    <option value="gemini-3-pro-image">Nano Banana Pro (Gemini 3 Pro Image)</option>
+                    <option value="imagen-3.0-generate-002">Google Imagen 3</option>
+                `;
+            }
+
+            const visualModeSelect = document.getElementById('ai-visual-mode');
+            if (visualModeSelect) {
+                visualModeSelect.innerHTML = `
+                    <option value="ai_photo_free">📸 Сгенерировать фото: Бесплатный ИИ (FLUX — без лимитов)</option>
+                    <option value="ai_photo_hybrid">📸 Сгенерировать фото: Авто (Nano Banana / Google -> Бесплатный ИИ)</option>
+                    <option value="ai_photo_google">📸 Сгенерировать фото: Только Google API (Nano Banana / Imagen)</option>
+                    <option value="radar">📡 Плейсхолдер: Радар / Камера спецконтроля</option>
+                    <option value="none">📄 Без фото и без плейсхолдера (Только текст)</option>
+                `;
+            }
+
+            const geminiConf = JSON.parse(localStorage.getItem('vestnik_gemini_config') || '{}');
+            if (!geminiConf.model || geminiConf.model === 'gemini-3.8-flash') {
+                const modelInput = document.getElementById('gemini-model');
+                if (modelInput) modelInput.value = 'gemini-3.5-flash-lite';
+            }
+            const imgModelInput = document.getElementById('gemini-image-model');
+            if (imgModelInput && (!geminiConf.imageModel || geminiConf.imageModel === 'imagen-3.0-generate-002')) {
+                imgModelInput.value = 'auto-hybrid';
             }
         }
 
@@ -1353,20 +1294,21 @@
         }
 
         function saveGeminiConfig() {
-            let modelName = (document.getElementById('gemini-model').value || 'gemini-3.8-flash').trim();
-            modelName = modelName.replace(/^models\//, '');
+            let modelName = (document.getElementById('gemini-model')?.value || 'gemini-3.5-flash-lite').trim().replace(/^models\//, '');
             if (modelName === 'gemini-2.5-pro' || modelName === 'gemini-2.5-flash') {
-                modelName = 'gemini-3.1-pro-preview';
+                modelName = 'gemini-3.5-flash-lite';
             }
-            document.getElementById('gemini-model').value = modelName;
+            if (document.getElementById('gemini-model')) {
+                document.getElementById('gemini-model').value = modelName;
+            }
 
-            let imageModel = (document.getElementById('gemini-image-model').value || 'imagen-3.0-generate-002').trim();
-            imageModel = imageModel.replace(/^models\//, '');
-            document.getElementById('gemini-image-model').value = imageModel;
+            const imgEl = document.getElementById('gemini-image-model');
+            let imageModel = (imgEl ? imgEl.value : 'auto-hybrid').trim().replace(/^models\//, '');
+            if (imgEl) imgEl.value = imageModel;
 
-            const protocol = document.getElementById('gemini-protocol').value || 'auto';
+            const protocol = document.getElementById('gemini-protocol')?.value || 'auto';
             const conf = {
-                apiKey: document.getElementById('gemini-api-key').value.trim(),
+                apiKey: (document.getElementById('gemini-api-key')?.value || '').trim(),
                 model: modelName,
                 imageModel,
                 protocol
@@ -1379,9 +1321,10 @@
             document.getElementById('ai-prompt-input').value = text;
         }
 
-        function compressBase64Image(dataUrl, maxWidth = 880, quality = 0.74) {
+        function compressBase64Image(dataUrl, maxWidth = 860, quality = 0.74) {
             return new Promise((resolve) => {
                 const img = new Image();
+                img.crossOrigin = "anonymous";
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     const scale = img.width > maxWidth ? maxWidth / img.width : 1;
@@ -1389,25 +1332,51 @@
                     canvas.height = Math.round(img.height * scale);
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    resolve(canvas.toDataURL('image/jpeg', quality));
+                    try {
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    } catch (e) {
+                        resolve(dataUrl);
+                    }
                 };
-                img.onerror = () => resolve(dataUrl);
+                img.onerror = () => resolve(null);
                 img.src = dataUrl;
             });
         }
 
-        async function generateArticleImageWithGemini(conf, imagePromptEn, fallbackTitle, fallbackGeo) {
-            const finalPrompt = (imagePromptEn && imagePromptEn.trim())
-                ? `Realistic editorial news agency press photograph (TASS / Reuters style), documentary photojournalism, 35mm lens, natural lighting, no text or watermarks: ${imagePromptEn.trim()}`
-                : `Realistic documentary press photograph from Russia (${fallbackGeo || 'Moscow'}), official news reportage scene: ${fallbackTitle}, 35mm photojournalism, no text`;
+        async function generateViaFreeFlux(promptText) {
+            const cleanPrompt = encodeURIComponent(`realistic editorial news press photograph, photojournalism, 35mm documentary lens, natural lighting, no text, no watermark: ${promptText}`.slice(0, 340));
+            const seed = Math.floor(Math.random() * 999999);
+            const fluxUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?width=860&height=480&nologo=true&seed=${seed}&model=flux`;
 
-            const imgModelsToTry = [
-                conf.imageModel || 'imagen-3.0-generate-002',
-                'imagen-3.0-fast-generate-001',
-                'gemini-2.0-flash-preview-image-generation'
-            ].filter((v, i, a) => v && a.indexOf(v) === i);
+            try {
+                const res = await fetch(fluxUrl);
+                if (res.ok) {
+                    const blob = await res.blob();
+                    const b64 = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.readAsDataURL(blob);
+                    });
+                    const compressed = await compressBase64Image(b64, 860, 0.74);
+                    if (compressed) return compressed;
+                }
+            } catch (e) {}
 
-            for (const mName of imgModelsToTry) {
+            return await compressBase64Image(fluxUrl, 860, 0.74);
+        }
+
+        async function generateViaGoogleImageApi(conf, promptText) {
+            const finalPrompt = `Realistic editorial news agency press photograph (TASS / Reuters documentary style), 35mm lens, natural lighting, no text or watermarks: ${promptText}`;
+            const googleModels = [
+                conf.imageModel,
+                'gemini-2.5-flash-preview-image',
+                'gemini-3.1-flash-image',
+                'gemini-3.1-flash-lite-image',
+                'gemini-3-pro-image',
+                'imagen-3.0-generate-002'
+            ].filter((v, i, a) => v && v !== 'pollinations-flux' && v !== 'auto-hybrid' && a.indexOf(v) === i);
+
+            for (const mName of googleModels) {
                 try {
                     if (mName.startsWith('imagen')) {
                         const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(mName)}:predict?key=${encodeURIComponent(conf.apiKey)}`;
@@ -1423,8 +1392,7 @@
                             const data = await res.json();
                             const b64 = data.predictions?.[0]?.bytesBase64Encoded || data.predictions?.[0]?.image?.bytesBase64Encoded;
                             if (b64) {
-                                const mime = data.predictions?.[0]?.mimeType || 'image/jpeg';
-                                return await compressBase64Image(`data:${mime};base64,${b64}`);
+                                return await compressBase64Image(`data:image/jpeg;base64,${b64}`);
                             }
                         }
                     } else {
@@ -1453,13 +1421,26 @@
             return null;
         }
 
+        async function generateArticleImageWithGemini(conf, imagePromptEn, fallbackTitle, fallbackGeo, mode = 'ai_photo_hybrid') {
+            const promptText = (imagePromptEn && imagePromptEn.trim())
+                ? imagePromptEn.trim()
+                : `Documentary press photograph in Russia (${fallbackGeo || 'Moscow'}), official reportage: ${fallbackTitle}`;
+
+            if (mode === 'ai_photo_free' || conf.imageModel === 'pollinations-flux') {
+                return await generateViaFreeFlux(promptText);
+            }
+
+            if (mode === 'ai_photo_google') {
+                return await generateViaGoogleImageApi(conf, promptText);
+            }
+
+            const googleImg = await generateViaGoogleImageApi(conf, promptText);
+            if (googleImg) return googleImg;
+            return await generateViaFreeFlux(promptText);
+        }
+
         async function generatePhotoInsideEditor() {
             const conf = saveGeminiConfig();
-            if (!conf.apiKey) {
-                switchTab('ai');
-                showToast("Сначала укажите Gemini API Key во вкладке 3!", true);
-                return;
-            }
             const title = document.getElementById('ed-title').value.trim();
             const lead = document.getElementById('ed-lead').value.trim();
             const geo = document.getElementById('ed-geo').value.trim();
@@ -1473,19 +1454,24 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading mr-1"></i> Генерация...`;
 
             try {
-                const promptGen = await callGeminiAPI(
-                    conf,
-                    "Return ONLY a single-sentence English visual description for a realistic press photo (no text in image, documentary style).",
-                    `Заголовок: ${title}\nЛид: ${lead}\nГород: ${geo}`
-                );
-                const imgData = await generateArticleImageWithGemini(conf, promptGen, title, geo);
+                let promptGen = `Documentary press photo in Russia (${geo || 'Moscow'}): ${title}`;
+                if (conf.apiKey) {
+                    try {
+                        promptGen = await callGeminiAPI(
+                            conf,
+                            "Return ONLY a single-sentence English visual description for a realistic press photo (no text in image, documentary style).",
+                            `Заголовок: ${title}\nЛид: ${lead}\nГород: ${geo}`
+                        );
+                    } catch (e) {}
+                }
+                const imgData = await generateArticleImageWithGemini(conf, promptGen, title, geo, 'ai_photo_hybrid');
                 if (imgData) {
                     document.getElementById('ed-image').value = imgData;
                     document.getElementById('ed-visual-mode').value = 'auto';
                     updateLivePreview();
-                    showToast("ИИ-фотография успешно сгенерирована и сжата!");
+                    showToast("Фотография успешно сгенерирована и сжата!");
                 } else {
-                    showToast("Генерация изображений недоступна для текущего тарифа ключа API (включен Радар)", true);
+                    showToast("Не удалось получить изображение, включен Радар", true);
                 }
             } catch (err) {
                 showToast("Ошибка генерации фото: " + err.message, true);
@@ -1496,19 +1482,14 @@
 
         function extractTextFromGeminiResponse(result) {
             if (!result) return null;
-
-            if (typeof result.output_text === 'string' && result.output_text.trim()) {
-                return result.output_text;
-            }
+            if (typeof result.output_text === 'string' && result.output_text.trim()) return result.output_text;
 
             if (Array.isArray(result.steps)) {
                 const collected = [];
                 for (const step of result.steps) {
                     if ((!step.type || step.type === 'model_output') && Array.isArray(step.content)) {
                         for (const block of step.content) {
-                            if (typeof block.text === 'string' && block.text.trim()) {
-                                collected.push(block.text);
-                            }
+                            if (typeof block.text === 'string' && block.text.trim()) collected.push(block.text);
                         }
                     }
                 }
@@ -1524,7 +1505,6 @@
                 const partsText = result.candidates[0].content.parts.map(p => p.text).filter(Boolean).join('\n');
                 if (partsText) return partsText;
             }
-
             return null;
         }
 
@@ -1533,7 +1513,6 @@
                 const fixedAttrs = attrs.replace(/=\s*"([^"]*)"/g, "='$1'");
                 return `<${tag} ${fixedAttrs}>`;
             });
-
             fixed = fixed.replace(/,(\s*[}\]])/g, '$1');
 
             let inString = false;
@@ -1541,21 +1520,9 @@
             let result = '';
             for (let i = 0; i < fixed.length; i++) {
                 const ch = fixed[i];
-                if (escaped) {
-                    result += ch;
-                    escaped = false;
-                    continue;
-                }
-                if (ch === '\\') {
-                    result += ch;
-                    escaped = true;
-                    continue;
-                }
-                if (ch === '"') {
-                    inString = !inString;
-                    result += ch;
-                    continue;
-                }
+                if (escaped) { result += ch; escaped = false; continue; }
+                if (ch === '\\') { result += ch; escaped = true; continue; }
+                if (ch === '"') { inString = !inString; result += ch; continue; }
                 if (inString) {
                     if (ch === '\n') { result += '\\n'; continue; }
                     if (ch === '\r') { continue; }
@@ -1576,17 +1543,12 @@
                 if (!inString) {
                     if (ch === '{') stack.push('}');
                     else if (ch === '[') stack.push(']');
-                    else if (ch === '}' || ch === ']') {
-                        if (stack.length > 0 && stack[stack.length - 1] === ch) {
-                            stack.pop();
-                        }
+                    else if ((ch === '}' || ch === ']') && stack.length > 0 && stack[stack.length - 1] === ch) {
+                        stack.pop();
                     }
                 }
             }
-            while (stack.length > 0) {
-                result += stack.pop();
-            }
-
+            while (stack.length > 0) result += stack.pop();
             return result;
         }
 
@@ -1608,8 +1570,7 @@
             try {
                 return JSON.parse(cleaned);
             } catch (e1) {
-                const repaired = repairBrokenJsonString(cleaned);
-                return JSON.parse(repaired);
+                return JSON.parse(repairBrokenJsonString(cleaned));
             }
         }
 
@@ -1619,30 +1580,25 @@
 
             const modelsToTry = [
                 conf.model,
-                'gemini-3.1-pro-preview',
-                'gemini-3.8-flash',
-                'gemini-3-flash-preview'
-            ].filter((v, i, arr) => v && !v.includes('2.5') && !v.includes('2.0') && arr.indexOf(v) === i);
+                'gemini-3.5-flash-lite',
+                'gemini-3.1-flash-lite',
+                'gemini-3-flash',
+                'gemini-3.6-flash',
+                'gemini-3.7-flash',
+                'gemini-3.8-flash'
+            ].filter((v, i, arr) => v && !v.includes('2.5-pro') && !v.includes('2.0') && arr.indexOf(v) === i);
 
             const executeSingleRequest = async (modelName) => {
                 const cleanModel = modelName.replace(/^models\//, '');
 
                 const tryInteractionsAPI = async () => {
                     const url = `https://generativelanguage.googleapis.com/v1beta/interactions?key=${encodeURIComponent(conf.apiKey)}`;
-                    const payload = {
-                        model: cleanModel,
-                        input: userInput
-                    };
-                    if (systemInstruction && systemInstruction.trim()) {
-                        payload.system_instruction = systemInstruction;
-                    }
+                    const payload = { model: cleanModel, input: userInput };
+                    if (systemInstruction && systemInstruction.trim()) payload.system_instruction = systemInstruction;
 
                     const response = await fetch(url, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-goog-api-key': conf.apiKey
-                        },
+                        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': conf.apiKey },
                         body: JSON.stringify(payload)
                     });
 
@@ -1656,7 +1612,7 @@
 
                     const data = await response.json();
                     const text = extractTextFromGeminiResponse(data);
-                    if (!text) throw new Error("Модель вернула ответ без текстового блока");
+                    if (!text) throw new Error("Пустой текстовый ответ от Interactions API");
                     return text;
                 };
 
@@ -1664,10 +1620,7 @@
                     const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cleanModel)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
                     const payload = {
                         contents: [{ role: "user", parts: [{ text: userInput }] }],
-                        generationConfig: {
-                            temperature: 0.8,
-                            responseMimeType: "application/json"
-                        }
+                        generationConfig: { temperature: 0.8, responseMimeType: "application/json" }
                     };
                     if (systemInstruction && systemInstruction.trim()) {
                         payload.systemInstruction = { parts: [{ text: systemInstruction }] };
@@ -1699,64 +1652,28 @@
                 try {
                     return await tryInteractionsAPI();
                 } catch (firstErr) {
-                    if (firstErr.message && /high demand|overloaded|temporar/i.test(firstErr.message)) {
-                        throw firstErr;
-                    }
+                    if (firstErr.message && /high demand|overloaded|quota|temporar/i.test(firstErr.message)) throw firstErr;
                     return await tryLegacyGenerateContent().catch((secondErr) => {
-                        if (secondErr.message && secondErr.message.includes('HTTP 405')) {
-                            throw firstErr;
-                        }
+                        if (secondErr.message && secondErr.message.includes('HTTP 405')) throw firstErr;
                         throw secondErr;
                     });
                 }
             };
 
             let lastError = null;
-
             for (let mIdx = 0; mIdx < modelsToTry.length; mIdx++) {
                 const currentModel = modelsToTry[mIdx];
-                const maxAttempts = mIdx === 0 ? 2 : 1;
-
-                for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-                    try {
-                        return await executeSingleRequest(currentModel);
-                    } catch (err) {
-                        lastError = err;
-
-                        const suggestedMatch = err.message && err.message.match(/use models\/([a-zA-Z0-9.-]+)/i);
-                        if (suggestedMatch && suggestedMatch[1]) {
-                            const suggestedModel = suggestedMatch[1].trim();
-                            if (!modelsToTry.includes(suggestedModel)) {
-                                modelsToTry.splice(mIdx + 1, 0, suggestedModel);
-                            }
-                            if (statusBox) {
-                                statusBox.innerHTML += `<div class="text-sky-300">🔄 Автопереключение на рекомендованную Google модель <strong>${suggestedModel}</strong>...</div>`;
-                            }
-                            break;
-                        }
-
-                        const isOverloaded =
-                            err.status === 503 ||
-                            err.status === 429 ||
-                            /high demand|overloaded|unavailable|quota|temporar/i.test(err.message);
-
-                        if (!isOverloaded) {
-                            break;
-                        }
-
-                        if (attempt < maxAttempts) {
-                            if (statusBox) {
-                                statusBox.innerHTML += `<div class="text-amber-300">⏳ Сервер <strong>${currentModel}</strong> перегружен (High demand). Авто-повтор через 3 сек...</div>`;
-                            }
-                            await sleep(3000);
-                        } else if (mIdx + 1 < modelsToTry.length && statusBox) {
-                            statusBox.innerHTML += `<div class="text-amber-400">🔄 Переключение с перегруженной <strong>${currentModel}</strong> на <strong>${modelsToTry[mIdx + 1]}</strong>...</div>`;
-                        }
+                try {
+                    return await executeSingleRequest(currentModel);
+                } catch (err) {
+                    lastError = err;
+                    if (mIdx + 1 < modelsToTry.length && statusBox) {
+                        statusBox.innerHTML += `<div class="text-amber-400">🔄 Модель <strong>${currentModel}</strong> недоступна/лимит, переключение на <strong>${modelsToTry[mIdx + 1]}</strong>...</div>`;
                     }
+                    await sleep(1200);
                 }
             }
-
-            throw lastError || new Error("Серверы Gemini временно перегружены, попробуйте через 15 секунд.");
+            throw lastError || new Error("Все модели временно недоступны.");
         }
 
         function stripHtmlForContext(html) {
@@ -1791,137 +1708,57 @@
 
             const statusBox = document.getElementById('ai-status-box');
             statusBox.classList.remove('hidden');
-            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Отправка запроса в <strong>Gemini (${conf.model})</strong> • Шаблон: ${layoutTypeChoice.toUpperCase()} • Чтение db.json (${appDB.articles.length} статей)...</div>`;
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Запрос в <strong>${conf.model}</strong> • Шаблон: ${layoutTypeChoice.toUpperCase()}...</div>`;
 
             const existingArticlesFull = useArticles
                 ? (appDB.articles || []).map((a, i) =>
-                    `СТАТЬЯ #${i + 1} [ID: "${a.id}" | Дата: ${a.date} | Рубрика: ${a.category} | Город: ${a.geo}]\n` +
-                    `Заголовок: ${a.title}\n` +
-                    `Лид: ${a.lead}\n` +
-                    `Полный текст: ${stripHtmlForContext(a.body)}`
-                ).join('\n\n---\n\n')
-                : "Контекст прошлых статей отключен.";
+                    `#${i + 1} [ID: "${a.id}" | ${a.date} | ${a.geo}] ${a.title}\nЛид: ${a.lead}\nТекст: ${stripHtmlForContext(a.body)}`
+                ).join('\n\n')
+                : "Отключено.";
 
-            const currentSiteSettingsContext = JSON.stringify({
-                breakingNews: appDB.siteSettings.breakingNews,
-                categories: appDB.siteSettings.categories,
-                informers: appDB.siteSettings.informers,
-                tickers: appDB.siteSettings.tickers,
-                poll: appDB.siteSettings.poll
-            }, null, 2);
+            const loreContext = useLore ? JSON.stringify(appLore) : "Отключено.";
 
-            const loreContext = useLore ? JSON.stringify(appLore, null, 2) : "Лор отключен.";
-
-            const layoutInstructions = {
-                standard: "Классический развернутый репортаж федерального агентства с подзаголовками H2, официальными цитатами и аналитикой.",
-                breaking: "Экстренный выпуск «СРОЧНАЯ МОЛНИЯ»: начни тело статьи с оперативной плашки <div class='my-4 p-4 bg-red-50 border-l-4 border-brand-red rounded-r-xl font-sans text-sm text-slate-900'><strong>⚡ ОПЕРАТИВНАЯ СВОДКА:</strong> краткие тезисы происходящего</div>, используй динамичный тон прямого включения.",
-                investigation: "Спецрасследование / Досье органов: сделай акцент на материалах следствия, обязательно включи подробную таблицу <div id='dossier-block' ...> с фигурантами, уликами или замерами.",
-                digest: "Хроника событий / Поминутный таймлайн: включи в статью блок поминутной хронологии развития инцидента (например, 08:15, 09:40, 11:20, 14:00) с использованием маркированного или нумерованного списка."
-            }[layoutTypeChoice] || "";
-
-            const systemInstruction = `Ты — главный редактор сатирического федерального информационного агентства «ВЕСТНИК РОССИИ» (стиль РБК, ТАСС, Коммерсантъ).
-Твоя задача — написать невероятно смешную, абсурдную, но выдержанную в предельно серьезном, канцелярско-протокольном, бюрократическом тоне новостную статью по заданию пользователя, а также подготовить обновления для базы сайта (db.json) и базы лора (universe_lore.json).
-
-ВЫБРАННЫЙ ФОРМАТ ВЕРСТКИ СТАТЬИ (${layoutTypeChoice}):
-${layoutInstructions}
-
-КРИТИЧЕСКИ ВАЖНЫЕ ПРАВИЛА КАНОНА И СВЯЗНОСТИ С DB.JSON:
-1. Внимательно изучи БАЗУ ЛОРА ВСЕЛЕННОЙ (universe_lore.json), ПОЛНЫЕ ТЕКСТЫ СУЩЕСТВУЮЩИХ СТАТЕЙ из db.json и ТЕКУЩИЕ НАСТРОЙКИ САЙТА из db.json.
-2. НИКОГДА не допускай противоречий с уже опубликованными статьями:
-   - Станислав Д. — верховный главнокомандующий Объединенных сырных сил (ОСС) во Владикавказе, воюет за рассольный сыр «ирон цыхт» для пирогов уалибах, внесен в тройной реестр (иноагент, экстремист, террорист).
-   - Андрей Б. — 22 года, родом из станицы Гостагаевской, жил в Анапе, работал разнорабочим в суши-баре (НЕ шеф-поваром!), проиграл 7 схваток жертвам на Пионерском проспекте (включая 64-летнюю пенсионерку с термосом шиповника), теперь командир штурмовиков ОСС в бронежилете из спрессованного творога.
-   - Мирослав К. — 22 года, родом из г. Мелеуз (отпиливаемый Башкортостан), уехал в Таганрог учиться на программиста, обрушил индекс правопорядка Таганрога до −142%, используется ОСС как статистическое психотронное оружие.
-   - Герман Ф. — 22 года, родом из Владикавказа, живет в Санкт-Петербурге, программист геймдев-студии (разрабатывает игры), выступ носа 53 мм (при лимите Смольного в 42 мм), запустил в мессенджере МАКС флешмоб #ДАбольшимносам! и курирует IT-связь молоковозов Станислава Д.
-
-ПРАВИЛА БЕЗОПАСНОГО JSON И HTML В ПОЛЕ "body":
-1. Внутри поля "body" во всех HTML-тегах используй ТОЛЬКО ОДИНАРНЫЕ кавычки (') для атрибутов class и id!
-2. Для любых кавычек в русском тексте используй ТОЛЬКО кавычки-ёлочки «...». НИКОГДА не используй неэкранированные двойные кавычки " внутри значений JSON!
-3. Пиши всё содержимое поля "body" в одну строку без сырых переносов строки.
-4. Режим спецблоков (${specialBlocks}): при необходимости добавь маркированный список, таблицу <div id='dossier-block' ...> или карточку <div id='max-flashmob' ...> с одинарными кавычками в атрибутах.
-5. В поле "imagePromptEn" напиши подробный промпт на английском языке для генерации реалистичной репортажной фотографии (без текста на картинке), точно иллюстрирующей сцену из этой новости.
-
-Верни ответ СТРОГО в виде валидного JSON-объекта по следующей схеме:
+            const systemInstruction = `Ты — главный редактор сатирического агентства «ВЕСТНИК РОССИИ» (стиль ТАСС, РБК, Коммерсантъ).
+Строго соблюдай факты из universe_lore.json и существующих статей db.json.
+Формат верстки: ${layoutTypeChoice}. Режим спецблоков: ${specialBlocks}.
+Внутри поля "body" во всех HTML-тегах используй ТОЛЬКО одинарные кавычки (') для атрибутов class и id, а для текста — кавычки-ёлочки «...». Для плашки мессенджера МАКС всегда ставь id='max-flashmob'.
+В поле "imagePromptEn" напиши детальный промпт на английском языке для генерации реалистичной репортажной фотографии по сюжету статьи (без текста на картинке).
+Верни ответ СТРОГО в формате JSON:
 {
   "article": {
-    "id": "unikalnyj-latin-slug-novosti",
-    "title": "Громкий заголовок в стиле ТАСС/РБК",
-    "lead": "Подробный жирный лид-абзац из 2-3 предложений",
+    "id": "unikalnyj-latin-slug",
+    "title": "Заголовок",
+    "lead": "Лид-абзац",
     "category": "${targetCat === 'AUTO' ? 'Безопасность' : targetCat}",
-    "geo": "Город / Регион",
-    "badgeType": "ЗАГОЛОВОК КАМЕРЫ ИЛИ РАДАРА (КАПСОМ)",
-    "badgeTelemetry": "КРАТКАЯ ТЕЛЕМЕТРИЯ РАДАРА С ЦИФРАМИ И ПРОЦЕНТАМИ",
-    "caption": "Фото: Подпись фотослужбы «Вестник России»",
-    "imagePromptEn": "Realistic photojournalism press photo of ..., 35mm documentary style, no text",
-    "tags": ["Тег1", "Тег2", "Тег3"],
-    "body": "<p>Текст статьи с одинарными кавычками в HTML-атрибутах...</p>",
-    "comments": [
-      {
-        "author": "Имя комментатора",
-        "badge": "Город / Статус",
-        "time": "Только что",
-        "text": "Смешной комментарий по теме статьи"
-      }
-    ]
+    "geo": "Город",
+    "badgeType": "ЗАГОЛОВОК РАДАРА",
+    "badgeTelemetry": "ТЕЛЕМЕТРИЯ РАДАРА",
+    "caption": "Фото: Фотослужба «Вестник России»",
+    "imagePromptEn": "Realistic documentary press photo of ...",
+    "tags": ["Тег1", "Тег2"],
+    "body": "<p>HTML текст статьи...</p>",
+    "comments": [{"author": "Имя", "badge": "Город", "time": "Только что", "text": "Комментарий"}]
   },
   "dbUpdates": {
-    "updatedBreakingNews": "Новая строка МОЛНИИ для шапки сайта",
-    "updatedInformer": {
-      "city": "Город статьи",
-      "status": "Краткий статус (2-3 слова)",
-      "icon": "fa-bolt",
-      "color": "text-amber-400"
-    },
-    "updatedTicker": {
-      "label": "Название индекса (например, СЫР ИРОН)",
-      "value": "Значение со стрелкой ▲ или ▼",
-      "color": "text-amber-400"
-    },
-    "updatedPoll": {
-      "question": "Новый актуальный вопрос опроса дня по теме свежей статьи",
-      "options": [
-        { "text": "Вариант 1", "votes": 840 },
-        { "text": "Вариант 2", "votes": 620 },
-        { "text": "Вариант 3", "votes": 410 }
-      ]
-    },
-    "appendUpdateToOldArticle": {
-      "targetArticleId": "ID существующей статьи из db.json, которую продолжает эта новость (или пустая строка)",
-      "updateText": "Краткая сводка (1 предложение), как сюжет получил развитие в новом материале"
-    }
+    "updatedBreakingNews": "Строка МОЛНИИ",
+    "updatedInformer": {"city": "Город", "status": "Статус", "icon": "fa-bolt", "color": "text-amber-400"},
+    "updatedTicker": {"label": "ИНДЕКС", "value": "Значение ▲", "color": "text-amber-400"},
+    "updatedPoll": {"question": "Вопрос?", "options": [{"text": "Ответ 1", "votes": 750}, {"text": "Ответ 2", "votes": 520}]},
+    "appendUpdateToOldArticle": {"targetArticleId": "", "updateText": ""}
   },
   "loreUpdates": {
-    "newTimelineEvent": "Краткая запись о событии этой статьи с датой для хронологии вселенной",
-    "characterUpdates": [
-      {
-        "name": "Имя персонажа",
-        "currentLocation": "Обновленная локация персонажа",
-        "status": "Обновленный статус персонажа",
-        "appendBiography": "Одно предложение о новых действиях персонажа"
-      }
-    ]
+    "newTimelineEvent": "Дата — Событие",
+    "characterUpdates": [{"name": "Имя", "currentLocation": "Локация", "status": "Статус", "appendBiography": "Факт"}]
   }
 }`;
 
-            const fullUserContent = `БАЗА ЛОРА ВСЕЛЕННОЙ (universe_lore.json):
-${loreContext}
-
-ТЕКУЩИЕ НАСТРОЙКИ САЙТА ИЗ DB.JSON (Информеры, котировки, опрос):
-${currentSiteSettingsContext}
-
-ПОЛНЫЕ ТЕКСТЫ ВСЕХ СУЩЕСТВУЮЩИХ СТАТЕЙ НА САЙТЕ ИЗ DB.JSON:
-${existingArticlesFull}
-
-ЗАДАНИЕ НА НОВУЮ СТАТЬЮ ОТ ГЛАВНОГО РЕДАКТОРА:
-${userPrompt}`;
+            const fullUserContent = `ЛОР:\n${loreContext}\n\nСТАТЬИ DB.JSON:\n${existingArticlesFull}\n\nЗАДАНИЕ:\n${userPrompt}`;
 
             try {
                 const rawText = await callGeminiAPI(conf, systemInstruction, fullUserContent);
                 const parsed = parseModelJsonSafely(rawText);
                 const genArt = parsed.article;
-
-                if (!genArt || !genArt.title) {
-                    throw new Error("Не удалось распознать структуру статьи в ответе ИИ");
-                }
+                if (!genArt || !genArt.title) throw new Error("Некорректный JSON статьи");
 
                 let newArticleId = (genArt.id || "").trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
                 if (!newArticleId || (appDB.articles || []).some(a => a.id === newArticleId)) {
@@ -1929,19 +1766,19 @@ ${userPrompt}`;
                 }
                 genArt.id = newArticleId;
 
-                statusBox.innerHTML += `<div class="text-emerald-400">✅ Текст статьи сгенерирован: «${genArt.title}»</div>`;
+                statusBox.innerHTML += `<div class="text-emerald-400">✅ Статья создана: «${genArt.title}»</div>`;
 
                 let generatedBase64Image = "";
                 let finalVisualMode = "auto";
 
-                if (visualModeChoice === 'ai_photo') {
-                    statusBox.innerHTML += `<div class="text-indigo-300"><i class="fa-solid fa-camera ai-loading mr-1.5"></i>Генерация репортажного ИИ-фото по сюжету (${conf.imageModel})...</div>`;
-                    generatedBase64Image = await generateArticleImageWithGemini(conf, genArt.imagePromptEn, genArt.title, genArt.geo) || "";
+                if (visualModeChoice.startsWith('ai_photo')) {
+                    statusBox.innerHTML += `<div class="text-indigo-300"><i class="fa-solid fa-camera ai-loading mr-1.5"></i>Генерация фото к статье...</div>`;
+                    generatedBase64Image = await generateArticleImageWithGemini(conf, genArt.imagePromptEn, genArt.title, genArt.geo, visualModeChoice) || "";
                     if (generatedBase64Image) {
-                        statusBox.innerHTML += `<div class="text-emerald-400">📸 ИИ-фотография успешно сгенерирована и сжата для db.json!</div>`;
+                        statusBox.innerHTML += `<div class="text-emerald-400">📸 Фотография успешно сгенерирована и встроена в статью!</div>`;
                         finalVisualMode = "auto";
                     } else {
-                        statusBox.innerHTML += `<div class="text-amber-300">⚠️ ИИ-фото недоступно для ключа, автоматически включен экран Радара спецконтроля.</div>`;
+                        statusBox.innerHTML += `<div class="text-amber-300">⚠️ Фото недоступно, включен экран Радара.</div>`;
                         finalVisualMode = "radar";
                     }
                 } else if (visualModeChoice === 'radar') {
@@ -1951,18 +1788,14 @@ ${userPrompt}`;
                 }
 
                 const dbUpd = parsed.dbUpdates || {};
-
                 if (makeHero && (dbUpd.updatedBreakingNews || parsed.updatedBreakingNews)) {
                     appDB.siteSettings.breakingNews = dbUpd.updatedBreakingNews || parsed.updatedBreakingNews;
-                    statusBox.innerHTML += `<div class="text-sky-300">⚡ Обновлена строка «МОЛНИЯ» в db.json</div>`;
                 }
 
                 if (autoUpdateDb) {
-                    if (dbUpd.updatedInformer && dbUpd.updatedInformer.city && dbUpd.updatedInformer.status) {
+                    if (dbUpd.updatedInformer?.city && dbUpd.updatedInformer?.status) {
                         const inf = dbUpd.updatedInformer;
-                        const existingInf = (appDB.siteSettings.informers || []).find(i =>
-                            i.city.toLowerCase() === inf.city.toLowerCase()
-                        );
+                        const existingInf = (appDB.siteSettings.informers || []).find(i => i.city.toLowerCase() === inf.city.toLowerCase());
                         if (existingInf) {
                             existingInf.status = inf.status;
                             existingInf.articleId = newArticleId;
@@ -1974,41 +1807,22 @@ ${userPrompt}`;
                                 color: inf.color || "text-amber-400",
                                 articleId: newArticleId
                             });
-                            if (appDB.siteSettings.informers.length > 6) {
-                                appDB.siteSettings.informers.pop();
-                            }
+                            if (appDB.siteSettings.informers.length > 6) appDB.siteSettings.informers.pop();
                         }
-                        statusBox.innerHTML += `<div class="text-sky-300">🏙️ Обновлен информер города «${inf.city}: ${inf.status}» в db.json</div>`;
                     }
-
-                    if (dbUpd.updatedTicker && dbUpd.updatedTicker.label && dbUpd.updatedTicker.value) {
+                    if (dbUpd.updatedTicker?.label && dbUpd.updatedTicker?.value) {
                         const tick = dbUpd.updatedTicker;
-                        const existingTick = (appDB.siteSettings.tickers || []).find(t =>
-                            t.label.toLowerCase() === tick.label.toLowerCase()
-                        );
-                        if (existingTick) {
-                            existingTick.value = tick.value;
-                        } else if (appDB.siteSettings.tickers.length > 0) {
-                            appDB.siteSettings.tickers[appDB.siteSettings.tickers.length - 1] = {
-                                label: tick.label.toUpperCase(),
-                                value: tick.value,
-                                color: tick.color || "text-amber-400"
-                            };
-                        }
+                        const existingTick = (appDB.siteSettings.tickers || []).find(t => t.label.toLowerCase() === tick.label.toLowerCase());
+                        if (existingTick) existingTick.value = tick.value;
                     }
-
-                    if (dbUpd.updatedPoll && dbUpd.updatedPoll.question && Array.isArray(dbUpd.updatedPoll.options) && dbUpd.updatedPoll.options.length > 1) {
+                    if (dbUpd.updatedPoll?.question && Array.isArray(dbUpd.updatedPoll.options) && dbUpd.updatedPoll.options.length > 1) {
                         appDB.siteSettings.poll = dbUpd.updatedPoll;
                         localStorage.removeItem('vestnik_poll_votes');
-                        statusBox.innerHTML += `<div class="text-sky-300">📊 Обновлен виджет «Опрос дня» в db.json</div>`;
                     }
-
-                    if (dbUpd.appendUpdateToOldArticle && dbUpd.appendUpdateToOldArticle.targetArticleId && dbUpd.appendUpdateToOldArticle.updateText) {
+                    if (dbUpd.appendUpdateToOldArticle?.targetArticleId && dbUpd.appendUpdateToOldArticle?.updateText) {
                         const oldArt = (appDB.articles || []).find(a => a.id === dbUpd.appendUpdateToOldArticle.targetArticleId);
                         if (oldArt && oldArt.body && !oldArt.body.includes(newArticleId)) {
-                            const updateBlockHtml = `\n<div class="my-6 p-4 bg-red-50 border-l-4 border-brand-red rounded-r-xl font-sans text-xs sm:text-sm text-slate-800">\n    <strong class="text-brand-red uppercase tracking-wider block mb-1">⚡ ОБНОВЛЕНИЕ СЮЖЕТА:</strong>\n    <span>${dbUpd.appendUpdateToOldArticle.updateText} — </span>\n    <a href="article.html?id=${encodeURIComponent(newArticleId)}" class="font-bold text-brand-red underline hover:text-brand-darkred">Читать продолжение репортажа →</a>\n</div>`;
-                            oldArt.body += updateBlockHtml;
-                            statusBox.innerHTML += `<div class="text-sky-300">🔗 В старую статью [${oldArt.id}] встроена ссылка на продолжение!</div>`;
+                            oldArt.body += `\n<div class="my-6 p-4 bg-red-50 border-l-4 border-brand-red rounded-r-xl font-sans text-xs sm:text-sm text-slate-800"><strong class="text-brand-red uppercase tracking-wider block mb-1">⚡ ОБНОВЛЕНИЕ СЮЖЕТА:</strong><span>${dbUpd.appendUpdateToOldArticle.updateText} — </span><a href="article.html?id=${encodeURIComponent(newArticleId)}" class="font-bold text-brand-red underline">Читать продолжение →</a></div>`;
                         }
                     }
                 }
@@ -2016,14 +1830,12 @@ ${userPrompt}`;
                 populateSiteSettingsForm();
 
                 if (autoUpdateLore && parsed.loreUpdates) {
-                    if (parsed.loreUpdates.newTimelineEvent) {
-                        appLore.timeline.push(parsed.loreUpdates.newTimelineEvent);
-                    }
+                    if (parsed.loreUpdates.newTimelineEvent) appLore.timeline.push(parsed.loreUpdates.newTimelineEvent);
                     if (Array.isArray(parsed.loreUpdates.characterUpdates)) {
                         parsed.loreUpdates.characterUpdates.forEach(upd => {
                             const existingChar = appLore.characters.find(c =>
-                                c.name.toLowerCase().includes(upd.name.toLowerCase()) ||
-                                upd.name.toLowerCase().includes(c.name.toLowerCase())
+                                c.name.toLowerCase().includes((upd.name || '').toLowerCase()) ||
+                                (upd.name || '').toLowerCase().includes(c.name.toLowerCase())
                             );
                             if (existingChar) {
                                 if (upd.currentLocation) existingChar.currentLocation = upd.currentLocation;
@@ -2046,7 +1858,6 @@ ${userPrompt}`;
                         });
                     }
                     renderLoreUI();
-                    statusBox.innerHTML += `<div class="text-amber-300">📚 Память Лора (universe_lore.json) автоматически обновлена новыми фактами!</div>`;
                 }
 
                 window._lastAiGeneratedComments = Array.isArray(genArt.comments) ? genArt.comments : [];
@@ -2073,15 +1884,11 @@ ${userPrompt}`;
                 document.getElementById('admin-cat-filter').value = "ALL";
 
                 await saveArticleFromEditor(autoPublishAndPush, !autoPublishAndPush);
+                statusBox.innerHTML += `<div class="text-emerald-300 font-bold">📰 Статья добавлена в базу (всего статей: ${appDB.articles.length}).</div>`;
 
-                statusBox.innerHTML += `<div class="text-emerald-300 font-bold">📰 Статья добавлена в общий список (всего статей: ${appDB.articles.length}).</div>`;
-
-                if (!autoPublishAndPush) {
-                    setTimeout(() => switchTab('editor'), 700);
-                }
-
+                if (!autoPublishAndPush) setTimeout(() => switchTab('editor'), 700);
             } catch (err) {
-                statusBox.innerHTML += `<div class="text-rose-400 font-bold">❌ Ошибка Gemini API: ${err.message}</div>`;
+                statusBox.innerHTML += `<div class="text-rose-400 font-bold">❌ Ошибка: ${err.message}</div>`;
                 showToast("Ошибка генерации: " + err.message, true);
             }
         }
@@ -2093,15 +1900,14 @@ ${userPrompt}`;
                 showToast("Сначала укажите Gemini API Key во вкладке 3!", true);
                 return;
             }
-
             const btn = document.getElementById('btn-ai-lore-audit');
             const origHTML = btn.innerHTML;
             btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading"></i> Синхронизация...`;
 
             try {
-                const digest = (appDB.articles || []).map(a => `[${a.date} | ${a.geo}] ${a.title}\n${a.lead}\n${stripHtmlForContext(a.body)}`).join('\n\n---\n\n');
-                const sysPrompt = "Ты — аналитик базы знаний агентства «Вестник России». Верни ТОЛЬКО валидный JSON-объект структуры universe_lore.json без лишнего текста. Внутри строк используй кавычки-ёлочки «...».";
-                const userPrompt = `Проанализируй все текущие статьи сайта из db.json и текущую базу universe_lore.json. Обнови статусы, локации и биографии существующих персонажей, добавь новых упомянутых персонажей и актуализируй хронологию событий (timeline), чтобы база знаний на 100% соответствовала всем статьям.\n\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\n\nСТАТЬИ САЙТА ИЗ DB.JSON:\n${digest}`;
+                const digest = (appDB.articles || []).map(a => `[${a.date} | ${a.geo}] ${a.title}\n${a.lead}\n${stripHtmlForContext(a.body)}`).join('\n\n');
+                const sysPrompt = "Верни ТОЛЬКО валидный JSON-объект структуры universe_lore.json.";
+                const userPrompt = `Обнови universe_lore.json по статьям.\nЛОР:\n${JSON.stringify(appLore)}\nСТАТЬИ:\n${digest}`;
 
                 const rawText = await callGeminiAPI(conf, sysPrompt, userPrompt);
                 const updatedLore = parseModelJsonSafely(rawText);
@@ -2109,10 +1915,10 @@ ${userPrompt}`;
                     appLore = updatedLore;
                     persistLocalBackup();
                     renderLoreUI();
-                    showToast("База Лора успешно синхронизирована со всеми статьями из db.json!");
+                    showToast("База Лора синхронизирована!");
                 }
             } catch (e) {
-                showToast("Ошибка синхронизации Лора: " + e.message, true);
+                showToast("Ошибка синхронизации: " + e.message, true);
             } finally {
                 btn.innerHTML = origHTML;
             }
@@ -2122,14 +1928,10 @@ ${userPrompt}`;
             const cats = (appDB.siteSettings && appDB.siteSettings.categories) || DEFAULT_DB.siteSettings.categories;
             const select = document.getElementById('admin-cat-filter');
             const currentVal = select.value || "ALL";
-            select.innerHTML = `<option value="ALL">Все рубрики (${cats.length})</option>` +
-                cats.map(c => `<option value="${c}">${c}</option>`).join('');
-            if (currentVal === "ALL" || cats.includes(currentVal)) {
-                select.value = currentVal;
-            }
+            select.innerHTML = `<option value="ALL">Все рубрики (${cats.length})</option>` + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+            if (currentVal === "ALL" || cats.includes(currentVal)) select.value = currentVal;
 
-            const datalist = document.getElementById('ed-category-datalist');
-            datalist.innerHTML = cats.map(c => `<option value="${c}">`).join('');
+            document.getElementById('ed-category-datalist').innerHTML = cats.map(c => `<option value="${c}">`).join('');
             document.getElementById('nav-articles-count').textContent = (appDB.articles || []).length;
         }
 
@@ -2181,19 +1983,11 @@ ${userPrompt}`;
                         <div class="flex items-center gap-1.5 flex-wrap">${getLayoutBadgeHtml(art.layoutType, art.visualMode, !!art.image)}</div>
                         <div class="text-xs text-slate-600"><i class="fa-solid fa-location-dot text-brand-red mr-1"></i>${art.geo}</div>
                     </td>
-                    <td class="py-3.5 px-4 align-top font-mono text-xs text-slate-600 whitespace-nowrap">
-                        ${art.date}
-                    </td>
+                    <td class="py-3.5 px-4 align-top font-mono text-xs text-slate-600 whitespace-nowrap">${art.date}</td>
                     <td class="py-3.5 px-4 align-top text-right whitespace-nowrap space-x-1">
-                        <button onclick="openArticleInEditor('${art.id}')" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold cursor-pointer">
-                            <i class="fa-solid fa-pen"></i> Править
-                        </button>
-                        <a href="article.html?id=${encodeURIComponent(art.id)}" target="_blank" class="inline-block px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                        <button onclick="deleteArticle('${art.id}')" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-lg text-xs font-semibold cursor-pointer">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
+                        <button onclick="openArticleInEditor('${art.id}')" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold cursor-pointer"><i class="fa-solid fa-pen"></i> Править</button>
+                        <a href="article.html?id=${encodeURIComponent(art.id)}" target="_blank" class="inline-block px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold"><i class="fa-solid fa-eye"></i></a>
+                        <button onclick="deleteArticle('${art.id}')" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-lg text-xs font-semibold cursor-pointer"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -2218,15 +2012,9 @@ ${userPrompt}`;
                             <span class="ml-1"><i class="fa-solid fa-location-dot text-brand-red mr-1"></i>${art.geo}</span>
                         </div>
                         <div class="flex items-center gap-1.5 shrink-0">
-                            <button onclick="openArticleInEditor('${art.id}')" class="px-2.5 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-semibold cursor-pointer">
-                                <i class="fa-solid fa-pen"></i> Править
-                            </button>
-                            <a href="article.html?id=${encodeURIComponent(art.id)}" target="_blank" class="px-2.5 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold">
-                                <i class="fa-solid fa-eye"></i>
-                            </a>
-                            <button onclick="deleteArticle('${art.id}')" class="px-2.5 py-1.5 bg-rose-50 text-rose-600 rounded-lg text-xs font-semibold cursor-pointer">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <button onclick="openArticleInEditor('${art.id}')" class="px-2.5 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-semibold cursor-pointer"><i class="fa-solid fa-pen"></i> Править</button>
+                            <a href="article.html?id=${encodeURIComponent(art.id)}" target="_blank" class="px-2.5 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold"><i class="fa-solid fa-eye"></i></a>
+                            <button onclick="deleteArticle('${art.id}')" class="px-2.5 py-1.5 bg-rose-50 text-rose-600 rounded-lg text-xs font-semibold cursor-pointer"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                 </div>
@@ -2320,8 +2108,8 @@ ${userPrompt}`;
             if (!file) return;
             const reader = new FileReader();
             reader.onload = async function(e) {
-                const compressed = await compressBase64Image(e.target.result, 880, 0.76);
-                document.getElementById('ed-image').value = compressed;
+                const compressed = await compressBase64Image(e.target.result, 860, 0.76);
+                document.getElementById('ed-image').value = compressed || e.target.result;
                 document.getElementById('ed-visual-mode').value = 'auto';
                 updateLivePreview();
                 showToast("Фото сжато и встроено в статью!");
@@ -2336,15 +2124,16 @@ ${userPrompt}`;
 
         function insertTemplateBlock(type) {
             const textarea = document.getElementById('ed-body');
-            let snippet = "";
-            if (type === 'p') snippet = `\n<p>\n    Новый абзац текста репортажа...\n</p>\n`;
-            else if (type === 'h2') snippet = `\n<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">\n    Подзаголовок раздела\n</h2>\n`;
-            else if (type === 'quote') snippet = `\n<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm">\n    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">\n        «Текст официального заявления или цитаты очевидца», — прокомментировал источник.\n    </p>\n</blockquote>\n`;
-            else if (type === 'list') snippet = `\n<ul class="my-6 space-y-3.5 font-sans text-base text-slate-800 bg-slate-50 p-5 sm:p-6 rounded-xl border border-slate-200">\n    <li class="flex items-start gap-3">\n        <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>\n        <span>Первый пункт оперативного плана;</span>\n    </li>\n</ul>\n`;
-            else if (type === 'dossier') snippet = `\n<div id="dossier-block" class="my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm">\n    <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">\n        <span class="font-bold text-xs uppercase tracking-wider">Оперативная сводка / Досье</span>\n        <span class="text-[11px] font-mono text-amber-400">МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">Данные статистического наблюдения...</div>\n</div>\n`;
-            else if (type === 'max') snippet = `\n<div id="max-flashmob" class="my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm">\n    <div class="text-xs font-bold text-sky-400 mb-2">МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">Текст координационной сводки в мессенджере МАКС...</p>\n</div>\n`;
-            else if (type === 'timeline') snippet = `\n<div class="my-6 font-sans bg-slate-50 p-5 rounded-xl border-l-4 border-slate-900 space-y-3 text-xs sm:text-sm">\n    <div class="font-bold uppercase tracking-wider text-slate-500">⏱️ Поминутная хроника событий</div>\n    <div><strong class="font-mono text-brand-red">08:30</strong> — Первое сообщение оперативного дежурного;</div>\n    <div><strong class="font-mono text-brand-red">10:15</strong> — Введение специального регламента на территории объекта.</div>\n</div>\n`;
-
+            const snippets = {
+                p: `\n<p>\n    Новый абзац текста репортажа...\n</p>\n`,
+                h2: `\n<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">\n    Подзаголовок раздела\n</h2>\n`,
+                quote: `\n<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm">\n    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">\n        «Текст официального заявления», — прокомментировал источник.\n    </p>\n</blockquote>\n`,
+                list: `\n<ul class="my-6 space-y-3.5 font-sans text-base text-slate-800 bg-slate-50 p-5 sm:p-6 rounded-xl border border-slate-200">\n    <li class="flex items-start gap-3">\n        <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>\n        <span>Первый пункт оперативного плана;</span>\n    </li>\n</ul>\n`,
+                dossier: `\n<div id="dossier-block" class="my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm">\n    <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">\n        <span class="font-bold text-xs uppercase tracking-wider">Оперативная сводка / Досье</span>\n        <span class="text-[11px] font-mono text-amber-400">МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">Данные статистического наблюдения...</div>\n</div>\n`,
+                max: `\n<div id="max-flashmob" class="my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm">\n    <div class="text-xs font-bold text-sky-400 mb-2">МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">Текст координационной сводки в мессенджере МАКС...</p>\n</div>\n`,
+                timeline: `\n<div class="my-6 font-sans bg-slate-50 p-5 rounded-xl border-l-4 border-slate-900 space-y-3 text-xs sm:text-sm">\n    <div class="font-bold uppercase tracking-wider text-slate-500">⏱️ Поминутная хроника событий</div>\n    <div><strong class="font-mono text-brand-red">08:30</strong> — Первое сообщение оперативного дежурного;</div>\n    <div><strong class="font-mono text-brand-red">10:15</strong> — Введение специального регламента.</div>\n</div>\n`
+            };
+            const snippet = snippets[type] || "";
             const start = textarea.selectionStart || textarea.value.length;
             textarea.value = textarea.value.slice(0, start) + snippet + textarea.value.slice(start);
             updateLivePreview();
@@ -2387,9 +2176,7 @@ ${userPrompt}`;
             }
 
             const isHero = document.getElementById('ed-ishero').checked;
-            if (isHero) {
-                (appDB.articles || []).forEach(a => { a.isHero = false; });
-            }
+            if (isHero) (appDB.articles || []).forEach(a => { a.isHero = false; });
 
             const targetId = editingOriginalId || id;
             const idx = (appDB.articles || []).findIndex(a => a.id === targetId);
@@ -2431,11 +2218,8 @@ ${userPrompt}`;
                 appDB.siteSettings.categories.push(newArticleObj.category);
             }
 
-            if (idx !== -1) {
-                appDB.articles[idx] = newArticleObj;
-            } else {
-                appDB.articles.unshift(newArticleObj);
-            }
+            if (idx !== -1) appDB.articles[idx] = newArticleObj;
+            else appDB.articles.unshift(newArticleObj);
 
             editingOriginalId = id;
             window._lastAiGeneratedComments = null;
@@ -2495,7 +2279,7 @@ ${userPrompt}`;
 
             persistLocalBackup();
             populateCategoryFilters();
-            showToast("Настройки портала в db.json сохранены!");
+            showToast("Настройки портала сохранены!");
             if (andPush) pushToGitHub();
         }
 
@@ -2627,7 +2411,10 @@ ${userPrompt}`;
             }
         }
 
-        window.addEventListener('DOMContentLoaded', initCMS);
+        window.addEventListener('DOMContentLoaded', () => {
+            initCMS();
+            upgradeUiForRateLimitsAndPhotos();
+        });
     </script>
 </body>
 </html>
