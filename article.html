@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Загрузка материала — ВЕСТНИК РОССИИ</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script>
@@ -40,10 +37,18 @@
         body {
             background-color: #f4f5f7;
             color: #1e293b;
+            overflow-x: hidden;
         }
         .article-content p {
-            margin-bottom: 1.35rem;
-            line-height: 1.82;
+            margin-bottom: 1.25rem;
+            line-height: 1.8;
+            word-wrap: break-word;
+        }
+        .article-content table {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         .quote-block {
             border-left: 4px solid #c01414;
@@ -84,7 +89,6 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* Подсветка для режима прямой правки на странице */
         .inline-editable-active [contenteditable="true"] {
             outline: 2px dashed #c01414;
             outline-offset: 4px;
@@ -100,9 +104,8 @@
 </head>
 <body class="antialiased selection:bg-brand-red selection:text-white min-h-screen flex flex-col">
 
-    <!-- ВЕРХНЯЯ ИНФОРМАЦИОННАЯ ПАНЕЛЬ -->
-    <div class="bg-slate-950 text-slate-300 text-xs border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-2">
+    <div class="bg-slate-950 text-slate-300 text-[11px] sm:text-xs border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2 flex items-center justify-between gap-2">
             <div class="flex items-center space-x-3 overflow-x-auto no-scrollbar py-0.5">
                 <span class="font-semibold text-white flex items-center gap-1.5 shrink-0">
                     <i class="fa-regular fa-calendar text-brand-red"></i>
@@ -111,53 +114,50 @@
                 <span class="text-slate-700">|</span>
                 <div id="top-informers-list" class="flex items-center space-x-3 shrink-0"></div>
             </div>
-            <div id="top-tickers-list" class="hidden sm:flex items-center space-x-4 font-mono text-[11px] shrink-0"></div>
+            <div id="top-tickers-list" class="hidden md:flex items-center space-x-4 font-mono text-[11px] shrink-0"></div>
         </div>
     </div>
 
-    <!-- ГЛАВНАЯ ШАПКА САЙТА -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center justify-between h-20 gap-4">
-                <!-- Логотип -->
-                <div class="flex items-center space-x-4 shrink-0">
-                    <a href="index.html" class="flex items-center gap-3 group">
-                        <div class="w-11 h-11 bg-brand-red flex items-center justify-center text-white font-headline font-extrabold text-2xl tracking-tighter shadow-xs group-hover:bg-brand-darkred transition">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4">
+            <div class="flex items-center justify-between h-16 sm:h-20 gap-3">
+                <div class="flex items-center space-x-3 shrink-0 min-w-0">
+                    <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group min-w-0">
+                        <div class="w-9 h-9 sm:w-11 sm:h-11 bg-brand-red flex items-center justify-center text-white font-headline font-extrabold text-xl sm:text-2xl tracking-tighter shadow-xs group-hover:bg-brand-darkred transition shrink-0">
                             ВР
                         </div>
-                        <div>
-                            <div id="site-title-el" class="font-headline font-extrabold text-2xl sm:text-3xl tracking-tight text-slate-900 leading-none">
+                        <div class="min-w-0">
+                            <div id="site-title-el" class="font-headline font-extrabold text-xl sm:text-3xl tracking-tight text-slate-900 leading-none truncate">
                                 ВЕСТНИК <span class="text-brand-red">РОССИИ</span>
                             </div>
-                            <div id="site-subtitle-el" class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold mt-1">
+                            <div id="site-subtitle-el" class="text-[9px] sm:text-[10px] uppercase tracking-widest text-slate-500 font-semibold mt-1 truncate">
                                 Федеральное информационное агентство
                             </div>
                         </div>
                     </a>
                 </div>
 
-                <!-- Навигация по рубрикам -->
                 <nav id="header-categories-nav" class="hidden xl:flex items-center space-x-5 text-sm font-semibold text-slate-700 overflow-x-auto no-scrollbar"></nav>
 
-                <!-- Кнопки справа -->
-                <div class="flex items-center space-x-2.5 shrink-0">
-                    <a href="index.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">
+                <div class="flex items-center space-x-2 shrink-0">
+                    <a href="index.html" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">
                         <i class="fa-solid fa-newspaper text-brand-red"></i>
-                        <span>Все новости</span>
+                        <span class="hidden xs:inline sm:inline">Все новости</span>
                     </a>
-                    <span class="px-2 py-1 text-xs font-bold bg-slate-200 text-slate-700 rounded">18+</span>
+                    <span class="px-2 py-1 text-[11px] sm:text-xs font-bold bg-slate-200 text-slate-700 rounded">18+</span>
                 </div>
             </div>
+
+            <div id="mobile-categories-nav" class="xl:hidden flex items-center space-x-2 py-2 overflow-x-auto no-scrollbar border-t border-slate-100 text-xs font-semibold"></div>
         </div>
 
-        <!-- БЕГУЩАЯ СТРОКА «МОЛНИЯ» (5 кликов открывают панель редактора / переход в admin.html) -->
         <div class="bg-red-50 border-t border-red-200 text-slate-900">
-            <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-3 text-xs sm:text-sm">
-                <div class="flex items-center gap-3 min-w-0">
+            <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2 flex items-center justify-between gap-2 sm:gap-3 text-xs sm:text-sm">
+                <div class="flex items-center gap-2 sm:gap-3 min-w-0">
                     <button
                         id="molniya-btn"
                         onclick="handleMolniyaClick()"
-                        class="bg-brand-red hover:bg-brand-darkred active:scale-95 text-white font-bold px-2.5 py-0.5 rounded-xs uppercase tracking-wider text-[11px] flex items-center gap-1.5 shrink-0 cursor-pointer select-none transition"
+                        class="bg-brand-red hover:bg-brand-darkred active:scale-95 text-white font-bold px-2 sm:px-2.5 py-0.5 rounded-xs uppercase tracking-wider text-[10px] sm:text-[11px] flex items-center gap-1.5 shrink-0 cursor-pointer select-none transition"
                     >
                         <span class="w-2 h-2 rounded-full bg-white live-dot"></span>
                         <span>МОЛНИЯ</span>
@@ -166,21 +166,20 @@
                         Загрузка оперативной сводки...
                     </div>
                 </div>
-                <span id="molniya-counter-hint" class="hidden text-[11px] font-mono text-brand-red font-bold shrink-0"></span>
+                <span id="molniya-counter-hint" class="hidden text-[10px] sm:text-[11px] font-mono text-brand-red font-bold shrink-0"></span>
             </div>
         </div>
     </header>
 
-    <!-- ОСНОВНОЙ КОНТЕНТ СТРАНИЦЫ СТАТЬИ -->
-    <main class="max-w-7xl mx-auto px-4 py-6 sm:py-8 flex-1 w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <main class="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8 flex-1 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
 
-            <!-- ЛЕВАЯ/ЦЕНТРАЛЬНАЯ КОЛОНКА — СТАТЬЯ (8 колонок) -->
-            <article class="lg:col-span-8 bg-white rounded-xl shadow-xs border border-slate-200 p-5 sm:p-8 md:p-10">
+            <article id="article-card-wrapper" class="lg:col-span-8 bg-white rounded-xl shadow-xs border border-slate-200 p-4 sm:p-8 md:p-10 overflow-hidden">
 
-                <!-- Хлебные крошки и управление шрифтом -->
-                <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100 text-xs text-slate-500">
-                    <div class="flex flex-wrap items-center gap-2">
+                <div id="article-layout-banner" class="hidden mb-4 px-3.5 py-2 rounded-lg font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-between gap-2"></div>
+
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-3.5 sm:pb-4 mb-4 sm:mb-5 border-b border-slate-100 text-xs text-slate-500">
+                    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <a href="index.html" class="hover:text-brand-red font-medium transition">Главная</a>
                         <span>/</span>
                         <a id="article-category-link" href="index.html" class="text-brand-red font-bold uppercase tracking-wider hover:underline">Рубрика</a>
@@ -191,220 +190,194 @@
                             <i class="fa-solid fa-location-dot text-brand-red"></i> --
                         </span>
                     </div>
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="changeFontSize(-1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-bold transition" title="Уменьшить шрифт">A-</button>
-                        <button onclick="changeFontSize(1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-bold transition" title="Увеличить шрифт">A+</button>
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button onclick="changeFontSize(-1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-bold transition cursor-pointer" title="Уменьшить шрифт">A-</button>
+                        <button onclick="changeFontSize(1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-bold transition cursor-pointer" title="Увеличить шрифт">A+</button>
                     </div>
                 </div>
 
-                <!-- ЗАГОЛОВОК H1 -->
-                <h1 id="article-title" class="font-headline font-extrabold text-2xl sm:text-3xl md:text-[34px] text-slate-950 leading-[1.2] mb-5">
+                <h1 id="article-title" class="font-headline font-extrabold text-xl sm:text-3xl md:text-[34px] text-slate-950 leading-[1.22] mb-4 sm:mb-5">
                     Загрузка заголовка...
                 </h1>
 
-                <!-- ЛИД-АБЗАЦ -->
-                <div id="article-lead" class="font-sans font-semibold text-base sm:text-lg text-slate-800 leading-relaxed mb-6 pb-6 border-b border-slate-200">
+                <div id="article-lead" class="font-sans font-semibold text-sm sm:text-lg text-slate-800 leading-relaxed mb-5 sm:mb-6 pb-5 sm:pb-6 border-b border-slate-200">
                     Загрузка лид-абзаца...
                 </div>
 
-                <!-- БЛОК ИЛЛЮСТРАЦИИ / ИНТЕРАКТИВНЫЙ ЭКРАН СПЕЦКОНТРОЛЯ -->
-                <figure class="mb-8">
+                <figure id="article-figure" class="mb-6 sm:mb-8">
                     <div
                         id="photo-container"
                         onclick="triggerLocalPhotoUpload()"
-                        class="relative rounded-xl overflow-hidden bg-slate-950 border-2 border-slate-800 cursor-pointer group aspect-16/9 flex items-center justify-center select-none"
+                        class="relative rounded-xl overflow-hidden bg-slate-950 border-2 border-slate-800 cursor-pointer group min-h-[260px] sm:aspect-16/9 flex items-center justify-center select-none"
                     >
-                        <!-- Изображение статьи или загруженное пользователем фото -->
-                        <img id="article-main-img" src="" alt="Иллюстрация материала" class="hidden w-full h-full object-cover">
+                        <img id="article-main-img" src="" alt="Иллюстрация материала" class="hidden w-full h-full max-h-[520px] object-cover">
 
-                        <!-- Репортажный интерфейс камеры / радара (если не задана обычная картинка) -->
-                        <div id="default-cctv-overlay" class="w-full h-full cctv-grid relative flex flex-col justify-between p-4 sm:p-6 text-sky-400 font-mono">
+                        <div id="default-cctv-overlay" class="w-full h-full cctv-grid relative flex flex-col justify-between p-3.5 sm:p-6 text-sky-400 font-mono gap-4">
                             <div class="lidar-beam"></div>
 
-                            <!-- Верхняя строка телеметрии -->
-                            <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs z-10">
-                                <div class="flex items-center gap-2 bg-slate-900/90 px-2.5 py-1 rounded border border-sky-500/30">
-                                    <span class="w-2 h-2 rounded-full bg-red-500 live-dot"></span>
-                                    <span id="cctv-badge-type" class="text-white font-bold">ОПЕРАТИВНЫЙ КОНТРОЛЬ</span>
+                            <div class="flex flex-wrap items-center justify-between gap-1.5 text-[10px] sm:text-xs z-10">
+                                <div class="flex items-center gap-1.5 bg-slate-900/90 px-2 sm:px-2.5 py-1 rounded border border-sky-500/30 max-w-full">
+                                    <span class="w-2 h-2 rounded-full bg-red-500 live-dot shrink-0"></span>
+                                    <span id="cctv-badge-type" class="text-white font-bold truncate">ОПЕРАТИВНЫЙ КОНТРОЛЬ</span>
                                 </div>
-                                <div id="cctv-category-pill" class="bg-red-950/90 text-red-300 border border-red-500/50 px-2.5 py-1 rounded font-bold uppercase">
+                                <div id="cctv-category-pill" class="bg-red-950/90 text-red-300 border border-red-500/50 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded font-bold uppercase text-[10px] sm:text-xs">
                                     ФЕДЕРАЛЬНАЯ СВОДКА
                                 </div>
                             </div>
 
-                            <!-- Центральная векторная схема / радар -->
-                            <div class="my-auto flex flex-col sm:flex-row items-center justify-center gap-6 z-10 py-2">
-                                <div id="cctv-vector-box" class="relative w-52 h-40 sm:w-60 sm:h-44 border border-sky-400/40 bg-slate-900/80 rounded-lg p-3 flex items-center justify-center">
-                                    <!-- Заполняется динамически под тему новости -->
-                                </div>
+                            <div class="my-auto flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-6 z-10 py-1">
+                                <div id="cctv-vector-box" class="relative w-44 h-32 sm:w-60 sm:h-44 border border-sky-400/40 bg-slate-900/80 rounded-lg p-2.5 sm:p-3 flex items-center justify-center shrink-0"></div>
 
-                                <div class="text-xs space-y-2 bg-slate-900/90 p-3.5 rounded-lg border border-slate-700 max-w-xs w-full">
-                                    <div class="text-white font-bold border-b border-slate-700 pb-1 flex items-center justify-between">
-                                        <span id="cctv-geo-label">ЛОКАЦИЯ: РФ</span>
-                                        <span class="text-red-400">LIVE</span>
+                                <div class="text-xs space-y-1.5 sm:space-y-2 bg-slate-900/90 p-3 sm:p-3.5 rounded-lg border border-slate-700 w-full max-w-xs">
+                                    <div class="text-white font-bold border-b border-slate-700 pb-1 flex items-center justify-between text-[11px] sm:text-xs">
+                                        <span id="cctv-geo-label" class="truncate">ЛОКАЦИЯ: РФ</span>
+                                        <span class="text-red-400 shrink-0 ml-2">LIVE</span>
                                     </div>
-                                    <div id="cctv-telemetry-text" class="text-[11px] text-amber-300 font-bold leading-relaxed">
+                                    <div id="cctv-telemetry-text" class="text-[10px] sm:text-[11px] text-amber-300 font-bold leading-relaxed break-words">
                                         ТЕЛЕМЕТРИЯ АКТИВНА
                                     </div>
-                                    <div class="pt-1.5 text-[11px] text-slate-300 flex items-center gap-1.5">
-                                        <i class="fa-solid fa-camera text-brand-red"></i>
-                                        <span class="underline decoration-dotted">Нажмите, чтобы подставить своё фото</span>
+                                    <div class="pt-1 text-[10px] sm:text-[11px] text-slate-300 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-camera text-brand-red shrink-0"></i>
+                                        <span class="underline decoration-dotted">Нажмите, чтобы заменить кадр</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Нижняя строка камеры -->
-                            <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-[11px] text-slate-400 z-10 border-t border-slate-800/80 pt-2">
-                                <span id="cctv-footer-left">АРХИВ ФОТОСЛУЖБЫ «ВЕСТНИК РОССИИ»</span>
-                                <span class="text-sky-400 font-semibold">КАНАЛ ЗАЩИЩЕН • 2026</span>
+                            <div class="flex flex-wrap items-center justify-between gap-2 text-[9px] sm:text-[11px] text-slate-400 z-10 border-t border-slate-800/80 pt-2">
+                                <span id="cctv-footer-left" class="truncate">АРХИВ ФОТОСЛУЖБЫ «ВЕСТНИК РОССИИ»</span>
+                                <span class="text-sky-400 font-semibold shrink-0">КАНАЛ ЗАЩИЩЕН • 2026</span>
                             </div>
                         </div>
 
-                        <!-- Кнопка возврата схемы -->
                         <button
                             id="reset-img-btn"
                             onclick="resetLocalPhoto(event)"
-                            class="hidden absolute top-3 right-3 bg-slate-900/85 hover:bg-brand-red text-white text-xs px-3 py-1.5 rounded-md font-sans font-semibold shadow-md transition z-20"
+                            class="hidden absolute top-2.5 right-2.5 sm:top-3 sm:right-3 bg-slate-900/85 hover:bg-brand-red text-white text-[11px] sm:text-xs px-2.5 py-1.5 rounded-md font-sans font-semibold shadow-md transition z-20 cursor-pointer"
                         >
-                            <i class="fa-solid fa-rotate-left mr-1"></i> Вернуть схему
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Радар
                         </button>
                     </div>
                     <input type="file" id="local-file-input" accept="image/*" class="hidden" onchange="handleLocalPhotoSelect(event)">
-                    <figcaption class="text-xs text-slate-500 mt-2.5 flex items-center justify-between gap-2">
-                        <span id="article-caption">Фото: Фотослужба «Вестник России»</span>
+                    <figcaption class="text-[11px] sm:text-xs text-slate-500 mt-2 flex flex-wrap items-center justify-between gap-2">
+                        <span id="article-caption" class="leading-snug">Фото: Фотослужба «Вестник России»</span>
                         <span class="text-[11px] text-brand-red font-medium cursor-pointer hover:underline shrink-0" onclick="triggerLocalPhotoUpload()">[Заменить кадр]</span>
                     </figcaption>
                 </figure>
 
-                <!-- ОСНОВНОЙ ТЕКСТ СТАТЬИ -->
-                <div id="article-body" class="article-content font-serif text-slate-800 text-[16.5px] sm:text-[17.5px]">
-                    <!-- Заполняется из db.json -->
+                <div id="article-body" class="article-content font-serif text-slate-800 text-[15.5px] sm:text-[17.5px]"></div>
+
+                <div id="related-articles-box" class="my-6 sm:my-8 bg-slate-50 border-l-4 border-slate-900 p-4 sm:p-5 rounded-r-xl">
+                    <div class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5 sm:mb-3">Материалы по теме в единой сводке</div>
+                    <div id="related-articles-list" class="space-y-2.5 text-xs sm:text-sm font-semibold"></div>
                 </div>
 
-                <!-- БЛОК «МАТЕРИАЛЫ ПО ТЕМЕ» (СВЯЗАННЫЕ НОВОСТИ ИЗ DB.JSON) -->
-                <div id="related-articles-box" class="my-8 bg-slate-50 border-l-4 border-slate-900 p-5 rounded-r-xl">
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Материалы по теме в единой сводке</div>
-                    <div id="related-articles-list" class="space-y-2.5 text-sm font-semibold">
-                        <!-- Заполняется автоматически -->
-                    </div>
-                </div>
+                <div class="pt-5 sm:pt-6 border-t border-slate-200">
+                    <div id="article-tags-list" class="flex flex-wrap gap-1.5 sm:gap-2 mb-5 sm:mb-6"></div>
 
-                <!-- ТЕГИ И РЕАКЦИИ ЧИТАТЕЛЕЙ -->
-                <div class="pt-6 border-t border-slate-200">
-                    <div id="article-tags-list" class="flex flex-wrap gap-2 mb-6">
-                        <!-- Теги -->
-                    </div>
-
-                    <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200/80">
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="bumpArticleReaction('fire')" class="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-red-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition cursor-pointer">
-                                <span>🔥 Резонансно</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-slate-50 p-3.5 sm:p-4 rounded-xl border border-slate-200/80">
+                        <div class="grid grid-cols-3 sm:flex sm:flex-wrap gap-2">
+                            <button onclick="bumpArticleReaction('fire')" class="flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-2 sm:py-1.5 bg-white hover:bg-red-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition cursor-pointer">
+                                <span>🔥</span>
+                                <span class="hidden sm:inline">Резонансно</span>
                                 <span id="react-fire" class="text-brand-red font-bold">0</span>
                             </button>
-                            <button onclick="bumpArticleReaction('cheese')" class="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-red-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition cursor-pointer">
-                                <span>🧀 Закон и порядок</span>
+                            <button onclick="bumpArticleReaction('cheese')" class="flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-2 sm:py-1.5 bg-white hover:bg-red-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition cursor-pointer">
+                                <span>🧀</span>
+                                <span class="hidden sm:inline">Закон</span>
                                 <span id="react-cheese" class="text-slate-900 font-bold">0</span>
                             </button>
-                            <button onclick="bumpArticleReaction('shock')" class="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-red-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition cursor-pointer">
-                                <span>⚡ Статистический шок</span>
+                            <button onclick="bumpArticleReaction('shock')" class="flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-2 sm:py-1.5 bg-white hover:bg-red-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition cursor-pointer">
+                                <span>⚡</span>
+                                <span class="hidden sm:inline">Шок</span>
                                 <span id="react-shock" class="text-slate-900 font-bold">0</span>
                             </button>
                         </div>
-                        <button onclick="copyDirectLink()" id="copy-link-btn" class="text-xs font-semibold text-slate-600 hover:text-brand-red flex items-center gap-1.5 cursor-pointer">
+                        <button onclick="copyDirectLink()" id="copy-link-btn" class="w-full sm:w-auto justify-center py-2 sm:py-1 px-3 bg-white sm:bg-transparent border sm:border-0 border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:text-brand-red flex items-center gap-1.5 cursor-pointer">
                             <i class="fa-regular fa-copy"></i>
-                            <span>Скопировать ссылку на статью</span>
+                            <span>Скопировать ссылку</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- СЕКЦИЯ КОММЕНТАРИЕВ -->
-                <section class="mt-10 pt-8 border-t border-slate-200">
-                    <h3 class="font-headline font-bold text-xl text-slate-900 mb-5 flex items-center gap-2">
+                <section class="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-slate-200">
+                    <h3 class="font-headline font-bold text-lg sm:text-xl text-slate-900 mb-4 sm:mb-5 flex items-center gap-2">
                         <span>Обсуждение материала</span>
                         <span id="comments-count-pill" class="text-xs font-sans bg-slate-900 text-white px-2.5 py-0.5 rounded-full">0</span>
                     </h3>
 
-                    <form onsubmit="handleCommentSubmit(event)" class="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                            <input type="text" id="comm-author" placeholder="Ваше имя или позывной" required class="px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
-                            <input type="text" id="comm-badge" placeholder="Город / статус (например, Владикавказ)" class="px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                    <form onsubmit="handleCommentSubmit(event)" class="mb-6 bg-slate-50 p-3.5 sm:p-4 rounded-xl border border-slate-200">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 mb-2.5 sm:mb-3">
+                            <input type="text" id="comm-author" placeholder="Ваше имя или позывной" required class="px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                            <input type="text" id="comm-badge" placeholder="Город / статус (например, Владикавказ)" class="px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
                         </div>
-                        <textarea id="comm-text" rows="2" placeholder="Напишите ваше мнение по материалу..." required class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red mb-2.5"></textarea>
-                        <button type="submit" class="bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-lg transition cursor-pointer">
+                        <textarea id="comm-text" rows="2" placeholder="Напишите ваше мнение по материалу..." required class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red mb-2.5"></textarea>
+                        <button type="submit" class="w-full sm:w-auto bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold uppercase tracking-wider px-4 py-2.5 sm:py-2 rounded-lg transition cursor-pointer">
                             Опубликовать комментарий
                         </button>
                     </form>
 
-                    <div id="comments-container" class="space-y-4">
-                        <!-- Комментарии статьи -->
-                    </div>
+                    <div id="comments-container" class="space-y-3.5 sm:space-y-4"></div>
                 </section>
             </article>
 
-            <!-- ПРАВАЯ БОКОВАЯ КОЛОНКА (4 колонки) -->
             <aside class="lg:col-span-4 space-y-6">
 
-                <!-- БЛОК «КАРТИНА ДНЯ (LIVE)» -->
-                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5">
+                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-4 sm:p-5">
                     <div class="flex items-center justify-between pb-3 mb-4 border-b-2 border-slate-900">
-                        <h3 class="font-headline font-bold text-lg text-slate-900 uppercase tracking-tight">Картина дня</h3>
+                        <h3 class="font-headline font-bold text-base sm:text-lg text-slate-900 uppercase tracking-tight">Картина дня</h3>
                         <span class="text-[11px] font-mono text-brand-red font-bold flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-brand-red live-dot"></span>
                             LIVE
                         </span>
                     </div>
-                    <div id="sidebar-live-list" class="divide-y divide-slate-100 text-sm"></div>
+                    <div id="sidebar-live-list" class="divide-y divide-slate-100 text-xs sm:text-sm"></div>
                 </div>
 
-                <!-- БЛОК «ОПРОС ДНЯ» -->
-                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5">
+                <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-4 sm:p-5">
                     <div class="flex items-center justify-between mb-1">
                         <span class="text-xs font-bold uppercase tracking-wider text-brand-red">Опрос «Вестника»</span>
                         <span id="poll-total-votes" class="text-[11px] font-mono text-slate-400">Голосов: 0</span>
                     </div>
-                    <h4 id="poll-question-el" class="font-headline font-bold text-base text-slate-900 mb-4 leading-snug">
+                    <h4 id="poll-question-el" class="font-headline font-bold text-sm sm:text-base text-slate-900 mb-3.5 sm:mb-4 leading-snug">
                         Загрузка опроса...
                     </h4>
-                    <div id="poll-options-container" class="space-y-2.5 text-xs sm:text-sm"></div>
+                    <div id="poll-options-container" class="space-y-2 sm:space-y-2.5 text-xs sm:text-sm"></div>
                 </div>
 
             </aside>
         </div>
     </main>
 
-    <!-- НИЖНЯЯ ПАНЕЛЬ БЫСТРОЙ ПРАВКИ (ПОЯВЛЯЕТСЯ ТОЛЬКО ПОСЛЕ 5 КЛИКОВ НА «МОЛНИЯ») -->
-    <div id="cms-quick-bar" class="hidden fixed bottom-4 inset-x-4 max-w-4xl mx-auto bg-slate-900/95 backdrop-blur-md text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700 z-50 flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div class="flex items-center gap-2.5">
+    <div id="cms-quick-bar" class="hidden fixed bottom-3 inset-x-3 sm:bottom-4 sm:inset-x-4 max-w-4xl mx-auto bg-slate-900/95 backdrop-blur-md text-white p-3 sm:px-4 sm:py-3 rounded-xl shadow-2xl border border-slate-700 z-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 text-xs">
+        <div class="flex items-center justify-between sm:justify-start gap-2.5">
             <span class="px-2 py-0.5 bg-brand-red text-white font-bold rounded uppercase">ВЕСТНИК-CMS</span>
-            <span class="text-slate-300 hidden sm:inline">Оперативная правка материала</span>
+            <span class="text-slate-300 text-[11px] sm:text-xs">Оперативная правка материала</span>
         </div>
-        <div class="flex flex-wrap items-center gap-2">
-            <button id="inline-edit-btn" onclick="toggleInlineEditMode()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg font-semibold transition cursor-pointer">
-                Прямая правка текста: ВЫКЛ
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <button id="inline-edit-btn" onclick="toggleInlineEditMode()" class="flex-1 sm:flex-initial justify-center px-2.5 sm:px-3 py-2 sm:py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg font-semibold transition cursor-pointer">
+                Прямая правка: ВЫКЛ
             </button>
-            <button onclick="saveInlineToLocalAndGoAdmin()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg font-semibold transition cursor-pointer">
-                <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Сохранить и открыть полную CMS
+            <button onclick="saveInlineToLocalAndGoAdmin()" class="flex-1 sm:flex-initial justify-center px-2.5 sm:px-3 py-2 sm:py-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg font-semibold transition cursor-pointer">
+                <i class="fa-solid fa-cloud-arrow-up mr-1"></i> В полную CMS
             </button>
-            <button onclick="hideQuickBar()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 rounded-lg font-semibold transition cursor-pointer">
-                <i class="fa-solid fa-camera mr-1"></i> Чистый вид
+            <button onclick="hideQuickBar()" class="px-2.5 sm:px-3 py-2 sm:py-1.5 bg-emerald-700 hover:bg-emerald-600 rounded-lg font-semibold transition cursor-pointer">
+                <i class="fa-solid fa-camera"></i>
             </button>
         </div>
     </div>
 
-    <!-- ПОДВАЛ САЙТА -->
-    <footer class="bg-slate-950 text-slate-400 text-xs mt-14 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer class="bg-slate-950 text-slate-400 text-xs mt-10 sm:mt-14 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
             <div>
                 <a href="index.html" class="font-headline font-bold text-white text-base hover:text-brand-red transition">ВЕСТНИК РОССИИ</a>
-                <p class="text-slate-500 mt-1">Свидетельство о регистрации СМИ ЭЛ № ФС 77-99412. При цитировании ссылка обязательна.</p>
+                <p class="text-slate-500 mt-1 text-[11px] sm:text-xs">Свидетельство о регистрации СМИ ЭЛ № ФС 77-99412. При цитировании ссылка обязательна.</p>
             </div>
-            <div class="text-right font-mono text-[11px] text-slate-500">
-                18+ • Издание • 2026
+            <div class="font-mono text-[11px] text-slate-500">
+                18+ • Сатирическое издание • 2026
             </div>
         </div>
     </footer>
 
-    <!-- JAVASCRIPT: ПОЛНАЯ РЕЗЕРВНАЯ БАЗА СО ВСЕМИ 6 СТАТЬЯМИ И ЛОГИКА СТРАНИЦЫ -->
     <script>
         const DEFAULT_DB = {
             siteSettings: {
@@ -439,6 +412,8 @@
                 {
                     id: "cheese-blitzkrieg",
                     isHero: true,
+                    layoutType: "breaking",
+                    visualMode: "auto",
                     title: "ФСБ и Росфинмониторинг внесли Станислава Д. в тройной реестр иноагентов, экстремистов и террористов: командующий ОСС объявил «сырный блицкриг» и привлек кадры из Гостагаевской и Мелеуза",
                     lead: "Конфликт вокруг критического дефицита сырья для традиционных пирогов уалибах в Северной Осетии перерос в полномасштабную военную кампанию межрегионального масштаба. Самопровозглашенный верховный главнокомандующий Объединенных сырных сил (ОСС) Станислав Д. объявил о начале генерального наступления под кодовым названием «Сырный блицкриг» сразу по четырем стратегическим направлениям. В ответ на это Минюст РФ, Росфинмониторинг и Генпрокуратура одновременно присвоили лидеру мятежных сыроваров статусы иностранного агента, экстремиста и террориста.",
                     date: "15 октября 2026, 08:30",
@@ -513,6 +488,8 @@
                 {
                     id: "spb-nose-limit",
                     isHero: false,
+                    layoutType: "standard",
+                    visualMode: "auto",
                     title: "Смольный ввел предельно допустимые габариты носовых перегородок: петербургский IT-специалист запустил флешмоб #ДАбольшимносам",
                     lead: "Правительство Санкт-Петербурга утвердило постановление № 412-п «Об оптимизации аэродинамических и фасадных характеристик пешеходных потоков в историческом центре». Согласно регламенту, на территории города вводится строгий норматив на длину кончика носа: выступ носовой перегородки от фронтальной плоскости лица не должен превышать 42 миллиметров. Лицам, чьи параметры выходят за рамки стандарта, предписано пройти внеочередную процедуру эстетического усечения либо передвигаться по улицам исключительно в плотно прилегающих компрессионных накладках.",
                     date: "14 октября 2026, 23:10",
@@ -542,6 +519,8 @@
                 {
                     id: "vladikavkaz-cheese-shortage",
                     isHero: false,
+                    layoutType: "standard",
+                    visualMode: "auto",
                     title: "В Северной Осетии объявлено чрезвычайное положение из-за критического дефицита осетинского сыра: Владикавказ охвачен «лактозными бунтами», сформированы Объединенные сырные силы",
                     lead: "Во Владикавказе и на всей территории Республики Северная Осетия — Алания введен план специальной социально-продовольственной деэскалации в связи с полным исчерпанием региональных запасов рассольного осетинского сыра («ирон цыхт»), базового компонента традиционных пирогов уалибах. Тотальный дефицит ключевого сырья в считанные дни парализовал общепит и привел к масштабному расколу в обществе, стремительно перерастающему в вооруженное противостояние конкурирующих хлебобулочных группировок.",
                     date: "14 октября 2026, 21:40",
@@ -567,6 +546,8 @@
                 {
                     id: "anapa-sushi-maniac",
                     isHero: false,
+                    layoutType: "investigation",
+                    visualMode: "auto",
                     title: "«Кошмар Пионерского проспекта»: полиция Анапы разыскивает серийного маньяка, получившего отпор от всех семи потенциальных жертв",
                     lead: "Следственный отдел по городу-курорту Анапа проводит проверку по серии необычных инцидентов в районе Пионерского проспекта и Джемете. По данным правоохранительных органов, на побережье объявился злоумышленник, примеряющий на себя образ классического маньяка-потрошителя, однако ни одно из его нападений так и не увенчалось успехом из-за тотальной нерасторопности нападавшего и активного сопротивления местных жительниц.",
                     date: "14 октября 2026, 19:15",
@@ -591,6 +572,8 @@
                 {
                     id: "taganrog-negative-index",
                     isHero: false,
+                    layoutType: "standard",
+                    visualMode: "auto",
                     title: "Счетная палата зафиксировала отрицательный индекс правопорядка в Таганроге после прибытия беженца из Башкортостана",
                     lead: "Город Таганрог Ростовской области стал первым населенным пунктом в новейшей истории РФ, где официально зафиксирован отрицательный показатель законопослушности населения. Согласно экстренному докладу аналитического центра правовой статистики, совокупный индекс правопорядка в муниципалитете рухнул до отметки −142%.",
                     date: "14 октября 2026, 17:45",
@@ -614,6 +597,8 @@
                 {
                     id: "bashkortostan-drift",
                     isHero: false,
+                    layoutType: "digest",
+                    visualMode: "auto",
                     title: "Госдума одобрила проект о выводе Башкортостана в нейтральные воды из-за аномальной криминогенной обстановки",
                     lead: "Государственная дума РФ приняла в третьем, окончательном чтении законопроект «О пространственно-географической изоляции Республики Башкортостан». Согласно документу, с 1 января 2027 года регион официально выводится из состава Российской Федерации, после чего его территорию отделят от Евразийской континентальной плиты и отбуксируют в международные воды Мирового океана.",
                     date: "14 октября 2026, 11:30",
@@ -645,25 +630,44 @@
         let inlineEditActive = false;
 
         async function initArticlePage() {
+            const params = new URLSearchParams(window.location.search);
+            const requestedId = params.get('id');
+
+            let remoteDB = null;
+            let localDB = null;
+
+            const localBackup = localStorage.getItem('vestnik_db_backup');
+            if (localBackup) {
+                try { localDB = JSON.parse(localBackup); } catch (e) {}
+            }
+
             try {
                 const res = await fetch('./db.json?t=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
-                    const remote = await res.json();
-                    if (remote && Array.isArray(remote.articles)) {
-                        appDB = remote;
+                    const parsed = await res.json();
+                    if (parsed && Array.isArray(parsed.articles)) {
+                        remoteDB = parsed;
                     }
                 }
-            } catch (err) {
-                const localBackup = localStorage.getItem('vestnik_db_backup');
-                if (localBackup) {
-                    try { appDB = JSON.parse(localBackup); } catch (e) {}
+            } catch (err) {}
+
+            if (remoteDB && localDB) {
+                const inRemote = requestedId && remoteDB.articles.some(a => a.id === requestedId);
+                const inLocal = requestedId && localDB.articles.some(a => a.id === requestedId);
+                if (!inRemote && inLocal) {
+                    appDB = localDB;
+                } else if (localDB.articles.length > remoteDB.articles.length) {
+                    appDB = localDB;
+                } else {
+                    appDB = remoteDB;
                 }
+            } else if (remoteDB) {
+                appDB = remoteDB;
+            } else if (localDB) {
+                appDB = localDB;
             }
 
-            const params = new URLSearchParams(window.location.search);
-            const requestedId = params.get('id');
             const articles = appDB.articles || DEFAULT_DB.articles;
-
             currentArticle = articles.find(a => a.id === requestedId) || articles.find(a => a.isHero) || articles[0];
 
             renderTopAndHeader();
@@ -678,7 +682,6 @@
             document.getElementById('site-subtitle-el').textContent = s.subtitle || "Федеральное информационное агентство";
             document.getElementById('breaking-news-text').innerHTML = s.breakingNews || "";
 
-            // Информеры
             document.getElementById('top-informers-list').innerHTML = (s.informers || []).map(inf => `
                 <a href="article.html?id=${encodeURIComponent(inf.articleId || '')}" class="hover:text-white flex items-center gap-1.5 ${inf.color || 'text-sky-400'} font-medium transition shrink-0">
                     <i class="fa-solid ${inf.icon || 'fa-circle-info'}"></i>
@@ -686,12 +689,10 @@
                 </a>
             `).join('<span class="text-slate-800">•</span>');
 
-            // Котировки
             document.getElementById('top-tickers-list').innerHTML = (s.tickers || []).map(t => `
                 <span>${t.label} <strong class="${t.color || 'text-emerald-400'}">${t.value}</strong></span>
             `).join('');
 
-            // Меню рубрик
             const categories = ["Все", ...(s.categories || DEFAULT_DB.siteSettings.categories)];
             document.getElementById('header-categories-nav').innerHTML = categories.map(cat => {
                 const isCurrentCat = currentArticle && currentArticle.category === cat;
@@ -702,11 +703,46 @@
                     </a>
                 `;
             }).join('');
+
+            document.getElementById('mobile-categories-nav').innerHTML = categories.map(cat => {
+                const isCurrentCat = currentArticle && currentArticle.category === cat;
+                const href = cat === "Все" ? "index.html" : `index.html?category=${encodeURIComponent(cat)}`;
+                return `
+                    <a href="${href}" class="px-3 py-1 rounded-full whitespace-nowrap transition ${isCurrentCat ? 'bg-brand-red text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">
+                        ${cat === "Все" ? "Все" : cat}
+                    </a>
+                `;
+            }).join('');
+        }
+
+        function applyArticleLayoutStyle(article) {
+            const wrapper = document.getElementById('article-card-wrapper');
+            const banner = document.getElementById('article-layout-banner');
+            const layout = article.layoutType || 'standard';
+
+            wrapper.className = "lg:col-span-8 bg-white rounded-xl shadow-xs border border-slate-200 p-4 sm:p-8 md:p-10 overflow-hidden";
+            banner.className = "hidden";
+
+            if (layout === 'breaking') {
+                wrapper.classList.add('border-t-4', 'border-t-brand-red');
+                banner.className = "mb-4 px-3.5 py-2 rounded-lg font-sans text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center justify-between gap-2 bg-red-50 text-brand-red border border-red-200";
+                banner.innerHTML = `<span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-brand-red live-dot"></span>⚡ ЭКСТРЕННЫЙ ВЫПУСК • СРОЧНАЯ МОЛНИЯ</span><span class="font-mono text-[10px]">URGENT</span>`;
+            } else if (layout === 'investigation') {
+                wrapper.classList.add('border-t-4', 'border-t-slate-900');
+                banner.className = "mb-4 px-3.5 py-2 rounded-lg font-sans text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center justify-between gap-2 bg-slate-900 text-amber-400";
+                banner.innerHTML = `<span><i class="fa-solid fa-folder-open mr-1.5"></i>СПЕЦРАССЛЕДОВАНИЕ • МАТЕРИАЛЫ ДОСЬЕ</span><span class="font-mono text-[10px] text-slate-400">ДОСЬЕ ВР</span>`;
+            } else if (layout === 'digest') {
+                wrapper.classList.add('border-t-4', 'border-t-emerald-700');
+                banner.className = "mb-4 px-3.5 py-2 rounded-lg font-sans text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center justify-between gap-2 bg-emerald-50 text-emerald-900 border border-emerald-200";
+                banner.innerHTML = `<span><i class="fa-solid fa-clock-rotate-left mr-1.5 text-emerald-700"></i>ХРОНИКА СОБЫТИЙ • ОПЕРАТИВНЫЙ ТАЙМЛАЙН</span><span class="font-mono text-[10px] text-emerald-700">CHRONICLE</span>`;
+            }
         }
 
         function renderCurrentArticle() {
             if (!currentArticle) return;
             document.title = `${currentArticle.title} — ВЕСТНИК РОССИИ`;
+
+            applyArticleLayoutStyle(currentArticle);
 
             const catLink = document.getElementById('article-category-link');
             catLink.textContent = currentArticle.category || "Общество";
@@ -718,30 +754,38 @@
             document.getElementById('article-lead').textContent = currentArticle.lead || "";
             document.getElementById('article-caption').textContent = currentArticle.caption || "Фото: Фотослужба «Вестник России»";
 
-            // Иллюстрация или радар
+            const figureEl = document.getElementById('article-figure');
             const mainImg = document.getElementById('article-main-img');
             const cctvOverlay = document.getElementById('default-cctv-overlay');
             const resetBtn = document.getElementById('reset-img-btn');
 
-            if (currentArticle.image && currentArticle.image.trim() !== "") {
-                mainImg.src = currentArticle.image;
-                mainImg.classList.remove('hidden');
-                cctvOverlay.classList.add('hidden');
-                resetBtn.classList.remove('hidden');
-            } else {
-                mainImg.src = "";
-                mainImg.classList.add('hidden');
-                cctvOverlay.classList.remove('hidden');
-                resetBtn.classList.add('hidden');
+            const visualMode = currentArticle.visualMode || (currentArticle.hideVisual ? 'none' : 'auto');
 
-                document.getElementById('cctv-badge-type').textContent = currentArticle.badgeType || "СИСТЕМА МОНИТОРИНГА";
-                document.getElementById('cctv-category-pill').textContent = currentArticle.category || "СВОДКА";
-                document.getElementById('cctv-geo-label').textContent = `СЕКТОР: ${(currentArticle.geo || 'РФ').toUpperCase()}`;
-                document.getElementById('cctv-telemetry-text').textContent = currentArticle.badgeTelemetry || "СТАТУС: ОПЕРАТИВНЫЙ КОНТРОЛЬ";
-                document.getElementById('cctv-vector-box').innerHTML = buildVectorGraphicForArticle(currentArticle.id);
+            if (visualMode === 'none') {
+                figureEl.classList.add('hidden');
+            } else {
+                figureEl.classList.remove('hidden');
+                const hasImage = currentArticle.image && currentArticle.image.trim() !== "" && visualMode !== 'radar';
+
+                if (hasImage) {
+                    mainImg.src = currentArticle.image;
+                    mainImg.classList.remove('hidden');
+                    cctvOverlay.classList.add('hidden');
+                    resetBtn.classList.remove('hidden');
+                } else {
+                    mainImg.src = "";
+                    mainImg.classList.add('hidden');
+                    cctvOverlay.classList.remove('hidden');
+                    resetBtn.classList.add('hidden');
+
+                    document.getElementById('cctv-badge-type').textContent = currentArticle.badgeType || "СИСТЕМА МОНИТОРИНГА";
+                    document.getElementById('cctv-category-pill').textContent = currentArticle.category || "СВОДКА";
+                    document.getElementById('cctv-geo-label').textContent = `СЕКТОР: ${(currentArticle.geo || 'РФ').toUpperCase()}`;
+                    document.getElementById('cctv-telemetry-text').textContent = currentArticle.badgeTelemetry || "СТАТУС: ОПЕРАТИВНЫЙ КОНТРОЛЬ";
+                    document.getElementById('cctv-vector-box').innerHTML = buildVectorGraphicForArticle(currentArticle.id);
+                }
             }
 
-            // Основной текст статьи (если в db.json у статьи нет поля body, берем из встроенного DEFAULT_DB по id)
             let bodyHTML = currentArticle.body;
             if (!bodyHTML) {
                 const fallbackArt = DEFAULT_DB.articles.find(a => a.id === currentArticle.id);
@@ -749,23 +793,20 @@
             }
             document.getElementById('article-body').innerHTML = bodyHTML;
 
-            // Материалы по теме
             const otherArticles = (appDB.articles || []).filter(a => a.id !== currentArticle.id).slice(0, 3);
             document.getElementById('related-articles-list').innerHTML = otherArticles.map(a => `
-                <a href="article.html?id=${encodeURIComponent(a.id)}" class="block text-slate-900 hover:text-brand-red transition">
+                <a href="article.html?id=${encodeURIComponent(a.id)}" class="block text-slate-900 hover:text-brand-red transition leading-snug">
                     <i class="fa-solid fa-angle-right text-brand-red mr-1.5"></i> ${a.title}
                 </a>
             `).join('');
 
-            // Теги
             const tags = currentArticle.tags || ["Россия", currentArticle.category || "Общество"];
             document.getElementById('article-tags-list').innerHTML = tags.map(t => `
-                <a href="index.html?q=${encodeURIComponent(t)}" class="px-3 py-1 bg-slate-100 hover:bg-brand-red hover:text-white text-slate-700 text-xs font-medium rounded-full transition">
+                <a href="index.html?q=${encodeURIComponent(t)}" class="px-2.5 sm:px-3 py-1 bg-slate-100 hover:bg-brand-red hover:text-white text-slate-700 text-xs font-medium rounded-full transition">
                     ${t.startsWith('#') ? t : '#' + t}
                 </a>
             `).join('');
 
-            // Реакции
             const savedReactions = JSON.parse(localStorage.getItem('vestnik_react_' + currentArticle.id) || 'null');
             const r = savedReactions || currentArticle.reactions || { fire: 3200, cheese: 2100, shock: 1850 };
             document.getElementById('react-fire').textContent = r.fire || 0;
@@ -811,7 +852,6 @@
             `;
         }
 
-        // Реакции
         function bumpArticleReaction(type) {
             if (!currentArticle) return;
             const key = 'vestnik_react_' + currentArticle.id;
@@ -821,7 +861,6 @@
             document.getElementById('react-' + type).textContent = saved[type];
         }
 
-        // Комментарии
         function renderComments() {
             if (!currentArticle) return;
             const key = 'vestnik_comments_' + currentArticle.id;
@@ -840,15 +879,15 @@
             }
 
             container.innerHTML = comments.map(c => `
-                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200/80">
-                    <div class="flex items-center justify-between text-xs mb-1.5">
+                <div class="p-3.5 sm:p-4 bg-slate-50 rounded-xl border border-slate-200/80">
+                    <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1.5">
                         <span class="font-bold text-slate-900">
                             ${c.author}
-                            ${c.badge ? `<span class="text-brand-red font-mono ml-1.5">[${c.badge}]</span>` : ''}
+                            ${c.badge ? `<span class="text-brand-red font-mono ml-1">[${c.badge}]</span>` : ''}
                         </span>
                         <span class="text-slate-400 font-mono text-[11px]">${c.time || 'Сегодня'}</span>
                     </div>
-                    <p class="text-sm text-slate-700 leading-relaxed">${c.text}</p>
+                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed break-words">${c.text}</p>
                 </div>
             `).join('');
         }
@@ -874,7 +913,6 @@
             renderComments();
         }
 
-        // Боковая колонка и опрос
         function renderSidebar() {
             const articles = appDB.articles || [];
             document.getElementById('sidebar-live-list').innerHTML = articles.map(art => {
@@ -884,7 +922,7 @@
                     <div class="py-3 first:pt-0 last:pb-0">
                         <div class="flex items-center justify-between text-[11px] font-mono mb-1">
                             <span class="text-brand-red font-bold">${timePart.trim()}</span>
-                            <span class="text-slate-500 uppercase">${art.geo}</span>
+                            <span class="text-slate-500 uppercase truncate max-w-[160px]">${art.geo}</span>
                         </div>
                         <a href="article.html?id=${encodeURIComponent(art.id)}" class="block ${isCurrent ? 'text-brand-red font-bold' : 'text-slate-900 font-semibold hover:text-brand-red'} leading-snug transition">
                             ${isCurrent ? '▶ ' : ''}${art.title}
@@ -908,7 +946,7 @@
             document.getElementById('poll-options-container').innerHTML = options.map((opt, idx) => {
                 const pct = total > 0 ? Math.round((opt.votes / total) * 100) : 0;
                 return `
-                    <button onclick="voteInPoll(${idx})" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:border-brand-red transition relative overflow-hidden cursor-pointer">
+                    <button onclick="voteInPoll(${idx})" class="w-full text-left p-2.5 sm:p-3 rounded-lg border border-slate-200 hover:border-brand-red transition relative overflow-hidden cursor-pointer">
                         <div class="absolute inset-y-0 left-0 bg-red-100/80 transition-all duration-500" style="width: ${pct}%"></div>
                         <div class="relative flex items-center justify-between gap-2 font-medium text-slate-800">
                             <span class="leading-snug">${opt.text}</span>
@@ -928,13 +966,11 @@
             renderPoll();
         }
 
-        // Размер шрифта
         function changeFontSize(delta) {
             currentFontSize = Math.min(23, Math.max(14, currentFontSize + delta));
             document.getElementById('article-body').style.fontSize = currentFontSize + 'px';
         }
 
-        // Загрузка локального снимка в плейсхолдер
         function triggerLocalPhotoUpload() {
             document.getElementById('local-file-input').click();
         }
@@ -962,17 +998,15 @@
             document.getElementById('reset-img-btn').classList.add('hidden');
         }
 
-        // Копирование прямой ссылки на статью
         function copyDirectLink() {
             navigator.clipboard?.writeText(window.location.href);
             const btn = document.getElementById('copy-link-btn');
             btn.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i> <span>Ссылка скопирована!</span>';
             setTimeout(() => {
-                btn.innerHTML = '<i class="fa-regular fa-copy"></i> <span>Скопировать ссылку на статью</span>';
+                btn.innerHTML = '<i class="fa-regular fa-copy"></i> <span>Скопировать ссылку</span>';
             }, 2000);
         }
 
-        // Единственный способ входа в админку / панель правки: 5 нажатий подряд на кнопку «МОЛНИЯ»
         function handleMolniyaClick() {
             molniyaClicks++;
             const hint = document.getElementById('molniya-counter-hint');
@@ -980,7 +1014,7 @@
 
             if (molniyaClicks >= 2 && molniyaClicks < 5) {
                 hint.classList.remove('hidden');
-                hint.textContent = `Режим CMS: ${5 - molniyaClicks}...`;
+                hint.textContent = `CMS: ${5 - molniyaClicks}...`;
             }
 
             if (molniyaClicks >= 5) {
@@ -1004,7 +1038,7 @@
             });
             document.body.classList.toggle('inline-editable-active', inlineEditActive);
             const btn = document.getElementById('inline-edit-btn');
-            btn.textContent = `Прямая правка текста: ${inlineEditActive ? 'ВКЛ' : 'ВЫКЛ'}`;
+            btn.textContent = `Прямая правка: ${inlineEditActive ? 'ВКЛ' : 'ВЫКЛ'}`;
             btn.classList.toggle('bg-brand-red', inlineEditActive);
         }
 
