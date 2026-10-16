@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS 3</title>
+    <title>ВЕСТНИК-CMS 4.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,7 +73,7 @@
                 <div class="min-w-0">
                     <div class="font-bold text-xs sm:text-base tracking-tight flex items-center gap-1.5 sm:gap-2">
                         <span class="truncate">ВЕСТНИК-CMS</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v3.8 PRO</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.0 PHOTO</span>
                     </div>
                     <div id="sync-status-line" class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">
                         База db.json и Лор загружены • Готово к работе
@@ -151,7 +151,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
                     <h1 class="font-headline font-bold text-lg sm:text-2xl text-slate-900">Управление материалами агентства</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">Создавайте статьи вручную или генерируйте связанные репортажи через вкладку «ИИ-Ньюсрум Gemini».</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Создавайте статьи вручную или генерируйте репортажи с ИИ-иллюстрациями через вкладку «ИИ-Ньюсрум Gemini».</p>
                 </div>
                 <div class="flex items-center">
                     <button
@@ -205,7 +205,7 @@
                             <tr class="bg-slate-900 text-slate-200 uppercase text-[11px] tracking-wider">
                                 <th class="py-3.5 px-4 font-bold">Статус / ID</th>
                                 <th class="py-3.5 px-4 font-bold">Заголовок и лид</th>
-                                <th class="py-3.5 px-4 font-bold">Рубрика / Город</th>
+                                <th class="py-3.5 px-4 font-bold">Рубрика / Формат</th>
                                 <th class="py-3.5 px-4 font-bold">Дата</th>
                                 <th class="py-3.5 px-4 font-bold text-right">Действия</th>
                             </tr>
@@ -261,7 +261,7 @@
                         <input type="text" id="ed-title" oninput="updateLivePreview()" placeholder="Введите громкий заголовок в стиле федеральных СМИ..." class="w-full px-3.5 py-2.5 text-sm sm:text-base font-bold bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Рубрика:</label>
                             <input type="text" id="ed-category" list="ed-category-datalist" oninput="updateLivePreview()" placeholder="Безопасность" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
@@ -273,10 +273,19 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="text-xs font-bold text-slate-700">Дата и время:</label>
+                                <label class="text-xs font-bold text-slate-700">Дата:</label>
                                 <button type="button" onclick="setNowDate()" class="text-[11px] text-brand-red font-semibold hover:underline cursor-pointer">Сейчас</button>
                             </div>
-                            <input type="text" id="ed-date" oninput="updateLivePreview()" placeholder="15 октября 2026, 12:30" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                            <input type="text" id="ed-date" oninput="updateLivePreview()" placeholder="16 октября 2026, 12:30" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-brand-red">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Вид верстки:</label>
+                            <select id="ed-layout" onchange="updateLivePreview()" class="w-full px-2.5 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-medium">
+                                <option value="standard">Классический репортаж</option>
+                                <option value="breaking">⚡ Срочная молния</option>
+                                <option value="investigation">📁 Спецрасследование</option>
+                                <option value="digest">⏱️ Хроника / Таймлайн</option>
+                            </select>
                         </div>
                     </div>
 
@@ -288,27 +297,40 @@
                     <div class="p-3.5 sm:p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-700">
-                                <i class="fa-solid fa-image text-brand-red mr-1"></i> Иллюстрация материала
+                                <i class="fa-solid fa-image text-brand-red mr-1"></i> Иллюстрация и режим плейсхолдера
                             </span>
-                            <div class="flex flex-wrap items-center gap-2">
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <button type="button" id="btn-ed-gen-photo" onclick="generatePhotoInsideEditor()" class="flex-1 sm:flex-initial px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded cursor-pointer transition">
+                                    <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Сгенерировать фото (ИИ)
+                                </button>
                                 <label class="flex-1 sm:flex-initial text-center px-2.5 py-1.5 bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold rounded cursor-pointer transition">
-                                    <i class="fa-solid fa-upload mr-1"></i> Загрузить фото
+                                    <i class="fa-solid fa-upload mr-1"></i> Загрузить файл
                                     <input type="file" accept="image/*" class="hidden" onchange="handleEditorImageUpload(event)">
                                 </label>
                                 <button type="button" onclick="clearEditorImage()" class="flex-1 sm:flex-initial px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded cursor-pointer">
-                                    Включить Радар
+                                    Сбросить фото
                                 </button>
                             </div>
                         </div>
 
-                        <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">URL картинки или Base64-код (оставьте пустым для экрана Радара):</label>
-                            <input type="text" id="ed-image" oninput="updateLivePreview()" placeholder="https://... или загрузите файл кнопкой выше" class="w-full px-3 py-1.5 text-xs font-mono bg-white border border-slate-300 rounded-lg">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Режим отображения блока:</label>
+                                <select id="ed-visual-mode" onchange="updateLivePreview()" class="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-300 rounded-lg font-semibold">
+                                    <option value="auto">Авто (Фото или Радар КГИОП/МВД)</option>
+                                    <option value="radar">Всегда экран Радара / Камеры</option>
+                                    <option value="none">Без фото и без плейсхолдера</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">URL картинки или сгенерированный Base64-код:</label>
+                                <input type="text" id="ed-image" oninput="updateLivePreview()" placeholder="Оставьте пустым для экрана Радара или нажмите «Сгенерировать фото (ИИ)»" class="w-full px-3 py-1.5 text-xs font-mono bg-white border border-slate-300 rounded-lg">
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Заголовок Радара (если фото пустое):</label>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Заголовок Радара (если используется плейсхолдер):</label>
                                 <input type="text" id="ed-badgetype" oninput="updateLivePreview()" placeholder="ОПЕРАТИВНЫЙ МОНИТОРИНГ ФСБ" class="w-full px-2.5 py-1.5 text-xs font-mono bg-white border border-slate-300 rounded-lg">
                             </div>
                             <div>
@@ -336,6 +358,7 @@
                             <button type="button" onclick="insertTemplateBlock('list')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-slate-800 cursor-pointer">+ Список</button>
                             <button type="button" onclick="insertTemplateBlock('dossier')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-amber-800 cursor-pointer">+ Досье</button>
                             <button type="button" onclick="insertTemplateBlock('max')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-blue-700 cursor-pointer">+ Плашка МАКС</button>
+                            <button type="button" onclick="insertTemplateBlock('timeline')" class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-300 rounded text-xs font-semibold text-emerald-700 cursor-pointer">+ Хроника</button>
                         </div>
 
                         <textarea
@@ -376,7 +399,7 @@
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
                                 <i class="fa-solid fa-eye text-brand-red mr-1"></i> Живое превью статьи
                             </span>
-                            <span class="text-[11px] font-mono text-slate-400">article.html</span>
+                            <span id="prev-layout-badge" class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded uppercase">STANDARD</span>
                         </div>
 
                         <div class="text-[11px] text-slate-500 mb-2 flex flex-wrap items-center gap-1.5">
@@ -411,11 +434,11 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум»</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Gemini 3.8 Flash + 3.1 Pro</span>
+                            <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + ИИ-Фотослужба</h2>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Gemini Text + Image Gen</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Агент читает полные тексты всех статей и настроек из <code>db.json</code>, сверяется с досье персонажей в <code>universe_lore.json</code>, сразу добавляет новую статью в общий список и обновляет информеры, котировки, опрос дня и базу лора.
+                            Агент читает статьи из <code>db.json</code> и персонажей из <code>universe_lore.json</code>, пишет репортаж в выбранном формате верстки, при желании <strong>генерирует реалистичную фотографию по сюжету статьи</strong> и автоматически обновляет информеры, опрос и базу лора.
                         </p>
                     </div>
                 </div>
@@ -455,7 +478,24 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-1">
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Желаемая рубрика:</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">1. Режим иллюстрации / Фото к статье:</label>
+                            <select id="ai-visual-mode" class="w-full px-3 py-2 text-xs sm:text-sm bg-indigo-50/70 border border-indigo-300 text-indigo-950 rounded-lg font-bold">
+                                <option value="ai_photo">📸 Сгенерировать ИИ-фото по тексту статьи (Gemini)</option>
+                                <option value="radar">📡 Плейсхолдер: Радар / Камера спецконтроля</option>
+                                <option value="none">📄 Без фото и без плейсхолдера (Только текст)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">2. Вариация вида новости (Шаблон):</label>
+                            <select id="ai-layout-type" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-semibold">
+                                <option value="standard">📰 Классический федеральный репортаж</option>
+                                <option value="breaking">⚡ Экстренный выпуск «СРОЧНАЯ МОЛНИЯ»</option>
+                                <option value="investigation">📁 Спецрасследование / Досье органов</option>
+                                <option value="digest">⏱️ Хроника событий (Поминутный таймлайн)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">3. Желаемая рубрика:</label>
                             <select id="ai-target-category" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-medium">
                                 <option value="AUTO">Автоматически (на выбор ИИ)</option>
                                 <option value="Безопасность">Безопасность</option>
@@ -468,7 +508,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Обязательные спецблоки в HTML:</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">4. Спецблоки внутри текста:</label>
                             <select id="ai-special-blocks" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-medium">
                                 <option value="ALL">Цитата + Досье + Плашка МАКС (Все)</option>
                                 <option value="QUOTE_DOSSIER">Цитата + Таблица-досье</option>
@@ -549,7 +589,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Основная модель Gemini:</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Текстовая модель Gemini:</label>
                             <input
                                 type="text"
                                 id="gemini-model"
@@ -561,8 +601,25 @@
                             >
                             <datalist id="gemini-models-datalist">
                                 <option value="gemini-3.8-flash">Gemini 3.8 Flash (Основная)</option>
-                                <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview (Рекомендуемая Pro)</option>
+                                <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview</option>
                                 <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
+                            </datalist>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Модель генерации фото (Imagen / Gemini Image):</label>
+                            <input
+                                type="text"
+                                id="gemini-image-model"
+                                list="gemini-img-models-datalist"
+                                value="imagen-3.0-generate-002"
+                                onchange="saveGeminiConfig()"
+                                class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:bg-white focus:border-indigo-600"
+                            >
+                            <datalist id="gemini-img-models-datalist">
+                                <option value="imagen-3.0-generate-002">Imagen 3 (imagen-3.0-generate-002)</option>
+                                <option value="imagen-3.0-fast-generate-001">Imagen 3 Fast</option>
+                                <option value="gemini-2.0-flash-preview-image-generation">Gemini Flash Image Generation</option>
                             </datalist>
                         </div>
 
@@ -901,6 +958,8 @@
                 {
                     id: "cheese-blitzkrieg",
                     isHero: true,
+                    layoutType: "breaking",
+                    visualMode: "auto",
                     title: "ФСБ и Росфинмониторинг внесли Станислава Д. в тройной реестр иноагентов, экстремистов и террористов: командующий ОСС объявил «сырный блицкриг» и привлек кадры из Гостагаевской и Мелеуза",
                     lead: "Конфликт вокруг критического дефицита сырья для традиционных пирогов уалибах в Северной Осетии перерос в полномасштабную военную кампанию межрегионального масштаба. Самопровозглашенный верховный главнокомандующий Объединенных сырных сил (ОСС) Станислав Д. объявил о начале генерального наступления под кодовым названием «Сырный блицкриг» сразу по четырем стратегическим направлениям. В ответ на это Минюст РФ, Росфинмониторинг и Генпрокуратура одновременно присвоили лидеру мятежных сыроваров статусы иностранного агента, экстремиста и террориста.",
                     date: "15 октября 2026, 08:30",
@@ -926,6 +985,8 @@
                 {
                     id: "spb-nose-limit",
                     isHero: false,
+                    layoutType: "standard",
+                    visualMode: "auto",
                     title: "Смольный ввел предельно допустимые габариты носовых перегородок: петербургский IT-специалист запустил флешмоб #ДАбольшимносам",
                     lead: "Правительство Санкт-Петербурга утвердило постановление № 412-п «Об оптимизации аэродинамических и фасадных характеристик пешеходных потоков в историческом центре». Согласно регламенту, выступ носовой перегородки от фронтальной плоскости лица не должен превышать 42 миллиметров. Против инициативы выступил 22-летний программист Герман Ф. с профилем 53 мм, запустивший в мессенджере МАКС флешмоб #ДАбольшимносам!.",
                     date: "14 октября 2026, 23:10",
@@ -943,6 +1004,8 @@
                 {
                     id: "vladikavkaz-cheese-shortage",
                     isHero: false,
+                    layoutType: "standard",
+                    visualMode: "auto",
                     title: "В Северной Осетии объявлено чрезвычайное положение из-за критического дефицита осетинского сыра: Владикавказ охвачен «лактозными бунтами»",
                     lead: "Во Владикавказе и на всей территории Республики Северная Осетия — Алания введен план специальной социально-продовольственной деэскалации в связи с полным исчерпанием региональных запасов рассольного осетинского сыра («ирон цыхт»), базового компонента традиционных пирогов уалибах.",
                     date: "14 октября 2026, 21:40",
@@ -960,6 +1023,8 @@
                 {
                     id: "anapa-sushi-maniac",
                     isHero: false,
+                    layoutType: "investigation",
+                    visualMode: "auto",
                     title: "«Кошмар Пионерского проспекта»: полиция Анапы разыскивает серийного маньяка, получившего отпор от всех семи потенциальных жертв",
                     lead: "Следственный отдел по городу-курорту Анапа проводит проверку по серии курьезных инцидентов в районе Пионерского проспекта. На побережье объявился 22-летний разнорабочий суши-бара Андрей Б., переселенец из станицы Гостагаевской, однако все семь его вылазок завершились избиением нападавшего пенсионерками и туристками.",
                     date: "14 октября 2026, 19:15",
@@ -977,6 +1042,8 @@
                 {
                     id: "taganrog-negative-index",
                     isHero: false,
+                    layoutType: "standard",
+                    visualMode: "auto",
                     title: "Счетная палата зафиксировала отрицательный индекс правопорядка в Таганроге после прибытия беженца из Башкортостана",
                     lead: "Город Таганрог Ростовской области стал первым населенным пунктом в новейшей истории РФ, где официально зафиксирован отрицательный показатель законопослушности населения (−142%) из-за прибытия уроженца Мелеуза Мирослава К.",
                     date: "14 октября 2026, 17:45",
@@ -994,6 +1061,8 @@
                 {
                     id: "bashkortostan-drift",
                     isHero: false,
+                    layoutType: "digest",
+                    visualMode: "auto",
                     title: "Госдума одобрила проект о выводе Башкортостана в нейтральные воды из-за аномальной криминогенной обстановки",
                     lead: "Государственная дума РФ приняла в третьем, окончательном чтении законопроект «О пространственно-географической изоляции Республики Башкортостан». С 1 января 2027 года регион отделят от Евразийской плиты и отбуксируют в Мировой океан.",
                     date: "14 октября 2026, 11:30",
@@ -1025,6 +1094,7 @@
 
             const geminiConf = JSON.parse(localStorage.getItem('vestnik_gemini_config') || '{}');
             if (geminiConf.apiKey) document.getElementById('gemini-api-key').value = geminiConf.apiKey;
+            if (geminiConf.imageModel) document.getElementById('gemini-image-model').value = geminiConf.imageModel;
 
             const deprecatedModels = [
                 'gemini-2.5-flash',
@@ -1290,10 +1360,15 @@
             }
             document.getElementById('gemini-model').value = modelName;
 
+            let imageModel = (document.getElementById('gemini-image-model').value || 'imagen-3.0-generate-002').trim();
+            imageModel = imageModel.replace(/^models\//, '');
+            document.getElementById('gemini-image-model').value = imageModel;
+
             const protocol = document.getElementById('gemini-protocol').value || 'auto';
             const conf = {
                 apiKey: document.getElementById('gemini-api-key').value.trim(),
                 model: modelName,
+                imageModel,
                 protocol
             };
             localStorage.setItem('vestnik_gemini_config', JSON.stringify(conf));
@@ -1302,6 +1377,121 @@
 
         function setAiQuickPrompt(text) {
             document.getElementById('ai-prompt-input').value = text;
+        }
+
+        function compressBase64Image(dataUrl, maxWidth = 880, quality = 0.74) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+                    canvas.width = Math.round(img.width * scale);
+                    canvas.height = Math.round(img.height * scale);
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
+                };
+                img.onerror = () => resolve(dataUrl);
+                img.src = dataUrl;
+            });
+        }
+
+        async function generateArticleImageWithGemini(conf, imagePromptEn, fallbackTitle, fallbackGeo) {
+            const finalPrompt = (imagePromptEn && imagePromptEn.trim())
+                ? `Realistic editorial news agency press photograph (TASS / Reuters style), documentary photojournalism, 35mm lens, natural lighting, no text or watermarks: ${imagePromptEn.trim()}`
+                : `Realistic documentary press photograph from Russia (${fallbackGeo || 'Moscow'}), official news reportage scene: ${fallbackTitle}, 35mm photojournalism, no text`;
+
+            const imgModelsToTry = [
+                conf.imageModel || 'imagen-3.0-generate-002',
+                'imagen-3.0-fast-generate-001',
+                'gemini-2.0-flash-preview-image-generation'
+            ].filter((v, i, a) => v && a.indexOf(v) === i);
+
+            for (const mName of imgModelsToTry) {
+                try {
+                    if (mName.startsWith('imagen')) {
+                        const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(mName)}:predict?key=${encodeURIComponent(conf.apiKey)}`;
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                instances: [{ prompt: finalPrompt }],
+                                parameters: { sampleCount: 1, aspectRatio: "16:9", outputOptions: { mimeType: "image/jpeg" } }
+                            })
+                        });
+                        if (res.ok) {
+                            const data = await res.json();
+                            const b64 = data.predictions?.[0]?.bytesBase64Encoded || data.predictions?.[0]?.image?.bytesBase64Encoded;
+                            if (b64) {
+                                const mime = data.predictions?.[0]?.mimeType || 'image/jpeg';
+                                return await compressBase64Image(`data:${mime};base64,${b64}`);
+                            }
+                        }
+                    } else {
+                        const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(mName)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ role: "user", parts: [{ text: finalPrompt }] }],
+                                generationConfig: { responseModalities: ["TEXT", "IMAGE"] }
+                            })
+                        });
+                        if (res.ok) {
+                            const data = await res.json();
+                            const parts = data.candidates?.[0]?.content?.parts || [];
+                            for (const p of parts) {
+                                if (p.inlineData && p.inlineData.data) {
+                                    const mime = p.inlineData.mimeType || 'image/jpeg';
+                                    return await compressBase64Image(`data:${mime};base64,${p.inlineData.data}`);
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {}
+            }
+            return null;
+        }
+
+        async function generatePhotoInsideEditor() {
+            const conf = saveGeminiConfig();
+            if (!conf.apiKey) {
+                switchTab('ai');
+                showToast("Сначала укажите Gemini API Key во вкладке 3!", true);
+                return;
+            }
+            const title = document.getElementById('ed-title').value.trim();
+            const lead = document.getElementById('ed-lead').value.trim();
+            const geo = document.getElementById('ed-geo').value.trim();
+            if (!title) {
+                showToast("Сначала введите заголовок или текст статьи!", true);
+                return;
+            }
+
+            const btn = document.getElementById('btn-ed-gen-photo');
+            const origHTML = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading mr-1"></i> Генерация...`;
+
+            try {
+                const promptGen = await callGeminiAPI(
+                    conf,
+                    "Return ONLY a single-sentence English visual description for a realistic press photo (no text in image, documentary style).",
+                    `Заголовок: ${title}\nЛид: ${lead}\nГород: ${geo}`
+                );
+                const imgData = await generateArticleImageWithGemini(conf, promptGen, title, geo);
+                if (imgData) {
+                    document.getElementById('ed-image').value = imgData;
+                    document.getElementById('ed-visual-mode').value = 'auto';
+                    updateLivePreview();
+                    showToast("ИИ-фотография успешно сгенерирована и сжата!");
+                } else {
+                    showToast("Генерация изображений недоступна для текущего тарифа ключа API (включен Радар)", true);
+                }
+            } catch (err) {
+                showToast("Ошибка генерации фото: " + err.message, true);
+            } finally {
+                btn.innerHTML = origHTML;
+            }
         }
 
         function extractTextFromGeminiResponse(result) {
@@ -1589,6 +1779,8 @@
                 return;
             }
 
+            const visualModeChoice = document.getElementById('ai-visual-mode').value;
+            const layoutTypeChoice = document.getElementById('ai-layout-type').value;
             const useLore = document.getElementById('ai-use-lore').checked;
             const useArticles = document.getElementById('ai-use-articles').checked;
             const autoUpdateDb = document.getElementById('ai-auto-update-db').checked;
@@ -1599,7 +1791,7 @@
 
             const statusBox = document.getElementById('ai-status-box');
             statusBox.classList.remove('hidden');
-            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Отправка запроса в <strong>Gemini (${conf.model})</strong> • Чтение базы db.json (${appDB.articles.length} статей) и universe_lore.json (${appLore.characters.length} героев)...</div>`;
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Отправка запроса в <strong>Gemini (${conf.model})</strong> • Шаблон: ${layoutTypeChoice.toUpperCase()} • Чтение db.json (${appDB.articles.length} статей)...</div>`;
 
             const existingArticlesFull = useArticles
                 ? (appDB.articles || []).map((a, i) =>
@@ -1620,8 +1812,18 @@
 
             const loreContext = useLore ? JSON.stringify(appLore, null, 2) : "Лор отключен.";
 
+            const layoutInstructions = {
+                standard: "Классический развернутый репортаж федерального агентства с подзаголовками H2, официальными цитатами и аналитикой.",
+                breaking: "Экстренный выпуск «СРОЧНАЯ МОЛНИЯ»: начни тело статьи с оперативной плашки <div class='my-4 p-4 bg-red-50 border-l-4 border-brand-red rounded-r-xl font-sans text-sm text-slate-900'><strong>⚡ ОПЕРАТИВНАЯ СВОДКА:</strong> краткие тезисы происходящего</div>, используй динамичный тон прямого включения.",
+                investigation: "Спецрасследование / Досье органов: сделай акцент на материалах следствия, обязательно включи подробную таблицу <div id='dossier-block' ...> с фигурантами, уликами или замерами.",
+                digest: "Хроника событий / Поминутный таймлайн: включи в статью блок поминутной хронологии развития инцидента (например, 08:15, 09:40, 11:20, 14:00) с использованием маркированного или нумерованного списка."
+            }[layoutTypeChoice] || "";
+
             const systemInstruction = `Ты — главный редактор сатирического федерального информационного агентства «ВЕСТНИК РОССИИ» (стиль РБК, ТАСС, Коммерсантъ).
 Твоя задача — написать невероятно смешную, абсурдную, но выдержанную в предельно серьезном, канцелярско-протокольном, бюрократическом тоне новостную статью по заданию пользователя, а также подготовить обновления для базы сайта (db.json) и базы лора (universe_lore.json).
+
+ВЫБРАННЫЙ ФОРМАТ ВЕРСТКИ СТАТЬИ (${layoutTypeChoice}):
+${layoutInstructions}
 
 КРИТИЧЕСКИ ВАЖНЫЕ ПРАВИЛА КАНОНА И СВЯЗНОСТИ С DB.JSON:
 1. Внимательно изучи БАЗУ ЛОРА ВСЕЛЕННОЙ (universe_lore.json), ПОЛНЫЕ ТЕКСТЫ СУЩЕСТВУЮЩИХ СТАТЕЙ из db.json и ТЕКУЩИЕ НАСТРОЙКИ САЙТА из db.json.
@@ -1631,13 +1833,12 @@
    - Мирослав К. — 22 года, родом из г. Мелеуз (отпиливаемый Башкортостан), уехал в Таганрог учиться на программиста, обрушил индекс правопорядка Таганрога до −142%, используется ОСС как статистическое психотронное оружие.
    - Герман Ф. — 22 года, родом из Владикавказа, живет в Санкт-Петербурге, программист геймдев-студии (разрабатывает игры), выступ носа 53 мм (при лимите Смольного в 42 мм), запустил в мессенджере МАКС флешмоб #ДАбольшимносам! и курирует IT-связь молоковозов Станислава Д.
 
-ПРАВИЛА БЕЗОПАСНОГО JSON И HTML В ПОЛЕ "body" (ЧТОБЫ НЕ БЫЛО ОШИБКИ ПАРСИНГА):
+ПРАВИЛА БЕЗОПАСНОГО JSON И HTML В ПОЛЕ "body":
 1. Внутри поля "body" во всех HTML-тегах используй ТОЛЬКО ОДИНАРНЫЕ кавычки (') для атрибутов class и id!
-   Пример: <h2 class='font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4'>Подзаголовок</h2>
-   Пример: <blockquote class='quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm'><p class='italic text-slate-800 text-base leading-relaxed mb-2 font-serif'>«Текст цитаты», — спикер.</p></blockquote>
 2. Для любых кавычек в русском тексте используй ТОЛЬКО кавычки-ёлочки «...». НИКОГДА не используй неэкранированные двойные кавычки " внутри значений JSON!
 3. Пиши всё содержимое поля "body" в одну строку без сырых переносов строки.
 4. Режим спецблоков (${specialBlocks}): при необходимости добавь маркированный список, таблицу <div id='dossier-block' ...> или карточку <div id='max-flashmob' ...> с одинарными кавычками в атрибутах.
+5. В поле "imagePromptEn" напиши подробный промпт на английском языке для генерации реалистичной репортажной фотографии (без текста на картинке), точно иллюстрирующей сцену из этой новости.
 
 Верни ответ СТРОГО в виде валидного JSON-объекта по следующей схеме:
 {
@@ -1650,6 +1851,7 @@
     "badgeType": "ЗАГОЛОВОК КАМЕРЫ ИЛИ РАДАРА (КАПСОМ)",
     "badgeTelemetry": "КРАТКАЯ ТЕЛЕМЕТРИЯ РАДАРА С ЦИФРАМИ И ПРОЦЕНТАМИ",
     "caption": "Фото: Подпись фотослужбы «Вестник России»",
+    "imagePromptEn": "Realistic photojournalism press photo of ..., 35mm documentary style, no text",
     "tags": ["Тег1", "Тег2", "Тег3"],
     "body": "<p>Текст статьи с одинарными кавычками в HTML-атрибутах...</p>",
     "comments": [
@@ -1727,7 +1929,26 @@ ${userPrompt}`;
                 }
                 genArt.id = newArticleId;
 
-                statusBox.innerHTML += `<div class="text-emerald-400">✅ Статья сгенерирована: «${genArt.title}»</div>`;
+                statusBox.innerHTML += `<div class="text-emerald-400">✅ Текст статьи сгенерирован: «${genArt.title}»</div>`;
+
+                let generatedBase64Image = "";
+                let finalVisualMode = "auto";
+
+                if (visualModeChoice === 'ai_photo') {
+                    statusBox.innerHTML += `<div class="text-indigo-300"><i class="fa-solid fa-camera ai-loading mr-1.5"></i>Генерация репортажного ИИ-фото по сюжету (${conf.imageModel})...</div>`;
+                    generatedBase64Image = await generateArticleImageWithGemini(conf, genArt.imagePromptEn, genArt.title, genArt.geo) || "";
+                    if (generatedBase64Image) {
+                        statusBox.innerHTML += `<div class="text-emerald-400">📸 ИИ-фотография успешно сгенерирована и сжата для db.json!</div>`;
+                        finalVisualMode = "auto";
+                    } else {
+                        statusBox.innerHTML += `<div class="text-amber-300">⚠️ ИИ-фото недоступно для ключа, автоматически включен экран Радара спецконтроля.</div>`;
+                        finalVisualMode = "radar";
+                    }
+                } else if (visualModeChoice === 'radar') {
+                    finalVisualMode = "radar";
+                } else if (visualModeChoice === 'none') {
+                    finalVisualMode = "none";
+                }
 
                 const dbUpd = parsed.dbUpdates || {};
 
@@ -1835,9 +2056,11 @@ ${userPrompt}`;
                 document.getElementById('ed-title').value = genArt.title || "";
                 document.getElementById('ed-category').value = genArt.category || "Общество";
                 document.getElementById('ed-geo').value = genArt.geo || "РФ";
+                document.getElementById('ed-layout').value = layoutTypeChoice || "standard";
+                document.getElementById('ed-visual-mode').value = finalVisualMode;
                 setNowDate();
                 document.getElementById('ed-lead').value = genArt.lead || "";
-                document.getElementById('ed-image').value = "";
+                document.getElementById('ed-image').value = generatedBase64Image;
                 document.getElementById('ed-badgetype').value = genArt.badgeType || "ОПЕРАТИВНЫЙ МОНИТОРИНГ";
                 document.getElementById('ed-badgetelemetry').value = genArt.badgeTelemetry || "СТАТУС: КОНТРОЛЬ";
                 document.getElementById('ed-caption').value = genArt.caption || "Фото: Фотослужба «Вестник России»";
@@ -1910,6 +2133,19 @@ ${userPrompt}`;
             document.getElementById('nav-articles-count').textContent = (appDB.articles || []).length;
         }
 
+        function getLayoutBadgeHtml(layoutType, visualMode, hasImg) {
+            const labels = {
+                standard: '<span class="bg-slate-100 text-slate-600 text-[10px] font-mono px-1.5 py-0.5 rounded">РЕПОРТАЖ</span>',
+                breaking: '<span class="bg-red-100 text-brand-red text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">⚡ МОЛНИЯ</span>',
+                investigation: '<span class="bg-amber-100 text-amber-900 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">📁 ДОСЬЕ</span>',
+                digest: '<span class="bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">⏱️ ХРОНИКА</span>'
+            };
+            const visLabel = visualMode === 'none'
+                ? '<span class="text-[10px] text-slate-400 font-mono">Без фото</span>'
+                : (hasImg ? '<span class="text-[10px] text-indigo-600 font-mono font-bold">📸 Фото</span>' : '<span class="text-[10px] text-sky-600 font-mono">📡 Радар</span>');
+            return `${labels[layoutType || 'standard'] || labels.standard} ${visLabel}`;
+        }
+
         function renderAdminArticlesList() {
             const q = (document.getElementById('admin-search-input').value || "").trim().toLowerCase();
             const cat = document.getElementById('admin-cat-filter').value;
@@ -1940,8 +2176,9 @@ ${userPrompt}`;
                         <div class="font-bold text-slate-900 leading-snug mb-1">${art.title}</div>
                         <div class="text-xs text-slate-500 line-clamp-2">${art.lead}</div>
                     </td>
-                    <td class="py-3.5 px-4 align-top">
-                        <span class="inline-block bg-slate-100 text-brand-red font-bold text-[11px] uppercase px-2 py-0.5 rounded mb-1">${art.category}</span>
+                    <td class="py-3.5 px-4 align-top space-y-1">
+                        <div><span class="inline-block bg-slate-100 text-brand-red font-bold text-[11px] uppercase px-2 py-0.5 rounded">${art.category}</span></div>
+                        <div class="flex items-center gap-1.5 flex-wrap">${getLayoutBadgeHtml(art.layoutType, art.visualMode, !!art.image)}</div>
                         <div class="text-xs text-slate-600"><i class="fa-solid fa-location-dot text-brand-red mr-1"></i>${art.geo}</div>
                     </td>
                     <td class="py-3.5 px-4 align-top font-mono text-xs text-slate-600 whitespace-nowrap">
@@ -1964,12 +2201,12 @@ ${userPrompt}`;
             mobileList.innerHTML = filtered.map(art => `
                 <div class="p-4 space-y-2.5 ${art.isHero ? 'bg-red-50/40' : 'bg-white'}">
                     <div class="flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2 min-w-0">
+                        <div class="flex items-center gap-1.5 min-w-0 flex-wrap">
                             ${art.isHero
                                 ? `<span class="bg-brand-red text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded shrink-0">★ Главная</span>`
                                 : `<button onclick="makeArticleHero('${art.id}')" class="text-[11px] text-slate-500 bg-slate-100 hover:text-brand-red px-2 py-0.5 rounded font-semibold shrink-0 cursor-pointer">Сделать главной</button>`
                             }
-                            <span class="font-mono text-[11px] text-slate-400 truncate">${art.id}</span>
+                            ${getLayoutBadgeHtml(art.layoutType, art.visualMode, !!art.image)}
                         </div>
                         <span class="font-mono text-[11px] text-slate-500 shrink-0">${art.date}</span>
                     </div>
@@ -2021,6 +2258,8 @@ ${userPrompt}`;
             document.getElementById('ed-title').value = "";
             document.getElementById('ed-category').value = "Общество";
             document.getElementById('ed-geo').value = "Москва";
+            document.getElementById('ed-layout').value = "standard";
+            document.getElementById('ed-visual-mode').value = "auto";
             setNowDate();
             document.getElementById('ed-lead').value = "";
             document.getElementById('ed-image').value = "";
@@ -2046,6 +2285,8 @@ ${userPrompt}`;
             document.getElementById('ed-category').value = art.category || "Общество";
             document.getElementById('ed-geo').value = art.geo || "";
             document.getElementById('ed-date').value = art.date || "";
+            document.getElementById('ed-layout').value = art.layoutType || "standard";
+            document.getElementById('ed-visual-mode').value = art.visualMode || (art.hideVisual ? "none" : "auto");
             document.getElementById('ed-lead').value = art.lead || "";
             document.getElementById('ed-image').value = art.image || "";
             document.getElementById('ed-badgetype').value = art.badgeType || "";
@@ -2078,21 +2319,12 @@ ${userPrompt}`;
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const maxW = 960;
-                    const scale = img.width > maxW ? maxW / img.width : 1;
-                    canvas.width = Math.round(img.width * scale);
-                    canvas.height = Math.round(img.height * scale);
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    document.getElementById('ed-image').value = canvas.toDataURL('image/jpeg', 0.78);
-                    updateLivePreview();
-                    showToast("Фото сжато и встроено в статью!");
-                };
-                img.src = e.target.result;
+            reader.onload = async function(e) {
+                const compressed = await compressBase64Image(e.target.result, 880, 0.76);
+                document.getElementById('ed-image').value = compressed;
+                document.getElementById('ed-visual-mode').value = 'auto';
+                updateLivePreview();
+                showToast("Фото сжато и встроено в статью!");
             };
             reader.readAsDataURL(file);
         }
@@ -2111,6 +2343,7 @@ ${userPrompt}`;
             else if (type === 'list') snippet = `\n<ul class="my-6 space-y-3.5 font-sans text-base text-slate-800 bg-slate-50 p-5 sm:p-6 rounded-xl border border-slate-200">\n    <li class="flex items-start gap-3">\n        <span class="w-6 h-6 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>\n        <span>Первый пункт оперативного плана;</span>\n    </li>\n</ul>\n`;
             else if (type === 'dossier') snippet = `\n<div id="dossier-block" class="my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm">\n    <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">\n        <span class="font-bold text-xs uppercase tracking-wider">Оперативная сводка / Досье</span>\n        <span class="text-[11px] font-mono text-amber-400">МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">Данные статистического наблюдения...</div>\n</div>\n`;
             else if (type === 'max') snippet = `\n<div id="max-flashmob" class="my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm">\n    <div class="text-xs font-bold text-sky-400 mb-2">МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">Текст координационной сводки в мессенджере МАКС...</p>\n</div>\n`;
+            else if (type === 'timeline') snippet = `\n<div class="my-6 font-sans bg-slate-50 p-5 rounded-xl border-l-4 border-slate-900 space-y-3 text-xs sm:text-sm">\n    <div class="font-bold uppercase tracking-wider text-slate-500">⏱️ Поминутная хроника событий</div>\n    <div><strong class="font-mono text-brand-red">08:30</strong> — Первое сообщение оперативного дежурного;</div>\n    <div><strong class="font-mono text-brand-red">10:15</strong> — Введение специального регламента на территории объекта.</div>\n</div>\n`;
 
             const start = textarea.selectionStart || textarea.value.length;
             textarea.value = textarea.value.slice(0, start) + snippet + textarea.value.slice(start);
@@ -2118,6 +2351,9 @@ ${userPrompt}`;
         }
 
         function updateLivePreview() {
+            const layout = document.getElementById('ed-layout').value || "standard";
+            const visualMode = document.getElementById('ed-visual-mode').value || "auto";
+            document.getElementById('prev-layout-badge').textContent = layout.toUpperCase();
             document.getElementById('prev-cat').textContent = document.getElementById('ed-category').value || "РУБРИКА";
             document.getElementById('prev-date').textContent = document.getElementById('ed-date').value || "Дата";
             document.getElementById('prev-geo').textContent = document.getElementById('ed-geo').value || "Город";
@@ -2127,12 +2363,18 @@ ${userPrompt}`;
 
             const imgVal = document.getElementById('ed-image').value.trim();
             const visualBox = document.getElementById('prev-visual-box');
-            if (imgVal) {
-                visualBox.innerHTML = `<img src="${imgVal}" class="w-full h-40 object-cover rounded">`;
+
+            if (visualMode === 'none') {
+                visualBox.classList.add('hidden');
             } else {
-                const bType = document.getElementById('ed-badgetype').value || "РАДАР СПЕЦКОНТРОЛЯ";
-                const bTel = document.getElementById('ed-badgetelemetry').value || "СТАТУС: КОНТРОЛЬ";
-                visualBox.innerHTML = `<div class="text-white font-bold mb-1">● ${bType}</div><div class="text-amber-300">${bTel}</div>`;
+                visualBox.classList.remove('hidden');
+                if (imgVal && visualMode !== 'radar') {
+                    visualBox.innerHTML = `<img src="${imgVal}" class="w-full h-44 object-cover rounded">`;
+                } else {
+                    const bType = document.getElementById('ed-badgetype').value || "РАДАР СПЕЦКОНТРОЛЯ";
+                    const bTel = document.getElementById('ed-badgetelemetry').value || "СТАТУС: КОНТРОЛЬ";
+                    visualBox.innerHTML = `<div class="text-white font-bold mb-1">● ${bType}</div><div class="text-amber-300">${bTel}</div>`;
+                }
             }
         }
 
@@ -2156,15 +2398,21 @@ ${userPrompt}`;
                 ? window._lastAiGeneratedComments
                 : existingComments;
 
+            const visualMode = document.getElementById('ed-visual-mode').value || "auto";
+            const layoutType = document.getElementById('ed-layout').value || "standard";
+
             const newArticleObj = {
                 id,
                 isHero,
+                layoutType,
+                visualMode,
+                hideVisual: visualMode === 'none',
                 title,
                 lead: document.getElementById('ed-lead').value.trim(),
                 date: document.getElementById('ed-date').value.trim(),
                 category: document.getElementById('ed-category').value.trim() || "Общество",
                 geo: document.getElementById('ed-geo').value.trim() || "РФ",
-                image: document.getElementById('ed-image').value.trim(),
+                image: visualMode === 'none' || visualMode === 'radar' ? "" : document.getElementById('ed-image').value.trim(),
                 badgeType: document.getElementById('ed-badgetype').value.trim(),
                 badgeTelemetry: document.getElementById('ed-badgetelemetry').value.trim(),
                 caption: document.getElementById('ed-caption').value.trim(),
