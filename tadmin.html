@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS 4.0</title>
+    <title>ВЕСТНИК-CMS 4.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
                 <div class="min-w-0">
                     <div class="font-bold text-xs sm:text-base tracking-tight flex items-center gap-1.5 sm:gap-2">
                         <span class="truncate">ВЕСТНИК-CMS</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.0</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.2 PRO</span>
                     </div>
                     <div id="sync-status-line" class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">База db.json и Лор загружены</div>
                 </div>
@@ -211,10 +211,15 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Вид верстки:</label>
                             <select id="ed-layout" onchange="updateLivePreview()" class="w-full px-2.5 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-medium">
-                                <option value="standard">Классический репортаж</option>
+                                <option value="standard">📰 Классический репортаж</option>
                                 <option value="breaking">⚡ Срочная молния</option>
-                                <option value="investigation">📁 Спецрасследование</option>
+                                <option value="interview">🎙️ Блиц-интервью (Вопрос — Ответ)</option>
+                                <option value="investigation">📁 Спецрасследование / Досье</option>
                                 <option value="digest">⏱️ Хроника / Таймлайн</option>
+                                <option value="explainer">💡 Разбор / Карточки «Что это значит»</option>
+                                <option value="reportage">📍 Репортаж с места событий</option>
+                                <option value="opinion">✒️ Авторская колонка / Аналитика</option>
+                                <option value="factcheck">🔍 Проверка слухов / Опровержение</option>
                             </select>
                         </div>
                     </div>
@@ -273,12 +278,17 @@
 
                     <div>
                         <div class="flex flex-wrap gap-1.5 mb-2 p-2 bg-slate-100 rounded-lg border border-slate-200">
-                            <button type="button" onclick="insertTemplateBlock('p')" class="px-2.5 py-1 bg-white border border-slate-300 rounded text-xs font-semibold cursor-pointer">+ Абзац</button>
-                            <button type="button" onclick="insertTemplateBlock('h2')" class="px-2.5 py-1 bg-white border border-slate-300 rounded text-xs font-semibold cursor-pointer">+ H2</button>
-                            <button type="button" onclick="insertTemplateBlock('quote')" class="px-2.5 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-brand-red cursor-pointer">+ Цитата</button>
-                            <button type="button" onclick="insertTemplateBlock('dossier')" class="px-2.5 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-amber-800 cursor-pointer">+ Досье</button>
-                            <button type="button" onclick="insertTemplateBlock('max')" class="px-2.5 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-blue-700 cursor-pointer">+ МАКС</button>
-                            <button type="button" onclick="insertTemplateBlock('timeline')" class="px-2.5 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-emerald-700 cursor-pointer">+ Хроника</button>
+                            <button type="button" onclick="insertTemplateBlock('p')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold cursor-pointer">+ Абзац</button>
+                            <button type="button" onclick="insertTemplateBlock('h2')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold cursor-pointer">+ H2</button>
+                            <button type="button" onclick="insertTemplateBlock('quote')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-brand-red cursor-pointer">+ Цитата</button>
+                            <button type="button" onclick="insertTemplateBlock('interview')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-purple-700 cursor-pointer">+ Интервью В/О</button>
+                            <button type="button" onclick="insertTemplateBlock('stats')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-indigo-700 cursor-pointer">+ Цифры дня</button>
+                            <button type="button" onclick="insertTemplateBlock('decree')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-rose-800 cursor-pointer">+ Указ/Документ</button>
+                            <button type="button" onclick="insertTemplateBlock('expert')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-teal-800 cursor-pointer">+ Эксперт</button>
+                            <button type="button" onclick="insertTemplateBlock('factbox')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-slate-700 cursor-pointer">+ Справка</button>
+                            <button type="button" onclick="insertTemplateBlock('dossier')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-amber-800 cursor-pointer">+ Досье</button>
+                            <button type="button" onclick="insertTemplateBlock('max')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-blue-700 cursor-pointer">+ МАКС</button>
+                            <button type="button" onclick="insertTemplateBlock('timeline')" class="px-2 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-emerald-700 cursor-pointer">+ Хроника</button>
                         </div>
                         <textarea id="ed-body" rows="12" oninput="updateLivePreview()" class="w-full px-3.5 py-2.5 text-xs font-mono bg-slate-950 text-emerald-300 border border-slate-800 rounded-xl leading-relaxed"></textarea>
                     </div>
@@ -336,10 +346,10 @@
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + Фотослужба</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">500 RPD Models + Free FLUX / Nano Banana</span>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">9 Форматов + 10 Спецблоков</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Оптимизировано под лимиты <code>gemini-3.5-flash-lite</code> (500 запросов/день). Поддерживает бесплатную генерацию фото через FLUX и модели Google Nano Banana / Imagen.
+                            Оптимизировано под лимиты <code>gemini-3.5-flash-lite</code> (500 запросов/день). Выбирайте жанр статьи (интервью, разбор, колонка, репортаж, проверка слухов) и разнообразные редакционные спецблоки.
                         </p>
                     </div>
                 </div>
@@ -347,8 +357,8 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
                 <div class="lg:col-span-8 bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 space-y-4">
-                    <label class="block text-xs font-bold text-slate-700">Задание для ИИ-корреспондента (опишите идею или поворот сюжета):</label>
-                    <textarea id="ai-prompt-input" rows="4" placeholder="Например: Станислав Д. отправил Андрея Б. в творожном бронежилете на переговоры, а Герман Ф. и Мирослав К. запустили обновление через мессенджер МАКС..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"></textarea>
+                    <label class="block text-xs font-bold text-slate-700">Задание для ИИ-корреспондента (опишите идею, героя интерью или поворот сюжета):</label>
+                    <textarea id="ai-prompt-input" rows="4" placeholder="Например: Возьми блиц-интервью у Андрея Б. на передовой о том, как творожный бронежилет защищает от термосов с шиповником, и добавь статистику расхода сметаны..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"></textarea>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                         <div>
@@ -362,12 +372,17 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">2. Вариация вида новости (Шаблон):</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">2. Жанр и шаблон новости (9 вариантов):</label>
                             <select id="ai-layout-type" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-semibold">
                                 <option value="standard">📰 Классический федеральный репортаж</option>
+                                <option value="interview">🎙️ Блиц-интервью / Беседа «Вопрос — Ответ»</option>
                                 <option value="breaking">⚡ Экстренный выпуск «СРОЧНАЯ МОЛНИЯ»</option>
+                                <option value="explainer">💡 Разбор по полочкам / «Что это значит»</option>
+                                <option value="reportage">📍 Спецрепортаж с места событий</option>
                                 <option value="investigation">📁 Спецрасследование / Досье органов</option>
                                 <option value="digest">⏱️ Хроника событий (Поминутный таймлайн)</option>
+                                <option value="opinion">✒️ Авторская колонка / Экспертная аналитика</option>
+                                <option value="factcheck">🔍 Проверка слухов / Официальное опровержение</option>
                             </select>
                         </div>
                         <div>
@@ -384,12 +399,18 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">4. Спецблоки внутри текста:</label>
-                            <select id="ai-special-blocks" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-medium">
-                                <option value="ALL">Цитата + Досье + Плашка МАКС (Все)</option>
-                                <option value="QUOTE_DOSSIER">Цитата + Таблица-досье</option>
-                                <option value="QUOTE_MAX">Цитата + Плашка мессенджера МАКС</option>
-                                <option value="QUOTE_ONLY">Только официальные цитаты и списки</option>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">4. Спецблоки внутри текста (10 вариантов):</label>
+                            <select id="ai-special-blocks" class="w-full px-3 py-2 text-xs sm:text-sm bg-amber-50/60 border border-amber-300 text-slate-900 rounded-lg font-semibold">
+                                <option value="DYNAMIC_MIX">🎲 Умный микс (ИИ сам комбинирует разные блоки под сюжет)</option>
+                                <option value="INTERVIEW_QA">🎙️ Диалог «Вопрос — Ответ» + Выносная цитата</option>
+                                <option value="STAT_FACTS">📊 Инфографика «Главные цифры» + Справка редакции</option>
+                                <option value="DECREE_EXPERT">📜 Выписка из указа / документа + Мнение эксперта</option>
+                                <option value="EXPLAINER_CARDS">🗂️ Карточки «Суть в 3 пунктах» + Прогноз последствий</option>
+                                <option value="TIMELINE_WITNESS">⏱️ Поминутная хроника + Свидетельство очевидца</option>
+                                <option value="QUOTE_DOSSIER">📁 Таблица-досье + Официальная цитата</option>
+                                <option value="QUOTE_MAX">💬 Перехват из мессенджера МАКС + Цитата</option>
+                                <option value="ALL">🔥 Полный фарш (Досье + Цифры + МАКС + Цитата)</option>
+                                <option value="QUOTE_ONLY">📝 Строгая классика (Только цитаты и подзаголовки)</option>
                             </select>
                         </div>
                     </div>
@@ -847,8 +868,13 @@
             const labels = {
                 standard: '<span class="bg-slate-100 text-slate-600 text-[10px] font-mono px-1.5 py-0.5 rounded">РЕПОРТАЖ</span>',
                 breaking: '<span class="bg-red-100 text-brand-red text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">⚡ МОЛНИЯ</span>',
+                interview: '<span class="bg-purple-100 text-purple-800 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">🎙️ ИНТЕРВЬЮ</span>',
                 investigation: '<span class="bg-amber-100 text-amber-900 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">📁 ДОСЬЕ</span>',
-                digest: '<span class="bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">⏱️ ХРОНИКА</span>'
+                digest: '<span class="bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">⏱️ ХРОНИКА</span>',
+                explainer: '<span class="bg-sky-100 text-sky-800 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">💡 РАЗБОР</span>',
+                reportage: '<span class="bg-orange-100 text-orange-800 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">📍 РЕПОРТАЖ</span>',
+                opinion: '<span class="bg-indigo-100 text-indigo-800 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">✒️ КОЛОНКА</span>',
+                factcheck: '<span class="bg-teal-100 text-teal-800 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded">🔍 ФАКТЧЕК</span>'
             };
             const visLabel = visualMode === 'none'
                 ? '<span class="text-[10px] text-slate-400 font-mono">Без фото</span>'
@@ -1204,7 +1230,7 @@
                     const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cleanModel)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
                     const payload = {
                         contents: [{ role: "user", parts: [{ text: userInput }] }],
-                        generationConfig: { temperature: 0.8, responseMimeType: "application/json" }
+                        generationConfig: { temperature: 0.85, responseMimeType: "application/json" }
                     };
                     if (systemInstruction?.trim()) payload.systemInstruction = { parts: [{ text: systemInstruction }] };
                     const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -1261,10 +1287,54 @@
             throw lastErr || new Error("Все модели Gemini временно недоступны.");
         }
 
-        function stripHtmlForContext(html) {
-            const tmp = document.createElement('div');
-            tmp.innerHTML = html || '';
-            return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+        function getLayoutPromptGuide(layoutType) {
+            const guides = {
+                standard: "КЛАССИЧЕСКИЙ РЕПОРТАЖ: сбалансированная новостная статья с вводной частью, подзаголовками H2, комментариями ведомств и деталями с места.",
+                interview: "БЛИЦ-ИНТЕРВЬЮ («ВОПРОС — ОТВЕТ»): построй основную часть статьи как эксклюзивную беседу корреспондента «Вестника России» с главным героем события. Используй минимум 4 вопроса и развернутых абсурдно-серьезных ответа, оформленных через блоки вопросов корреспондента и ответов спикера.",
+                breaking: "ЭКСТРЕННАЯ МОЛНИЯ: начни статью с плашки <div class='my-4 p-4 bg-red-50 border-l-4 border-brand-red rounded-r-xl font-sans text-sm text-slate-900'><strong>⚡ СРОЧНО В НОМЕР:</strong> 2-3 коротких буллита с главными фактами на эту минуту</div>. Пиши максимально динамично.",
+                explainer: "РАЗБОР ПО ПОЛОЧКАМ («ЧТО ЭТО ЗНАЧИТ»): построй статью вокруг карточек-разъяснений для граждан: «1. В чем суть инцидента?», «2. Кого коснутся новые меры?», «3. Что делать населению и какие штрафы предусмотрены?».",
+                reportage: "СПЕЦРЕПОРТАЖ С МЕСТА СОБЫТИЙ: пиши от лица специального корреспондента, находящегося прямо в эпицентре (описывай атмосферу, детали обстановки, диалоги прохожих и оперативников, запахи и звуки).",
+                investigation: "СПЕЦРАССЛЕДОВАНИЕ / ДОСЬЕ ОРГАНОВ: сделай упор на рассекреченные протоколы, инсайды источников в ведомствах, схемы поставок и таблицы сопоставления фактов.",
+                digest: "ПОМИНУТНАЯ ХРОНИКА СОБЫТИЙ: построй материал вокруг точного таймлайна развития кризиса по часам и минутам с анализом каждого этапа.",
+                opinion: "АВТОРСКАЯ КОЛОНКА / ЭКСПЕРТНАЯ АНАЛИТИКА: пиши в жанре глубокого государственно-философского эссе политического обозревателя, анализирующего абсурдное происшествие как важнейший геополитический сдвиг.",
+                factcheck: "ПРОВЕРКА СЛУХОВ / ОФИЦИАЛЬНОЕ ОПРОВЕРЖЕНИЕ: построй статью по схеме сопоставления: «Слух в мессенджерах» vs «Официальная реальность по данным ведомств», разбирая 3-4 мифа вокруг события."
+            };
+            return guides[layoutType] || guides.standard;
+        }
+
+        function getSpecialBlocksPromptGuide(specialBlocks) {
+            const templates = {
+                INTERVIEW_QA: `Включи в статью 3-4 блока диалога «Вопрос — Ответ» по шаблону:
+<div class='my-5 p-4 bg-slate-50 border-l-4 border-indigo-600 rounded-r-xl font-sans'><div class='text-xs font-bold uppercase text-indigo-700 mb-1'>🎙️ Вопрос корреспондента «Вестника»:</div><div class='font-bold text-slate-900 mb-2'>«Текст вопроса?»</div><div class='text-sm text-slate-800'><strong class='text-brand-red'>Ответ спикера:</strong> «Текст ответа...»</div></div>
+И одну выносную цитату <blockquote class='quote-block p-5 my-6 rounded-r-xl'><p class='italic text-slate-800'>«Цитата»</p></blockquote>.`,
+                STAT_FACTS: `Включи в статью инфобокс «Главные цифры» по шаблону:
+<div class='my-6 p-5 bg-slate-50 border border-slate-200 rounded-xl font-sans'><div class='text-xs font-bold uppercase tracking-wider text-brand-red mb-3'>📊 Цифры и факты сводки</div><div class='grid grid-cols-1 sm:grid-cols-3 gap-3'><div class='p-3 bg-white rounded-lg border border-slate-200'><div class='text-xl font-extrabold text-slate-900 font-mono'>ЦИФРА 1</div><div class='text-xs text-slate-600 mt-1'>Описание показателя</div></div><div class='p-3 bg-white rounded-lg border border-slate-200'><div class='text-xl font-extrabold text-brand-red font-mono'>ЦИФРА 2</div><div class='text-xs text-slate-600 mt-1'>Описание показателя</div></div><div class='p-3 bg-white rounded-lg border border-slate-200'><div class='text-xl font-extrabold text-indigo-700 font-mono'>ЦИФРА 3</div><div class='text-xs text-slate-600 mt-1'>Описание показателя</div></div></div></div>
+А также блок «Справка редакции»: <div class='my-5 p-4 bg-amber-50/80 border-l-4 border-amber-500 rounded-r-xl font-sans text-xs sm:text-sm text-slate-800'><strong class='block text-amber-900 uppercase mb-1'>📌 Справка «Вестника»:</strong>Текст исторической или технической справки.</div>.`,
+                DECREE_EXPERT: `Включи в статью блок «Выписка из документа/приказа»:
+<div class='my-6 p-5 bg-amber-50/60 border-2 border-dashed border-amber-400 rounded-xl font-mono text-xs sm:text-sm text-slate-900'><div class='font-bold uppercase text-amber-900 border-b border-amber-300 pb-2 mb-2'>📜 ВЫПИСКА ИЗ ПОСТАНОВЛЕНИЯ / ПРОТОКОЛА</div><p>Пункт 1. Текст предписания...</p><div class='text-right text-[11px] text-amber-800 mt-2'>ПЕЧАТЬ КАНЦЕЛЯРИИ • ВЕРНО</div></div>
+И карточку «Мнение эксперта»: <div class='my-6 p-5 bg-slate-50 border border-slate-200 rounded-xl font-sans'><div class='text-xs font-bold uppercase text-teal-800 mb-1'>🎓 Экспертная оценка • Имя Эксперта (Должность):</div><p class='text-sm text-slate-800 italic'>«Текст комментария эксперта...»</p></div>.`,
+                EXPLAINER_CARDS: `Включи в статью 3 карточки разбора по шаблону:
+<div class='my-6 space-y-3 font-sans'><div class='p-4 bg-slate-50 border border-slate-200 rounded-xl'><div class='font-bold text-brand-red text-sm mb-1'>01. Что произошло на самом деле</div><div class='text-xs sm:text-sm text-slate-800'>Разъяснение...</div></div><div class='p-4 bg-slate-50 border border-slate-200 rounded-xl'><div class='font-bold text-brand-red text-sm mb-1'>02. Какие правила вводятся</div><div class='text-xs sm:text-sm text-slate-800'>Разъяснение...</div></div><div class='p-4 bg-slate-50 border border-slate-200 rounded-xl'><div class='font-bold text-brand-red text-sm mb-1'>03. Прогноз развития ситуации</div><div class='text-xs sm:text-sm text-slate-800'>Разъяснение...</div></div></div>.`,
+                TIMELINE_WITNESS: `Включи поминутную хронику:
+<div class='my-6 font-sans bg-slate-50 p-5 rounded-xl border-l-4 border-slate-900 space-y-2.5 text-xs sm:text-sm text-slate-900'><div class='font-bold uppercase tracking-wider text-slate-500'>⏱️ Поминутная хроника событий</div><div><strong class='font-mono text-brand-red'>08:30</strong> — Событие 1;</div><div><strong class='font-mono text-brand-red'>10:15</strong> — Событие 2;</div><div><strong class='font-mono text-brand-red'>12:40</strong> — Событие 3.</div></div>
+И прямую речь очевидца: <blockquote class='quote-block p-5 my-6 rounded-r-xl'><p class='italic text-slate-800'>«Слова очевидца...», — рассказал местный житель.</p></blockquote>.`,
+                QUOTE_DOSSIER: `Включи цитату <blockquote class='quote-block p-5 my-6 rounded-r-xl'><p class='italic text-slate-800'>«Цитата»</p></blockquote> и таблицу-досье:
+<div id='dossier-block' class='my-7 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden'><div class='bg-slate-900 text-white px-4 py-2.5 font-bold text-xs uppercase'>📁 Оперативное досье / Сводная таблица</div><table class='w-full text-left border-collapse text-xs sm:text-sm'><thead><tr class='bg-slate-900 text-white'><th class='p-2.5'>Объект / Фигурант</th><th class='p-2.5'>Статус / Параметр</th><th class='p-2.5'>Примечание</th></tr></thead><tbody><tr class='border-t border-slate-200 bg-white text-slate-900'><td class='p-2.5 font-bold'>Данные 1</td><td class='p-2.5'>Данные 2</td><td class='p-2.5'>Данные 3</td></tr></tbody></table></div>.`,
+                QUOTE_MAX: `Включи цитату и заполненный блок перехвата из мессенджера МАКС (НИКОГДА не оставляй его пустым!):
+<div id='max-flashmob' class='my-6 font-sans bg-slate-900 text-white p-5 rounded-xl border border-blue-500/40'><div class='text-xs font-bold text-sky-400 uppercase mb-2'>💬 МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЙ КАНАЛ</div><p class='text-xs sm:text-sm text-slate-100'><strong>Автор (@handle):</strong> «Текст сообщения в мессенджере МАКС...»</p></div>.`,
+                ALL: `Включи в статью комбинацию: 1) Инфобокс с 3 цифрами, 2) Таблицу <div id='dossier-block'>...</div>, 3) Заполненный блок <div id='max-flashmob'>...</div> с текстом сообщения и 4) Официальную цитату <blockquote class='quote-block'>...</blockquote>.`,
+                QUOTE_ONLY: `Используй только классические абзацы <p>, подзаголовки <h2> и 1-2 выносные цитаты <blockquote class='quote-block p-5 my-6 rounded-r-xl'><p class='italic text-slate-800'>«Цитата»</p></blockquote> без таблиц и плашек.`
+            };
+
+            if (specialBlocks === 'DYNAMIC_MIX') {
+                const pool = ['INTERVIEW_QA', 'STAT_FACTS', 'DECREE_EXPERT', 'EXPLAINER_CARDS', 'TIMELINE_WITNESS', 'QUOTE_DOSSIER', 'QUOTE_MAX'];
+                const pick1 = pool[Math.floor(Math.random() * pool.length)];
+                let pick2 = pool[Math.floor(Math.random() * pool.length)];
+                if (pick2 === pick1) pick2 = 'STAT_FACTS';
+                return `УМНЫЙ МИКС СПЕЦБЛОКОВ (органично встрой оба формата в разные части статьи):\nЧасть А: ${templates[pick1]}\nЧасть Б: ${templates[pick2]}`;
+            }
+
+            return templates[specialBlocks] || templates.STAT_FACTS;
         }
 
         async function runGeminiGenerator(autoPublishAndPush = false) {
@@ -1289,17 +1359,30 @@
 
             const statusBox = document.getElementById('ai-status-box');
             statusBox.classList.remove('hidden');
-            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Генерация статьи через <strong>${conf.model}</strong>...</div>`;
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Генерация [${layoutTypeChoice.toUpperCase()} / ${specialBlocks}] через <strong>${conf.model}</strong>...</div>`;
 
             const digest = useArticles
                 ? (appDB.articles || []).slice(0, 12).map((a, i) => `#${i + 1} [ID:${a.id} | ${a.geo}] ${a.title} — ${a.lead}`).join('\n')
                 : "Отключено";
 
-            const systemInstruction = `Ты — главный редактор сатирического агентства «ВЕСТНИК РОССИИ» (стиль ТАСС, РБК, Коммерсантъ).
+            const layoutGuide = getLayoutPromptGuide(layoutTypeChoice);
+            const blocksGuide = getSpecialBlocksPromptGuide(specialBlocks);
+
+            const systemInstruction = `Ты — главный редактор сатирического федерального агентства «ВЕСТНИК РОССИИ» (стиль ТАСС, РБК, Коммерсантъ).
 Строго соблюдай канон из universe_lore.json и статей db.json.
-Формат статьи: ${layoutTypeChoice}. Спецблоки: ${specialBlocks}.
-Внутри поля "body" во всех HTML-тегах используй ТОЛЬКО одинарные кавычки (') для атрибутов class и id! Для плашки мессенджера МАКС всегда используй <div id='max-flashmob'>.
-В поле "imagePromptEn" напиши детальный промпт на английском языке для генерации реалистичной репортажной фотографии по сюжету статьи (без текста).
+
+ЖАНР И СТРУКТУРА ЭТОЙ СТАТЬИ (${layoutTypeChoice}):
+${layoutGuide}
+
+ТРЕБОВАНИЯ К СПЕЦБЛОКАМ ВНУТРИ ПОЛЯ "body":
+${blocksGuide}
+
+ПРАВИЛА БЕЗОПАСНОГО HTML И ЦВЕТОВ В ПОЛЕ "body":
+1. Во всех HTML-тегах внутри "body" используй ТОЛЬКО одинарные кавычки (') для атрибутов class и id!
+2. Для текста используй русские кавычки-ёлочки «...».
+3. НИКОГДА не создавай пустых тегов <div></div> без текста внутри и никогда не ставь темный текст (text-slate-900) на темный фон (bg-slate-900).
+4. В поле "imagePromptEn" напиши детальный промпт на английском языке для генерации реалистичной репортажной фотографии по сюжету статьи (без текста на картинке).
+
 Верни СТРОГО валидный JSON:
 {
   "article": {
@@ -1313,7 +1396,7 @@
     "caption": "Фото: Фотослужба «Вестник России»",
     "imagePromptEn": "Realistic documentary press photo of ...",
     "tags": ["Тег1", "Тег2"],
-    "body": "<p>HTML текст статьи...</p>",
+    "body": "<p>Развернутый HTML текст статьи со спецблоками...</p>",
     "comments": [{"author": "Имя", "badge": "Город", "time": "Только что", "text": "Комментарий"}]
   },
   "dbUpdates": {
@@ -1580,11 +1663,16 @@
             const textarea = document.getElementById('ed-body');
             const snippets = {
                 p: `\n<p>\n    Новый абзац текста репортажа...\n</p>\n`,
-                h2: `\n<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4">\n    Подзаголовок раздела\n</h2>\n`,
-                quote: `\n<blockquote class="quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm">\n    <p class="italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif">\n        «Текст официального заявления», — прокомментировал источник.\n    </p>\n</blockquote>\n`,
-                dossier: `\n<div id="dossier-block" class="my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm">\n    <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">\n        <span class="font-bold text-xs uppercase tracking-wider">Оперативная сводка / Досье</span>\n        <span class="text-[11px] font-mono text-amber-400">МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">Данные статистического наблюдения...</div>\n</div>\n`,
-                max: `\n<div id="max-flashmob" class="my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm">\n    <div class="text-xs font-bold text-sky-400 mb-2">МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">Текст координационной сводки в мессенджере МАКС...</p>\n</div>\n`,
-                timeline: `\n<div class="my-6 font-sans bg-slate-50 p-5 rounded-xl border-l-4 border-slate-900 space-y-3 text-xs sm:text-sm">\n    <div class="font-bold uppercase tracking-wider text-slate-500">⏱️ Поминутная хроника событий</div>\n    <div><strong class="font-mono text-brand-red">08:30</strong> — Первое сообщение оперативного дежурного;</div>\n    <div><strong class="font-mono text-brand-red">10:15</strong> — Введение специального регламента.</div>\n</div>\n`
+                h2: `\n<h2 class='font-headline font-bold text-xl sm:text-2xl text-slate-900 mt-8 mb-4'>\n    Подзаголовок раздела\n</h2>\n`,
+                quote: `\n<blockquote class='quote-block p-5 sm:p-6 my-7 rounded-r-xl font-sans relative overflow-hidden shadow-sm'>\n    <p class='italic text-slate-800 text-base sm:text-[17px] leading-relaxed mb-2 font-serif'>\n        «Текст официального заявления», — прокомментировал источник.\n    </p>\n</blockquote>\n`,
+                interview: `\n<div class='my-5 p-4 bg-slate-50 border-l-4 border-indigo-600 rounded-r-xl font-sans'>\n    <div class='text-xs font-bold uppercase text-indigo-700 mb-1'>🎙️ Вопрос корреспондента «Вестника»:</div>\n    <div class='font-bold text-slate-900 mb-2'>«Текст вопроса спикеру?»</div>\n    <div class='text-sm text-slate-800'><strong class='text-brand-red'>Ответ:</strong> «Развернутый ответ собеседника...»</div>\n</div>\n`,
+                stats: `\n<div class='my-6 p-5 bg-slate-50 border border-slate-200 rounded-xl font-sans'>\n    <div class='text-xs font-bold uppercase tracking-wider text-brand-red mb-3'>📊 Цифры и факты сводки</div>\n    <div class='grid grid-cols-1 sm:grid-cols-3 gap-3'>\n        <div class='p-3 bg-white rounded-lg border border-slate-200'><div class='text-xl font-extrabold text-slate-900 font-mono'>142%</div><div class='text-xs text-slate-600 mt-1'>Первый показатель</div></div>\n        <div class='p-3 bg-white rounded-lg border border-slate-200'><div class='text-xl font-extrabold text-brand-red font-mono'>42.0 мм</div><div class='text-xs text-slate-600 mt-1'>Второй показатель</div></div>\n        <div class='p-3 bg-white rounded-lg border border-slate-200'><div class='text-xl font-extrabold text-indigo-700 font-mono'>1.5 г Au</div><div class='text-xs text-slate-600 mt-1'>Третий показатель</div></div>\n    </div>\n</div>\n`,
+                decree: `\n<div class='my-6 p-5 bg-amber-50/70 border-2 border-dashed border-amber-400 rounded-xl font-mono text-xs sm:text-sm text-slate-900'>\n    <div class='font-bold uppercase text-amber-900 border-b border-amber-300 pb-2 mb-2'>📜 ВЫПИСКА ИЗ ПОСТАНОВЛЕНИЯ № 412-П</div>\n    <p>1. Ввести чрезвычайный норматив на всей территории муниципального образования...</p>\n    <div class='text-right text-[11px] text-amber-800 mt-2'>ПЕЧАТЬ КАНЦЕЛЯРИИ • ВЕРНО</div>\n</div>\n`,
+                expert: `\n<div class='my-6 p-5 bg-slate-50 border border-slate-200 rounded-xl font-sans'>\n    <div class='text-xs font-bold uppercase text-teal-800 mb-1'>🎓 Мнение эксперта • Имя Фамилия (Должность):</div>\n    <p class='text-sm text-slate-800 italic'>«Аналитический комментарий специалиста по ситуации...»</p>\n</div>\n`,
+                factbox: `\n<div class='my-5 p-4 bg-amber-50/80 border-l-4 border-amber-500 rounded-r-xl font-sans text-xs sm:text-sm text-slate-800'>\n    <strong class='block text-amber-900 uppercase mb-1'>📌 Справка редакции «Вестника»:</strong>\n    Исторический или технический контекст происходящего события.\n</div>\n`,
+                dossier: `\n<div id='dossier-block' class='my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm'>\n    <div class='bg-slate-900 text-white px-5 py-3 flex items-center justify-between'>\n        <span class='font-bold text-xs uppercase tracking-wider'>Оперативная сводка / Досье</span>\n        <span class='text-[11px] font-mono text-amber-400'>МОНИТОРИНГ-2026</span>\n    </div>\n    <div class='p-4 text-xs sm:text-sm text-slate-700'>Данные статистического наблюдения...</div>\n</div>\n`,
+                max: `\n<div id='max-flashmob' class='my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm'>\n    <div class='text-xs font-bold text-sky-400 mb-2'>МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class='text-xs sm:text-sm text-slate-200 leading-relaxed'>Текст координационной сводки в мессенджере МАКС...</p>\n</div>\n`,
+                timeline: `\n<div class='my-6 font-sans bg-slate-50 p-5 rounded-xl border-l-4 border-slate-900 space-y-3 text-xs sm:text-sm'>\n    <div class='font-bold uppercase tracking-wider text-slate-500'>⏱️ Поминутная хроника событий</div>\n    <div><strong class='font-mono text-brand-red'>08:30</strong> — Первое сообщение оперативного дежурного;</div>\n    <div><strong class='font-mono text-brand-red'>10:15</strong> — Введение специального регламента.</div>\n</div>\n`
             };
             const snippet = snippets[type] || "";
             const start = textarea.selectionStart || textarea.value.length;
