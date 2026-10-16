@@ -584,18 +584,53 @@
             wrapper.className = "lg:col-span-8 bg-white rounded-xl shadow-xs border border-slate-200 p-4 sm:p-8 md:p-10 overflow-hidden";
             banner.className = "hidden";
 
-            if (layout === 'breaking') {
-                wrapper.classList.add('border-t-4', 'border-t-brand-red');
-                banner.className = "mb-4 px-3.5 py-2 rounded-lg font-sans text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center justify-between gap-2 bg-red-50 text-brand-red border border-red-200";
-                banner.innerHTML = `<span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-brand-red live-dot"></span>⚡ ЭКСТРЕННЫЙ ВЫПУСК • СРОЧНАЯ МОЛНИЯ</span><span class="font-mono text-[10px]">URGENT</span>`;
-            } else if (layout === 'investigation') {
-                wrapper.classList.add('border-t-4', 'border-t-slate-900');
-                banner.className = "mb-4 px-3.5 py-2 rounded-lg font-sans text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center justify-between gap-2 bg-slate-900 text-amber-400";
-                banner.innerHTML = `<span><i class="fa-solid fa-folder-open mr-1.5"></i>СПЕЦРАССЛЕДОВАНИЕ • МАТЕРИАЛЫ ДОСЬЕ</span><span class="font-mono text-[10px] text-slate-400">ДОСЬЕ ВР</span>`;
-            } else if (layout === 'digest') {
-                wrapper.classList.add('border-t-4', 'border-t-emerald-700');
-                banner.className = "mb-4 px-3.5 py-2 rounded-lg font-sans text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center justify-between gap-2 bg-emerald-50 text-emerald-900 border border-emerald-200";
-                banner.innerHTML = `<span><i class="fa-solid fa-clock-rotate-left mr-1.5 text-emerald-700"></i>ХРОНИКА СОБЫТИЙ • ОПЕРАТИВНЫЙ ТАЙМЛАЙН</span><span class="font-mono text-[10px] text-emerald-700">CHRONICLE</span>`;
+            const styles = {
+                breaking: {
+                    border: 'border-t-brand-red',
+                    cls: 'bg-red-50 text-brand-red border border-red-200',
+                    html: `<span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-brand-red live-dot"></span>⚡ ЭКСТРЕННЫЙ ВЫПУСК • СРОЧНАЯ МОЛНИЯ</span><span class="font-mono text-[10px]">URGENT</span>`
+                },
+                interview: {
+                    border: 'border-t-purple-700',
+                    cls: 'bg-purple-50 text-purple-900 border border-purple-200',
+                    html: `<span><i class="fa-solid fa-microphone-lines mr-1.5 text-purple-700"></i>БЛИЦ-ИНТЕРВЬЮ • ЭКСКЛЮЗИВНАЯ БЕСЕДА</span><span class="font-mono text-[10px] text-purple-700">INTERVIEW</span>`
+                },
+                investigation: {
+                    border: 'border-t-slate-900',
+                    cls: 'bg-slate-900 text-amber-400',
+                    html: `<span><i class="fa-solid fa-folder-open mr-1.5"></i>СПЕЦРАССЛЕДОВАНИЕ • МАТЕРИАЛЫ ДОСЬЕ</span><span class="font-mono text-[10px] text-slate-400">ДОСЬЕ ВР</span>`
+                },
+                digest: {
+                    border: 'border-t-emerald-700',
+                    cls: 'bg-emerald-50 text-emerald-900 border border-emerald-200',
+                    html: `<span><i class="fa-solid fa-clock-rotate-left mr-1.5 text-emerald-700"></i>ХРОНИКА СОБЫТИЙ • ОПЕРАТИВНЫЙ ТАЙМЛАЙН</span><span class="font-mono text-[10px] text-emerald-700">CHRONICLE</span>`
+                },
+                explainer: {
+                    border: 'border-t-sky-600',
+                    cls: 'bg-sky-50 text-sky-900 border border-sky-200',
+                    html: `<span><i class="fa-solid fa-lightbulb mr-1.5 text-sky-600"></i>РАЗБОР РЕДАКЦИИ • ЧТО ЭТО ЗНАЧИТ</span><span class="font-mono text-[10px] text-sky-700">EXPLAINER</span>`
+                },
+                reportage: {
+                    border: 'border-t-orange-600',
+                    cls: 'bg-orange-50 text-orange-900 border border-orange-200',
+                    html: `<span><i class="fa-solid fa-location-crosshairs mr-1.5 text-orange-600"></i>СПЕЦРЕПОРТАЖ С МЕСТА СОБЫТИЙ</span><span class="font-mono text-[10px] text-orange-700">ON SCENE</span>`
+                },
+                opinion: {
+                    border: 'border-t-indigo-700',
+                    cls: 'bg-indigo-50 text-indigo-950 border border-indigo-200',
+                    html: `<span><i class="fa-solid fa-pen-fancy mr-1.5 text-indigo-700"></i>АВТОРСКАЯ КОЛОНКА • ЭКСПЕРТНАЯ АНАЛИТИКА</span><span class="font-mono text-[10px] text-indigo-700">OPINION</span>`
+                },
+                factcheck: {
+                    border: 'border-t-teal-700',
+                    cls: 'bg-teal-50 text-teal-950 border border-teal-200',
+                    html: `<span><i class="fa-solid fa-magnifying-glass-chart mr-1.5 text-teal-700"></i>ПРОВЕРКА СЛУХОВ • ОФИЦИАЛЬНЫЙ ФАКТЧЕК</span><span class="font-mono text-[10px] text-teal-700">FACTCHECK</span>`
+                }
+            };
+
+            if (styles[layout]) {
+                wrapper.classList.add('border-t-4', styles[layout].border);
+                banner.className = `mb-4 px-3.5 py-2 rounded-lg font-sans text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center justify-between gap-2 ${styles[layout].cls}`;
+                banner.innerHTML = styles[layout].html;
             }
         }
 
@@ -632,6 +667,11 @@
                     if (firstChild && (firstChild.textContent || '').toUpperCase().includes('МЕССЕНДЖЕР МАКС')) {
                         firstChild.classList.add('max-header-title');
                     }
+                    return;
+                }
+
+                if ((cls.includes('bg-slate-900') || cls.includes('bg-slate-950')) && el.id !== 'dossier-block') {
+                    el.style.color = '#f8fafc';
                 }
             });
 
