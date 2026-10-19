@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS 4.3</title>
+    <title>ВЕСТНИК-CMS 4.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
                 <div class="min-w-0">
                     <div class="font-bold text-xs sm:text-base tracking-tight flex items-center gap-1.5 sm:gap-2">
                         <span class="truncate">ВЕСТНИК-CMS</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.3 PRO</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.4 PRO</span>
                     </div>
                     <div id="sync-status-line" class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">База db.json и Лор загружены</div>
                 </div>
@@ -108,7 +108,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                     <h1 class="font-headline font-bold text-lg sm:text-2xl text-slate-900">Управление материалами агентства</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">При удалении статьи система автоматически очищает связанные с ней записи в Лоре, биографиях персонажей и информерах.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Нажмите «Править» у любой статьи, чтобы отредактировать её вручную или дополнить с помощью ИИ. При удалении новости её следы в Лоре очищаются автоматически.</p>
                 </div>
                 <button onclick="startNewArticle()" class="w-full sm:w-auto justify-center bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer">
                     <i class="fa-solid fa-plus"></i>
@@ -168,44 +168,63 @@
                 </div>
             </div>
 
-            <div class="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 text-white rounded-xl p-4 sm:p-5 border border-indigo-500/40 shadow-sm space-y-3">
+            <!-- Панель ИИ-редактирования (отображается ТОЛЬКО при редактировании существующей статьи) -->
+            <div id="editor-ai-assistant-box" class="hidden bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 text-white rounded-xl p-4 sm:p-5 border border-indigo-500/40 shadow-sm space-y-3">
                 <div class="flex flex-wrap items-center justify-between gap-2">
-                    <div class="flex items-center gap-2">
-                        <span class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-sm font-bold"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-sm font-bold shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
                         <div>
-                            <h3 class="font-bold text-xs sm:text-sm">🤖 ИИ-Редактор открытой статьи (Дополнить / Переписать / Изменить формат)</h3>
-                            <p class="text-[11px] text-indigo-200">Опишите, что нужно добавить, исправить или как перестроить текущий материал, и ИИ обновит статью и Лор.</p>
+                            <h3 class="font-bold text-xs sm:text-sm">🤖 ИИ-Редактор существующей статьи (Дополнить / Переписать / Изменить спецблоки)</h3>
+                            <p class="text-[11px] text-indigo-200">Напишите, что добавить или изменить в этой новости, выберите нужные спецблоки, и ИИ обновит статью и базу Лора.</p>
                         </div>
                     </div>
                     <label class="flex items-center gap-1.5 text-xs text-indigo-200 cursor-pointer">
                         <input type="checkbox" id="ed-ai-sync-lore" checked class="w-3.5 h-3.5 accent-indigo-500">
-                        <span>Синхронизировать изменения с Лором</span>
+                        <span>Синхронизировать с Лором</span>
                     </label>
                 </div>
 
                 <div class="flex flex-wrap gap-1.5">
                     <button type="button" onclick="setEditorAiQuickInstruction('Дополни статью 2-3 новыми абзацами с новыми абсурдными подробностями, реакцией ведомств и комментарием очевидца.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">➕ Дополнить новыми фактами</button>
-                    <button type="button" onclick="setEditorAiQuickInstruction('Перепиши статью в выбранном ниже виде верстки, сохранив ключевой сюжет, но полностью обновив подачу и спецблоки.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔄 Перестроить под выбранный вид верстки</button>
-                    <button type="button" onclick="setEditorAiQuickInstruction('Добавь внутрь статьи блок диалога «Вопрос — Ответ» (интервью с участником событий) и инфобокс с 3 главными цифрами.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🎙️ Встроить интервью и цифры</button>
+                    <button type="button" onclick="setEditorAiQuickInstruction('Перепиши статью под выбранный ниже вид верстки и спецблоки, сохранив основной сюжет и героев.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔄 Перестроить под выбранный жанр и спецблоки</button>
+                    <button type="button" onclick="setEditorAiQuickInstruction('Добавь внутрь статьи эксклюзивный блок «Вопрос — Ответ» (интервью с главным героем) и инфобокс с 3 цифрами.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🎙️ Встроить интервью и цифры</button>
                     <button type="button" onclick="setEditorAiQuickInstruction('Усиль канцелярско-протокольный тон ТАСС/РБК и сделай бюрократические формулировки еще смешнее и острее.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔥 Усилить сатиру и официоз</button>
                 </div>
 
-                <div class="flex flex-col sm:flex-row gap-2">
-                    <input
-                        type="text"
-                        id="ed-ai-instruction"
-                        placeholder="Что сделать со статьей? (Например: добавь в конец поворот про приезд комиссии из Москвы и таблицу-досье...)"
-                        class="flex-1 px-3.5 py-2 text-xs sm:text-sm bg-slate-900/90 text-white border border-indigo-400/40 rounded-lg focus:outline-none focus:border-indigo-400"
-                    >
-                    <button
-                        type="button"
-                        id="btn-ed-ai-rewrite"
-                        onclick="runAiRewriteInsideEditor()"
-                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-lg shrink-0 flex items-center justify-center gap-1.5 transition cursor-pointer"
-                    >
-                        <i class="fa-solid fa-bolt"></i>
-                        <span>Применить ИИ-правки</span>
-                    </button>
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                    <div class="sm:col-span-4">
+                        <select id="ed-ai-special-blocks" class="w-full px-3 py-2 text-xs bg-slate-900 text-amber-300 border border-indigo-400/40 rounded-lg font-semibold">
+                            <option value="DYNAMIC_MIX">🎲 Спецблоки: Умный микс</option>
+                            <option value="INTERVIEW_QA">🎙️ Вопрос — Ответ + Цитата</option>
+                            <option value="STAT_FACTS">📊 Главные цифры + Справка</option>
+                            <option value="DECREE_EXPERT">📜 Выписка из указа + Эксперт</option>
+                            <option value="EXPLAINER_CARDS">🗂️ Карточки разбора (3 пункта)</option>
+                            <option value="TIMELINE_WITNESS">⏱️ Хроника + Очевидец</option>
+                            <option value="QUOTE_DOSSIER">📁 Таблица-досье + Цитата</option>
+                            <option value="QUOTE_MAX">💬 Мессенджер МАКС + Цитата</option>
+                            <option value="ALL">🔥 Полный набор всех блоков</option>
+                            <option value="QUOTE_ONLY">📝 Только цитаты и текст</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-5">
+                        <input
+                            type="text"
+                            id="ed-ai-instruction"
+                            placeholder="Что изменить или добавить в статью?..."
+                            class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-900/90 text-white border border-indigo-400/40 rounded-lg focus:outline-none focus:border-indigo-400"
+                        >
+                    </div>
+                    <div class="sm:col-span-3">
+                        <button
+                            type="button"
+                            id="btn-ed-ai-rewrite"
+                            onclick="runAiRewriteInsideEditor()"
+                            class="w-full h-full px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition cursor-pointer"
+                        >
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>Переработать ИИ</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -244,10 +263,10 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="text-xs font-bold text-slate-700">Дата:</label>
+                                <label class="text-xs font-bold text-slate-700" title="Сохраняется с UTC-меткой для автоперевода в часовой пояс читателя">Дата (ваш пояс):</label>
                                 <button type="button" onclick="setNowDate()" class="text-[11px] text-brand-red font-semibold hover:underline cursor-pointer">Сейчас</button>
                             </div>
-                            <input type="text" id="ed-date" oninput="updateLivePreview()" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg">
+                            <input type="text" id="ed-date" oninput="handleManualDateInput()" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Вид верстки:</label>
@@ -387,10 +406,10 @@
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + Фотослужба</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Создание и ИИ-Редактирование</span>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">9 Форматов + 10 Спецблоков</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Создавайте новые материалы с нуля или выбирайте любую существующую новость для её дополнения, переписывания и обновления фактов в Лоре.
+                            Генерация новых материалов с привязкой к часовому поясу читателя. Для ИИ-редактирования уже опубликованной статьи нажмите «Править» напротив нужной новости во вкладке 1.
                         </p>
                     </div>
                 </div>
@@ -398,14 +417,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
                 <div class="lg:col-span-8 bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 space-y-4">
-                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                        <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">Режим работы ИИ-Ньюсрума:</label>
-                        <select id="ai-target-article-select" onchange="handleAiTargetArticleChange()" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-bold text-slate-900">
-                            <option value="NEW">🆕 Создать совершенно новую статью с нуля</option>
-                        </select>
-                    </div>
-
-                    <label id="ai-prompt-label" class="block text-xs font-bold text-slate-700">Задание для ИИ-корреспондента (опишите идею, героя интервью или инструкции по переработке):</label>
+                    <label class="block text-xs font-bold text-slate-700">Задание для ИИ-корреспондента (опишите идею новой статьи, героя интервью или поворот сюжета):</label>
                     <textarea id="ai-prompt-input" rows="4" placeholder="Например: Возьми блиц-интервью у Андрея Б. на передовой о том, как творожный бронежилет защищает от термосов с шиповником, и добавь статистику расхода сметаны..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"></textarea>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -415,7 +427,6 @@
                                 <option value="ai_photo_free">📸 Бесплатный ИИ-генератор фото (FLUX — без лимитов)</option>
                                 <option value="ai_photo_hybrid">📸 Авто-гибрид (Google Nano Banana -> Бесплатный FLUX)</option>
                                 <option value="ai_photo_google">📸 Только Google API (Nano Banana / Imagen)</option>
-                                <option value="keep_existing">🖼️ Оставить текущее фото/режим (при правке статьи)</option>
                                 <option value="radar">📡 Плейсхолдер: Радар / Камера спецконтроля</option>
                                 <option value="none">📄 Без фото и без плейсхолдера (Только текст)</option>
                             </select>
@@ -490,11 +501,11 @@
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-2">
                         <button type="button" onclick="runGeminiGenerator(false)" class="w-full sm:w-auto justify-center px-4 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer">
                             <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            <span id="btn-ai-main-label">Сгенерировать и открыть в редакторе</span>
+                            <span>Сгенерировать и открыть в редакторе</span>
                         </button>
                         <button type="button" onclick="runGeminiGenerator(true)" class="w-full sm:w-auto justify-center px-4 py-3 bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer">
                             <i class="fa-solid fa-bolt"></i>
-                            <span>Автопилот: Выполнить + Push в GitHub</span>
+                            <span>Автопилот: Сгенерировать + Push в GitHub</span>
                         </button>
                     </div>
 
@@ -632,7 +643,10 @@
                             <input type="text" id="set-title" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg font-bold">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Дата:</label>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="text-xs font-bold text-slate-700">Дата в шапке:</label>
+                                <button type="button" onclick="setTodayHeaderDate()" class="text-[11px] text-brand-red font-semibold hover:underline cursor-pointer">Сегодня</button>
+                            </div>
                             <input type="text" id="set-date" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
                         </div>
                     </div>
@@ -738,7 +752,7 @@
             siteSettings: {
                 title: "ВЕСТНИК РОССИИ",
                 subtitle: "Федеральное информационное агентство",
-                currentDate: "Четверг, 15 октября 2026",
+                currentDate: getFormattedHeaderDateNow(),
                 breakingNews: "ФСБ и Росфинмониторинг внесли командующего Сырными войсками Станислава Д. в тройной реестр",
                 categories: ["Политика", "Безопасность", "Общество", "Происшествия", "Регионы", "Технологии", "Геотектоника"],
                 informers: [
@@ -766,6 +780,59 @@
         let editingOriginalId = null;
         window._lastAiGeneratedComments = null;
         window._lastAiMeta = null;
+        window._currentEditingTimestamp = null;
+
+        function getFormattedHeaderDateNow() {
+            const now = new Date();
+            const str = new Intl.DateTimeFormat('ru-RU', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            }).format(now).replace(/\s*г\.?$/, '');
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function formatTimestampToRuDate(ts) {
+            const months = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+            const d = new Date(ts);
+            if (isNaN(d.getTime())) return "";
+            return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+        }
+
+        function parseRussianDateToTimestamp(dateStr) {
+            if (!dateStr || typeof dateStr !== 'string') return null;
+            const monthsMap = {
+                'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3, 'мая': 4, 'июня': 5,
+                'июля': 6, 'августа': 7, 'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11
+            };
+            const m = dateStr.trim().match(/^(\d{1,2})\s+([а-яё]+)\s+(\d{4})(?:,\s*(\d{1,2}):(\d{2}))?/i);
+            if (!m) return null;
+            const day = parseInt(m[1], 10);
+            const monthIdx = monthsMap[m[2].toLowerCase()];
+            const year = parseInt(m[3], 10);
+            const hours = m[4] !== undefined ? parseInt(m[4], 10) : 12;
+            const minutes = m[5] !== undefined ? parseInt(m[5], 10) : 0;
+            if (monthIdx === undefined) return null;
+            const d = new Date(year, monthIdx, day, hours, minutes);
+            return isNaN(d.getTime()) ? null : d.getTime();
+        }
+
+        function formatArticleDateLocal(art) {
+            if (!art) return '';
+            const ts = art.timestamp || (art.createdAt ? new Date(art.createdAt).getTime() : null);
+            if (ts && !isNaN(ts)) {
+                return formatTimestampToRuDate(ts);
+            }
+            return art.date || '';
+        }
+
+        function setTodayHeaderDate() {
+            const todayStr = getFormattedHeaderDateNow();
+            const el = document.getElementById('set-date');
+            if (el) el.value = todayStr;
+            if (appDB.siteSettings) appDB.siteSettings.currentDate = todayStr;
+        }
 
         function openIdb() {
             return new Promise((resolve) => {
@@ -872,11 +939,14 @@
                 } catch (e) {}
             }
 
+            if (appDB.siteSettings) {
+                appDB.siteSettings.currentDate = getFormattedHeaderDateNow();
+            }
+
             const searchInput = document.getElementById('admin-search-input');
             if (searchInput) searchInput.value = '';
 
             populateCategoryFilters();
-            populateAiTargetArticlesDropdown();
             document.getElementById('admin-cat-filter').value = 'ALL';
             renderAdminArticlesList();
             populateSiteSettingsForm();
@@ -915,13 +985,12 @@
                 try {
                     const slimDB = JSON.parse(JSON.stringify(appDB));
                     (slimDB.articles || []).forEach(a => {
-                        if (a.image && a.image.startsWith('data:image')) a.image = '';
+                        if (a && a.image && a.image.startsWith('data:image')) a.image = '';
                     });
                     localStorage.setItem('vestnik_db_backup', JSON.stringify(slimDB));
                     localStorage.setItem('vestnik_lore_backup', JSON.stringify(appLore));
                 } catch (e2) {}
             }
-            populateAiTargetArticlesDropdown();
             updateAiMemoryStats();
         }
 
@@ -950,60 +1019,7 @@
             if (tabName === 'list') {
                 populateCategoryFilters();
                 renderAdminArticlesList();
-            } else if (tabName === 'ai') {
-                populateAiTargetArticlesDropdown();
             }
-        }
-
-        function populateAiTargetArticlesDropdown() {
-            const select = document.getElementById('ai-target-article-select');
-            if (!select) return;
-            const currentVal = select.value || 'NEW';
-            const optionsHtml = [`<option value="NEW">🆕 Создать совершенно новую статью с нуля</option>`];
-            (appDB.articles || []).forEach(art => {
-                if (art && art.id) {
-                    optionsHtml.push(`<option value="${escapeAttr(art.id)}">✏️ Редактировать / дополнить: ${escapeAttr((art.title || '').slice(0, 75))} [${escapeAttr(art.id)}]</option>`);
-                }
-            });
-            select.innerHTML = optionsHtml.join('');
-            if ([...(appDB.articles || [])].some(a => a && a.id === currentVal)) {
-                select.value = currentVal;
-            } else {
-                select.value = 'NEW';
-            }
-        }
-
-        function handleAiTargetArticleChange() {
-            const val = document.getElementById('ai-target-article-select').value;
-            const label = document.getElementById('ai-prompt-label');
-            const btnLabel = document.getElementById('btn-ai-main-label');
-            const input = document.getElementById('ai-prompt-input');
-            const visSelect = document.getElementById('ai-visual-mode');
-
-            if (val === 'NEW') {
-                label.textContent = "Задание для ИИ-корреспондента (опишите идею новой статьи):";
-                btnLabel.textContent = "Сгенерировать и открыть в редакторе";
-                input.placeholder = "Например: Возьми блиц-интервью у Андрея Б. на передовой о том, как творожный бронежилет защищает от термосов с шиповником...";
-            } else {
-                const art = (appDB.articles || []).find(a => a && a.id === val);
-                label.textContent = `Инструкция по ИИ-редактированию статьи «${(art?.title || val).slice(0, 60)}...»:`;
-                btnLabel.textContent = "Обновить статью через ИИ и открыть в редакторе";
-                input.placeholder = "Напишите, что дополнить, переписать или изменить в этой статье (например: добавь раздел с комментарием эксперта, обнови цифры и переделай под выбранный жанр)...";
-                if (art && art.layoutType) document.getElementById('ai-layout-type').value = art.layoutType;
-                if (art && art.category) document.getElementById('ai-target-category').value = art.category;
-                visSelect.value = 'keep_existing';
-            }
-        }
-
-        function openArticleInAiNewsroom(id) {
-            populateAiTargetArticlesDropdown();
-            const select = document.getElementById('ai-target-article-select');
-            if (select) {
-                select.value = id;
-                handleAiTargetArticleChange();
-            }
-            switchTab('ai');
-            document.getElementById('ai-prompt-input').focus();
         }
 
         function populateCategoryFilters() {
@@ -1078,7 +1094,7 @@
             }
 
             container.innerHTML = filtered.map(({ art, originalIdx }) => {
-                const safeId = escapeAttr(art.id || '');
+                const displayDate = formatArticleDateLocal(art);
                 return `
                     <div class="p-4 sm:p-5 flex flex-col md:flex-row md:items-start justify-between gap-3.5 transition ${art.isHero ? 'bg-red-50/40' : 'hover:bg-slate-50'}">
                         <div class="space-y-1.5 flex-1 min-w-0">
@@ -1090,18 +1106,15 @@
                                 <span class="bg-slate-100 text-brand-red font-bold text-[11px] uppercase px-2 py-0.5 rounded">${art.category || 'Сводка'}</span>
                                 ${getLayoutBadgeHtml(art.layoutType, art.visualMode, !!art.image)}
                                 <span class="text-xs text-slate-600"><i class="fa-solid fa-location-dot text-brand-red mr-1"></i>${art.geo || 'РФ'}</span>
-                                <span class="font-mono text-[11px] text-slate-400">${art.date || ''}</span>
+                                <span class="font-mono text-[11px] text-slate-500" title="Отображается в часовом поясе устройства">${displayDate}</span>
                                 <span class="font-mono text-[11px] text-slate-400">[${art.id}]</span>
                             </div>
                             <div class="font-bold text-sm sm:text-base text-slate-900 leading-snug">${art.title || 'Без заголовка'}</div>
                             <div class="text-xs text-slate-500 line-clamp-2 leading-relaxed">${art.lead || ''}</div>
                         </div>
                         <div class="flex flex-wrap items-center gap-1.5 shrink-0 pt-1 md:pt-0">
-                            <button onclick="openArticleInEditorByIndex(${originalIdx})" class="flex-1 md:flex-initial justify-center px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer" title="Открыть в редакторе (доступна ручная и ИИ-правка)">
-                                <i class="fa-solid fa-pen"></i><span>Править</span>
-                            </button>
-                            <button onclick="openArticleInAiNewsroom('${safeId}')" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer" title="Переписать или дополнить через ИИ-Ньюсрум">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i><span>ИИ</span>
+                            <button onclick="openArticleInEditorByIndex(${originalIdx})" class="flex-1 md:flex-initial justify-center px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer" title="Открыть в редакторе (ручная и ИИ-правка)">
+                                <i class="fa-solid fa-pen"></i><span>Править / ИИ</span>
                             </button>
                             <a href="article.html?id=${encodeURIComponent(art.id || '')}" target="_blank" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1">
                                 <i class="fa-solid fa-eye"></i>
@@ -1585,14 +1598,15 @@
             const curGeo = document.getElementById('ed-geo').value.trim() || "РФ";
             const curCat = document.getElementById('ed-category').value.trim() || "Общество";
             const curLayout = document.getElementById('ed-layout').value || "standard";
+            const specialBlocksChoice = document.getElementById('ed-ai-special-blocks')?.value || 'DYNAMIC_MIX';
             const syncLore = document.getElementById('ed-ai-sync-lore').checked;
 
             const btn = document.getElementById('btn-ed-ai-rewrite');
             const origHTML = btn.innerHTML;
-            btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading"></i> ИИ перерабатывает статью...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading"></i> ИИ перерабатывает...`;
 
             const layoutGuide = getLayoutPromptGuide(curLayout);
-            const blocksGuide = getSpecialBlocksPromptGuide('DYNAMIC_MIX');
+            const blocksGuide = getSpecialBlocksPromptGuide(specialBlocksChoice);
 
             const systemInstruction = `Ты — главный редактор сатирического агентства «ВЕСТНИК РОССИИ» (стиль ТАСС, РБК, Коммерсантъ).
 Перед тобой существующая статья. Твоя задача — отредактировать, дополнить или переписать её строго по указанию главного редактора, соблюдая канон из universe_lore.json.
@@ -1600,7 +1614,7 @@
 ЦЕЛЕВОЙ ЖАНР И ВИД ВЕРСТКИ (${curLayout}):
 ${layoutGuide}
 
-ДОСТУПНЫЕ СПЕЦБЛОКИ ДЛЯ ОБОГАЩЕНИЯ ТЕКСТА:
+ТРЕБОВАНИЯ К СПЕЦБЛОКАМ ВНУТРИ СТАТЬИ:
 ${blocksGuide}
 
 ПРАВИЛА БЕЗОПАСНОГО HTML В ПОЛЕ "body":
@@ -1873,9 +1887,6 @@ ${blocksGuide}
             const userPrompt = document.getElementById('ai-prompt-input').value.trim();
             if (!userPrompt) { showToast("Напишите задание для статьи!", true); return; }
 
-            const targetMode = document.getElementById('ai-target-article-select').value || 'NEW';
-            const existingTargetArt = targetMode !== 'NEW' ? (appDB.articles || []).find(a => a && a.id === targetMode) : null;
-
             const visualModeChoice = document.getElementById('ai-visual-mode').value;
             const layoutTypeChoice = document.getElementById('ai-layout-type').value;
             const useLore = document.getElementById('ai-use-lore').checked;
@@ -1888,7 +1899,7 @@ ${blocksGuide}
 
             const statusBox = document.getElementById('ai-status-box');
             statusBox.classList.remove('hidden');
-            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>${existingTargetArt ? 'ИИ-редактирование статьи [' + existingTargetArt.id + ']' : 'Генерация новой статьи'} [${layoutTypeChoice.toUpperCase()} / ${specialBlocks}] через <strong>${conf.model}</strong>...</div>`;
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Генерация новой статьи [${layoutTypeChoice.toUpperCase()} / ${specialBlocks}] через <strong>${conf.model}</strong>...</div>`;
 
             const digest = useArticles
                 ? (appDB.articles || []).slice(0, 12).map((a, i) => `#${i + 1} [ID:${a.id} | ${a.geo}] ${a.title} — ${a.lead}`).join('\n')
@@ -1897,12 +1908,8 @@ ${blocksGuide}
             const layoutGuide = getLayoutPromptGuide(layoutTypeChoice);
             const blocksGuide = getSpecialBlocksPromptGuide(specialBlocks);
 
-            const editContextSection = existingTargetArt
-                ? `\nВАЖНО: ТЫ РЕДАКТИРУЕШЬ И ДОПОЛНЯЕШЬ СУЩЕСТВУЮЩУЮ СТАТЬЮ (ID: "${existingTargetArt.id}").\nИсходный заголовок: ${existingTargetArt.title}\nИсходный лид: ${existingTargetArt.lead}\nИсходный HTML-текст:\n${existingTargetArt.body}\nПереработай или дополни этот материал в соответствии с заданием пользователя, сохранив его ID "${existingTargetArt.id}".`
-                : '';
-
             const systemInstruction = `Ты — главный редактор сатирического федерального агентства «ВЕСТНИК РОССИИ» (стиль ТАСС, РБК, Коммерсантъ).
-Строго соблюдай канон из universe_lore.json и статей db.json.${editContextSection}
+Строго соблюдай канон из universe_lore.json и статей db.json.
 
 ЖАНР И СТРУКТУРА ЭТОЙ СТАТЬИ (${layoutTypeChoice}):
 ${layoutGuide}
@@ -1919,10 +1926,10 @@ ${blocksGuide}
 Верни СТРОГО валидный JSON:
 {
   "article": {
-    "id": "${existingTargetArt ? existingTargetArt.id : 'unikalnyj-latin-slug'}",
+    "id": "unikalnyj-latin-slug",
     "title": "Заголовок",
     "lead": "Лид-абзац",
-    "category": "${targetCat === 'AUTO' ? (existingTargetArt?.category || 'Безопасность') : targetCat}",
+    "category": "${targetCat === 'AUTO' ? 'Безопасность' : targetCat}",
     "geo": "Город",
     "badgeType": "ЗАГОЛОВОК РАДАРА",
     "badgeTelemetry": "ТЕЛЕМЕТРИЯ",
@@ -1951,24 +1958,18 @@ ${blocksGuide}
                 const genArt = parsed.article;
                 if (!genArt || !genArt.title) throw new Error("Модель не вернула объект статьи");
 
-                let newArticleId = existingTargetArt
-                    ? existingTargetArt.id
-                    : (genArt.id || "").trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
-
-                if (!existingTargetArt && (!newArticleId || (appDB.articles || []).some(a => a && a.id === newArticleId))) {
+                let newArticleId = (genArt.id || "").trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+                if (!newArticleId || (appDB.articles || []).some(a => a && a.id === newArticleId)) {
                     newArticleId = (newArticleId || "ai-news") + "-" + Date.now().toString().slice(-4);
                 }
                 genArt.id = newArticleId;
 
-                statusBox.innerHTML += `<div class="text-emerald-400">✅ ${existingTargetArt ? 'Статья обновлена' : 'Статья создана'}: «${genArt.title}»</div>`;
+                statusBox.innerHTML += `<div class="text-emerald-400">✅ Статья создана: «${genArt.title}»</div>`;
 
-                let generatedBase64Image = existingTargetArt ? (existingTargetArt.image || "") : "";
-                let finalVisualMode = existingTargetArt ? (existingTargetArt.visualMode || "auto") : "auto";
+                let generatedBase64Image = "";
+                let finalVisualMode = "auto";
 
-                if (visualModeChoice === 'keep_existing' && existingTargetArt) {
-                    generatedBase64Image = existingTargetArt.image || "";
-                    finalVisualMode = existingTargetArt.visualMode || "auto";
-                } else if (visualModeChoice.startsWith('ai_photo')) {
+                if (visualModeChoice.startsWith('ai_photo')) {
                     statusBox.innerHTML += `<div class="text-indigo-300"><i class="fa-solid fa-camera ai-loading mr-1.5"></i>Генерация иллюстрации к новости...</div>`;
                     generatedBase64Image = await generateArticleImageWithGemini(conf, genArt.imagePromptEn, genArt.title, genArt.geo, visualModeChoice) || "";
                     if (generatedBase64Image) {
@@ -1979,10 +1980,8 @@ ${blocksGuide}
                         finalVisualMode = "radar";
                     }
                 } else if (visualModeChoice === 'radar') {
-                    generatedBase64Image = "";
                     finalVisualMode = "radar";
                 } else if (visualModeChoice === 'none') {
-                    generatedBase64Image = "";
                     finalVisualMode = "none";
                 }
 
@@ -2012,7 +2011,7 @@ ${blocksGuide}
                         appDB.siteSettings.poll = dbUpd.updatedPoll;
                         localStorage.removeItem('vestnik_poll_votes');
                     }
-                    if (!existingTargetArt && dbUpd.appendUpdateToOldArticle?.targetArticleId && dbUpd.appendUpdateToOldArticle?.updateText) {
+                    if (dbUpd.appendUpdateToOldArticle?.targetArticleId && dbUpd.appendUpdateToOldArticle?.updateText) {
                         const oldArt = (appDB.articles || []).find(a => a && a.id === dbUpd.appendUpdateToOldArticle.targetArticleId);
                         if (oldArt && oldArt.body && !oldArt.body.includes(newArticleId)) {
                             oldArt.body += `\n<div class="my-6 p-4 bg-red-50 border-l-4 border-brand-red rounded-r-xl font-sans text-xs sm:text-sm text-slate-800"><strong class="text-brand-red uppercase tracking-wider block mb-1">⚡ ОБНОВЛЕНИЕ СЮЖЕТА:</strong><span>${dbUpd.appendUpdateToOldArticle.updateText} — </span><a href="article.html?id=${encodeURIComponent(newArticleId)}" class="font-bold text-brand-red underline">Читать продолжение →</a></div>`;
@@ -2022,14 +2021,14 @@ ${blocksGuide}
 
                 populateSiteSettingsForm();
 
-                window._lastAiMeta = existingTargetArt?.aiMeta || null;
+                window._lastAiMeta = null;
                 if (autoUpdateLore && parsed.loreUpdates) {
-                    window._lastAiMeta = applyLoreUpdatesAndRecordMeta(parsed.loreUpdates, genArt.geo || "РФ", window._lastAiMeta);
+                    window._lastAiMeta = applyLoreUpdatesAndRecordMeta(parsed.loreUpdates, genArt.geo || "РФ", null);
                 }
 
-                window._lastAiGeneratedComments = Array.isArray(genArt.comments) ? genArt.comments : (existingTargetArt?.comments || []);
+                window._lastAiGeneratedComments = Array.isArray(genArt.comments) ? genArt.comments : [];
 
-                editingOriginalId = existingTargetArt ? existingTargetArt.id : null;
+                editingOriginalId = null;
 
                 document.getElementById('ed-id').value = newArticleId;
                 document.getElementById('ed-ishero').checked = makeHero;
@@ -2038,11 +2037,7 @@ ${blocksGuide}
                 document.getElementById('ed-geo').value = genArt.geo || "РФ";
                 document.getElementById('ed-layout').value = layoutTypeChoice || "standard";
                 document.getElementById('ed-visual-mode').value = finalVisualMode;
-                if (existingTargetArt && existingTargetArt.date) {
-                    document.getElementById('ed-date').value = existingTargetArt.date;
-                } else {
-                    setNowDate();
-                }
+                setNowDate();
                 document.getElementById('ed-lead').value = genArt.lead || "";
                 document.getElementById('ed-image').value = generatedBase64Image;
                 document.getElementById('ed-badgetype').value = genArt.badgeType || "ОПЕРАТИВНЫЙ МОНИТОРИНГ";
@@ -2055,6 +2050,7 @@ ${blocksGuide}
                 resetListFilters();
 
                 await saveArticleFromEditor(autoPublishAndPush, !autoPublishAndPush);
+                document.getElementById('editor-ai-assistant-box').classList.remove('hidden');
                 statusBox.innerHTML += `<div class="text-emerald-300 font-bold">📰 Всего статей в базе: ${appDB.articles.length}</div>`;
 
                 if (!autoPublishAndPush) setTimeout(() => switchTab('editor'), 600);
@@ -2091,6 +2087,7 @@ ${blocksGuide}
             editingOriginalId = null;
             window._lastAiGeneratedComments = null;
             window._lastAiMeta = null;
+            document.getElementById('editor-ai-assistant-box').classList.add('hidden');
             document.getElementById('editor-mode-badge').textContent = "РЕЖИМ: СОЗДАНИЕ НОВОЙ ПУБЛИКАЦИИ";
             document.getElementById('editor-heading-title').textContent = "Новый материал агентства";
             document.getElementById('ed-id').value = "news-" + Date.now().toString().slice(-5);
@@ -2119,14 +2116,17 @@ ${blocksGuide}
             editingOriginalId = art.id;
             window._lastAiGeneratedComments = art.comments || null;
             window._lastAiMeta = art.aiMeta || null;
-            document.getElementById('editor-mode-badge').textContent = `РЕЖИМ: РЕДАКТИРОВАНИЕ [${art.id}]`;
+            window._currentEditingTimestamp = art.timestamp || (art.createdAt ? new Date(art.createdAt).getTime() : parseRussianDateToTimestamp(art.date));
+
+            document.getElementById('editor-ai-assistant-box').classList.remove('hidden');
+            document.getElementById('editor-mode-badge').textContent = `РЕЖИМ: РЕДАКТИРОВАНИЕ СУЩЕСТВУЮЩЕЙ СТАТЬИ [${art.id}]`;
             document.getElementById('editor-heading-title').textContent = art.title;
             document.getElementById('ed-id').value = art.id || "";
             document.getElementById('ed-ishero').checked = !!art.isHero;
             document.getElementById('ed-title').value = art.title || "";
             document.getElementById('ed-category').value = art.category || "Общество";
             document.getElementById('ed-geo').value = art.geo || "";
-            document.getElementById('ed-date').value = art.date || "";
+            document.getElementById('ed-date').value = formatArticleDateLocal(art);
             document.getElementById('ed-layout').value = art.layoutType || "standard";
             document.getElementById('ed-visual-mode').value = art.visualMode || (art.hideVisual ? "none" : "auto");
             document.getElementById('ed-lead').value = art.lead || "";
@@ -2152,9 +2152,16 @@ ${blocksGuide}
         }
 
         function setNowDate() {
-            const months = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
-            const d = new Date();
-            document.getElementById('ed-date').value = `${d.getDate()} ${months[d.getMonth()]} 2026, ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+            const nowTs = Date.now();
+            window._currentEditingTimestamp = nowTs;
+            document.getElementById('ed-date').value = formatTimestampToRuDate(nowTs);
+            updateLivePreview();
+        }
+
+        function handleManualDateInput() {
+            const val = document.getElementById('ed-date').value.trim();
+            const parsedTs = parseRussianDateToTimestamp(val);
+            window._currentEditingTimestamp = parsedTs || null;
             updateLivePreview();
         }
 
@@ -2241,6 +2248,12 @@ ${blocksGuide}
 
             const visualMode = document.getElementById('ed-visual-mode').value || "auto";
             const layoutType = document.getElementById('ed-layout').value || "standard";
+            const dateInputStr = document.getElementById('ed-date').value.trim();
+
+            let finalTimestamp = window._currentEditingTimestamp || parseRussianDateToTimestamp(dateInputStr);
+            if (!finalTimestamp && idx === -1) {
+                finalTimestamp = Date.now();
+            }
 
             const newArticleObj = {
                 id,
@@ -2250,7 +2263,9 @@ ${blocksGuide}
                 hideVisual: visualMode === 'none',
                 title,
                 lead: document.getElementById('ed-lead').value.trim(),
-                date: document.getElementById('ed-date').value.trim(),
+                date: dateInputStr || formatTimestampToRuDate(finalTimestamp || Date.now()),
+                timestamp: finalTimestamp || undefined,
+                createdAt: finalTimestamp ? new Date(finalTimestamp).toISOString() : undefined,
                 category: document.getElementById('ed-category').value.trim() || "Общество",
                 geo: document.getElementById('ed-geo').value.trim() || "РФ",
                 image: visualMode === 'none' || visualMode === 'radar' ? "" : document.getElementById('ed-image').value.trim(),
@@ -2270,8 +2285,11 @@ ${blocksGuide}
 
             if (finalAiMeta) newArticleObj.aiMeta = finalAiMeta;
 
-            if (!appDB.siteSettings.categories.includes(newArticleObj.category)) {
-                appDB.siteSettings.categories.push(newArticleObj.category);
+            if (appDB.siteSettings) {
+                appDB.siteSettings.currentDate = getFormattedHeaderDateNow();
+                if (!appDB.siteSettings.categories.includes(newArticleObj.category)) {
+                    appDB.siteSettings.categories.push(newArticleObj.category);
+                }
             }
 
             if (idx !== -1) appDB.articles[idx] = newArticleObj;
@@ -2297,7 +2315,7 @@ ${blocksGuide}
             const s = appDB.siteSettings || FALLBACK_DB.siteSettings;
             document.getElementById('set-title').value = s.title || "";
             document.getElementById('set-subtitle').value = s.subtitle || "";
-            document.getElementById('set-date').value = s.currentDate || "";
+            document.getElementById('set-date').value = s.currentDate || getFormattedHeaderDateNow();
             document.getElementById('set-breaking').value = s.breakingNews || "";
             document.getElementById('set-categories').value = (s.categories || []).join(', ');
             const poll = s.poll || FALLBACK_DB.siteSettings.poll;
@@ -2311,7 +2329,7 @@ ${blocksGuide}
             const s = appDB.siteSettings;
             s.title = document.getElementById('set-title').value.trim();
             s.subtitle = document.getElementById('set-subtitle').value.trim();
-            s.currentDate = document.getElementById('set-date').value.trim();
+            s.currentDate = document.getElementById('set-date').value.trim() || getFormattedHeaderDateNow();
             s.breakingNews = document.getElementById('set-breaking').value.trim();
             s.categories = document.getElementById('set-categories').value.split(',').map(c => c.trim()).filter(Boolean);
             const pollLines = document.getElementById('set-poll-options').value.split('\n').map(l => l.trim()).filter(Boolean);
@@ -2434,6 +2452,9 @@ ${blocksGuide}
 
         async function pushToGitHub() {
             saveLoreFromUI();
+            if (appDB.siteSettings) {
+                appDB.siteSettings.currentDate = getFormattedHeaderDateNow();
+            }
             const conf = saveGitHubConfig();
             if (!conf.owner || !conf.repo || !conf.token) {
                 switchTab('github');
@@ -2447,6 +2468,7 @@ ${blocksGuide}
                 const timeLabel = new Date().toLocaleString('ru-RU');
                 await uploadSingleFileToGitHub(conf, 'db.json', appDB, `Обновление db.json (${timeLabel})`);
                 await uploadSingleFileToGitHub(conf, 'universe_lore.json', appLore, `Обновление universe_lore.json (${timeLabel})`);
+                localStorage.removeItem('vestnik_has_local_edits');
                 document.getElementById('sync-status-line').textContent = `Опубликовано в GitHub (${new Date().toLocaleTimeString('ru-RU')}) • Статей: ${appDB.articles.length}`;
                 logBox.innerHTML = `<div class="text-emerald-400 font-bold">✅ Успешно! Опубликовано статей: ${appDB.articles.length}</div>`;
                 showToast("Опубликовано в GitHub!");
