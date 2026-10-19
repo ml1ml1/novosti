@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS 4.4</title>
+    <title>ВЕСТНИК-CMS 4.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
                 <div class="min-w-0">
                     <div class="font-bold text-xs sm:text-base tracking-tight flex items-center gap-1.5 sm:gap-2">
                         <span class="truncate">ВЕСТНИК-CMS</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.4 PRO</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.5 PRO</span>
                     </div>
                     <div id="sync-status-line" class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">База db.json и Лор загружены</div>
                 </div>
@@ -108,7 +108,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                     <h1 class="font-headline font-bold text-lg sm:text-2xl text-slate-900">Управление материалами агентства</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">Нажмите «Править» у любой статьи, чтобы отредактировать её вручную или дополнить с помощью ИИ. При удалении новости её следы в Лоре очищаются автоматически.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Нажмите «Править / ИИ» у любой статьи для ручной правки или вызова ИИ-редактора. Удаление корректно очищает следы в Лоре.</p>
                 </div>
                 <button onclick="startNewArticle()" class="w-full sm:w-auto justify-center bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer">
                     <i class="fa-solid fa-plus"></i>
@@ -168,14 +168,14 @@
                 </div>
             </div>
 
-            <!-- Панель ИИ-редактирования (отображается ТОЛЬКО при редактировании существующей статьи) -->
+            <!-- Панель ИИ-редактирования статьи (появляется ТОЛЬКО при редактировании существующей новости) -->
             <div id="editor-ai-assistant-box" class="hidden bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 text-white rounded-xl p-4 sm:p-5 border border-indigo-500/40 shadow-sm space-y-3">
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <div class="flex items-center gap-2.5">
                         <span class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-sm font-bold shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
                         <div>
                             <h3 class="font-bold text-xs sm:text-sm">🤖 ИИ-Редактор существующей статьи (Дополнить / Переписать / Изменить спецблоки)</h3>
-                            <p class="text-[11px] text-indigo-200">Напишите, что добавить или изменить в этой новости, выберите нужные спецблоки, и ИИ обновит статью и базу Лора.</p>
+                            <p class="text-[11px] text-indigo-200">Напишите указание для ИИ, выберите спецблоки и нажмите кнопку переработки материала.</p>
                         </div>
                     </div>
                     <label class="flex items-center gap-1.5 text-xs text-indigo-200 cursor-pointer">
@@ -185,10 +185,10 @@
                 </div>
 
                 <div class="flex flex-wrap gap-1.5">
-                    <button type="button" onclick="setEditorAiQuickInstruction('Дополни статью 2-3 новыми абзацами с новыми абсурдными подробностями, реакцией ведомств и комментарием очевидца.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">➕ Дополнить новыми фактами</button>
-                    <button type="button" onclick="setEditorAiQuickInstruction('Перепиши статью под выбранный ниже вид верстки и спецблоки, сохранив основной сюжет и героев.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔄 Перестроить под выбранный жанр и спецблоки</button>
-                    <button type="button" onclick="setEditorAiQuickInstruction('Добавь внутрь статьи эксклюзивный блок «Вопрос — Ответ» (интервью с главным героем) и инфобокс с 3 цифрами.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🎙️ Встроить интервью и цифры</button>
-                    <button type="button" onclick="setEditorAiQuickInstruction('Усиль канцелярско-протокольный тон ТАСС/РБК и сделай бюрократические формулировки еще смешнее и острее.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔥 Усилить сатиру и официоз</button>
+                    <button type="button" onclick="setEditorAiQuickInstruction('Дополни статью 2-3 новыми абзацами с абсурдными подробностями, реакцией ведомств и комментарием очевидца.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">➕ Дополнить фактами</button>
+                    <button type="button" onclick="setEditorAiQuickInstruction('Перепиши статью под выбранный ниже вид верстки и спецблоки, сохранив сюжет и героев.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔄 Перестроить под жанр</button>
+                    <button type="button" onclick="setEditorAiQuickInstruction('Добавь внутрь статьи эксклюзивный блок «Вопрос — Ответ» (интервью) и инфобокс с 3 главными цифрами.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🎙️ Встроить интервью и цифры</button>
+                    <button type="button" onclick="setEditorAiQuickInstruction('Усиль официальный канцелярско-протокольный тон ТАСС/РБК и сделай сатиру острее.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔥 Усилить сатиру</button>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
@@ -263,7 +263,7 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="text-xs font-bold text-slate-700" title="Сохраняется с UTC-меткой для автоперевода в часовой пояс читателя">Дата (ваш пояс):</label>
+                                <label class="text-xs font-bold text-slate-700">Дата:</label>
                                 <button type="button" onclick="setNowDate()" class="text-[11px] text-brand-red font-semibold hover:underline cursor-pointer">Сейчас</button>
                             </div>
                             <input type="text" id="ed-date" oninput="handleManualDateInput()" class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg">
@@ -397,6 +397,7 @@
             </div>
         </section>
 
+        <!-- Вкладка 3: ИИ-Ньюсрум строго для СОЗДАНИЯ новых статей -->
         <section id="tab-ai" class="hidden space-y-4 sm:space-y-6">
             <div class="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 text-white rounded-2xl p-4 sm:p-6 shadow-md border border-indigo-500/30 flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-start gap-3 sm:gap-4">
@@ -406,10 +407,10 @@
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + Фотослужба</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">9 Форматов + 10 Спецблоков</span>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Генерация новых материалов</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Генерация новых материалов с привязкой к часовому поясу читателя. Для ИИ-редактирования уже опубликованной статьи нажмите «Править» напротив нужной новости во вкладке 1.
+                            Оптимизировано под лимиты <code>gemini-3.5-flash-lite</code> (500 запросов/день). Создавайте новые статьи с привязкой ко времени читателя. Для правки существующей статьи используйте кнопку «Править / ИИ» во вкладке 1.
                         </p>
                     </div>
                 </div>
@@ -417,8 +418,8 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
                 <div class="lg:col-span-8 bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 space-y-4">
-                    <label class="block text-xs font-bold text-slate-700">Задание для ИИ-корреспондента (опишите идею новой статьи, героя интервью или поворот сюжета):</label>
-                    <textarea id="ai-prompt-input" rows="4" placeholder="Например: Возьми блиц-интервью у Андрея Б. на передовой о том, как творожный бронежилет защищает от термосов с шиповником, и добавь статистику расхода сметаны..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"></textarea>
+                    <label class="block text-xs font-bold text-slate-700">Задание для ИИ-корреспондента (опишите идею новой статьи или поворот сюжета):</label>
+                    <textarea id="ai-prompt-input" rows="4" placeholder="Например: Станислав Д. отправил Андрея Б. в творожном бронежилете на переговоры..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"></textarea>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                         <div>
@@ -869,6 +870,36 @@
             });
         }
 
+        // Авто-нормализатор структуры опроса (защита от undefined в вариантах)
+        function normalizePollData(pollObj) {
+            const fallback = JSON.parse(JSON.stringify(FALLBACK_DB.siteSettings.poll));
+            if (!pollObj || typeof pollObj !== 'object') return fallback;
+
+            const q = typeof pollObj.question === 'string' && pollObj.question.trim() ? pollObj.question.trim() : fallback.question;
+            let rawOpts = pollObj.options;
+
+            if (!Array.isArray(rawOpts) || rawOpts.length === 0) {
+                rawOpts = fallback.options;
+            }
+
+            const normalizedOpts = rawOpts.map((opt, i) => {
+                if (typeof opt === 'string') {
+                    return { text: opt.trim() || `Вариант ${i + 1}`, votes: 100 + i * 50 };
+                }
+                if (opt && typeof opt === 'object') {
+                    const txt = opt.text || opt.label || opt.title || opt.option || `Вариант ${i + 1}`;
+                    const v = parseInt(opt.votes !== undefined ? opt.votes : opt.count, 10);
+                    return {
+                        text: String(txt).trim(),
+                        votes: !isNaN(v) && v >= 0 ? v : (100 + i * 50)
+                    };
+                }
+                return { text: `Вариант ${i + 1}`, votes: 100 + i * 50 };
+            });
+
+            return { question: q, options: normalizedOpts };
+        }
+
         async function initCMS() {
             const ghConf = JSON.parse(localStorage.getItem('vestnik_gh_config') || '{}');
             if (ghConf.owner) document.getElementById('gh-owner').value = ghConf.owner;
@@ -919,6 +950,11 @@
                 appDB = remoteDB;
             }
 
+            if (appDB.siteSettings) {
+                appDB.siteSettings.currentDate = getFormattedHeaderDateNow();
+                appDB.siteSettings.poll = normalizePollData(appDB.siteSettings.poll);
+            }
+
             let localLore = await idbGet('vestnik_lore_backup');
             if (!localLore) {
                 try {
@@ -937,10 +973,6 @@
                         if (remoteLore && Array.isArray(remoteLore.characters)) appLore = remoteLore;
                     }
                 } catch (e) {}
-            }
-
-            if (appDB.siteSettings) {
-                appDB.siteSettings.currentDate = getFormattedHeaderDateNow();
             }
 
             const searchInput = document.getElementById('admin-search-input');
@@ -976,6 +1008,9 @@
 
         function persistLocalBackup() {
             localStorage.setItem('vestnik_has_local_edits', 'true');
+            if (appDB.siteSettings) {
+                appDB.siteSettings.poll = normalizePollData(appDB.siteSettings.poll);
+            }
             idbSet('vestnik_db_backup', appDB);
             idbSet('vestnik_lore_backup', appLore);
             try {
@@ -1821,12 +1856,6 @@ ${blocksGuide}
             throw lastErr || new Error("Все модели Gemini временно недоступны.");
         }
 
-        function stripHtmlForContext(html) {
-            const tmp = document.createElement('div');
-            tmp.innerHTML = html || '';
-            return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
-        }
-
         function getLayoutPromptGuide(layoutType) {
             const guides = {
                 standard: "КЛАССИЧЕСКИЙ РЕПОРТАЖ: сбалансированная новостная статья с вводной частью, подзаголовками H2, комментариями ведомств и деталями с места.",
@@ -2007,8 +2036,8 @@ ${blocksGuide}
                         const existingTick = (appDB.siteSettings.tickers || []).find(t => t.label.toLowerCase() === tick.label.toLowerCase());
                         if (existingTick) existingTick.value = tick.value;
                     }
-                    if (dbUpd.updatedPoll?.question && Array.isArray(dbUpd.updatedPoll.options) && dbUpd.updatedPoll.options.length > 1) {
-                        appDB.siteSettings.poll = dbUpd.updatedPoll;
+                    if (dbUpd.updatedPoll) {
+                        appDB.siteSettings.poll = normalizePollData(dbUpd.updatedPoll);
                         localStorage.removeItem('vestnik_poll_votes');
                     }
                     if (dbUpd.appendUpdateToOldArticle?.targetArticleId && dbUpd.appendUpdateToOldArticle?.updateText) {
@@ -2050,7 +2079,6 @@ ${blocksGuide}
                 resetListFilters();
 
                 await saveArticleFromEditor(autoPublishAndPush, !autoPublishAndPush);
-                document.getElementById('editor-ai-assistant-box').classList.remove('hidden');
                 statusBox.innerHTML += `<div class="text-emerald-300 font-bold">📰 Всего статей в базе: ${appDB.articles.length}</div>`;
 
                 if (!autoPublishAndPush) setTimeout(() => switchTab('editor'), 600);
@@ -2287,6 +2315,7 @@ ${blocksGuide}
 
             if (appDB.siteSettings) {
                 appDB.siteSettings.currentDate = getFormattedHeaderDateNow();
+                appDB.siteSettings.poll = normalizePollData(appDB.siteSettings.poll);
                 if (!appDB.siteSettings.categories.includes(newArticleObj.category)) {
                     appDB.siteSettings.categories.push(newArticleObj.category);
                 }
@@ -2298,6 +2327,7 @@ ${blocksGuide}
             editingOriginalId = id;
             window._lastAiGeneratedComments = null;
             window._lastAiMeta = null;
+            window._currentEditingTimestamp = null;
             persistLocalBackup();
             populateCategoryFilters();
             renderAdminArticlesList();
@@ -2318,7 +2348,7 @@ ${blocksGuide}
             document.getElementById('set-date').value = s.currentDate || getFormattedHeaderDateNow();
             document.getElementById('set-breaking').value = s.breakingNews || "";
             document.getElementById('set-categories').value = (s.categories || []).join(', ');
-            const poll = s.poll || FALLBACK_DB.siteSettings.poll;
+            const poll = normalizePollData(s.poll);
             document.getElementById('set-poll-question').value = poll.question || "";
             document.getElementById('set-poll-options').value = (poll.options || []).map(o => `${o.text} | ${o.votes}`).join('\n');
             document.getElementById('set-informers-json').value = JSON.stringify(s.informers || [], null, 2);
@@ -2333,13 +2363,13 @@ ${blocksGuide}
             s.breakingNews = document.getElementById('set-breaking').value.trim();
             s.categories = document.getElementById('set-categories').value.split(',').map(c => c.trim()).filter(Boolean);
             const pollLines = document.getElementById('set-poll-options').value.split('\n').map(l => l.trim()).filter(Boolean);
-            s.poll = {
+            s.poll = normalizePollData({
                 question: document.getElementById('set-poll-question').value.trim(),
                 options: pollLines.map(line => {
                     const parts = line.split('|');
                     return { text: (parts[0] || "").trim(), votes: parseInt((parts[1] || "100").trim(), 10) || 100 };
                 })
-            };
+            });
             try {
                 s.informers = JSON.parse(document.getElementById('set-informers-json').value);
                 s.tickers = JSON.parse(document.getElementById('set-tickers-json').value);
@@ -2354,6 +2384,9 @@ ${blocksGuide}
         }
 
         function downloadDbJson() {
+            if (appDB.siteSettings) {
+                appDB.siteSettings.poll = normalizePollData(appDB.siteSettings.poll);
+            }
             const blob = new Blob([JSON.stringify(appDB, null, 2)], { type: "application/json;charset=utf-8" });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
@@ -2369,6 +2402,9 @@ ${blocksGuide}
                 try {
                     const parsed = JSON.parse(e.target.result);
                     if (parsed && Array.isArray(parsed.articles)) {
+                        if (parsed.siteSettings && parsed.siteSettings.poll) {
+                            parsed.siteSettings.poll = normalizePollData(parsed.siteSettings.poll);
+                        }
                         appDB = parsed;
                         persistLocalBackup();
                         resetListFilters();
@@ -2390,7 +2426,12 @@ ${blocksGuide}
                 const res = await fetch('./db.json?t=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
                     const remote = await res.json();
-                    if (remote && Array.isArray(remote.articles)) appDB = remote;
+                    if (remote && Array.isArray(remote.articles)) {
+                        if (remote.siteSettings && remote.siteSettings.poll) {
+                            remote.siteSettings.poll = normalizePollData(remote.siteSettings.poll);
+                        }
+                        appDB = remote;
+                    }
                 }
                 const resLore = await fetch('./universe_lore.json?t=' + Date.now(), { cache: 'no-store' });
                 if (resLore.ok) {
@@ -2454,6 +2495,7 @@ ${blocksGuide}
             saveLoreFromUI();
             if (appDB.siteSettings) {
                 appDB.siteSettings.currentDate = getFormattedHeaderDateNow();
+                appDB.siteSettings.poll = normalizePollData(appDB.siteSettings.poll);
             }
             const conf = saveGitHubConfig();
             if (!conf.owner || !conf.repo || !conf.token) {
