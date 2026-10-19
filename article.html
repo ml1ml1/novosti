@@ -186,7 +186,7 @@
             <div class="flex items-center space-x-3 overflow-x-auto no-scrollbar py-0.5">
                 <span class="font-semibold text-white flex items-center gap-1.5 shrink-0">
                     <i class="fa-regular fa-calendar text-brand-red"></i>
-                    <span id="top-current-date">Четверг, 15 октября 2026</span>
+                    <span id="top-current-date">Загрузка даты...</span>
                 </span>
                 <span class="text-slate-700">|</span>
                 <div id="top-informers-list" class="flex items-center space-x-3 shrink-0"></div>
@@ -261,7 +261,7 @@
                         <span>/</span>
                         <a id="article-category-link" href="index.html" class="text-brand-red font-bold uppercase tracking-wider hover:underline">Рубрика</a>
                         <span>•</span>
-                        <span id="article-date" class="font-semibold text-slate-700">--</span>
+                        <span id="article-date" class="font-semibold text-slate-700" title="Время в вашем часовом поясе">--</span>
                         <span>•</span>
                         <span id="article-geo" class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">
                             <i class="fa-solid fa-location-dot text-brand-red"></i> --
@@ -456,11 +456,80 @@
     </footer>
 
     <script>
+        function getLiveHeaderDate() {
+            const now = new Date();
+            const str = new Intl.DateTimeFormat('ru-RU', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            }).format(now).replace(/\s*г\.?$/, '');
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function formatArticleDateForReader(art) {
+            if (!art) return '';
+            const ts = art.timestamp || (art.createdAt ? new Date(art.createdAt).getTime() : null);
+            if (ts && !isNaN(ts)) {
+                const months = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+                const d = new Date(ts);
+                return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+            }
+            return art.date || '';
+        }
+
+        function formatArticleSidebarTime(art) {
+            if (!art) return '';
+            const ts = art.timestamp || (art.createdAt ? new Date(art.createdAt).getTime() : null);
+            if (ts && !isNaN(ts)) {
+                const d = new Date(ts);
+                return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+            }
+            const fullDate = art.date || '';
+            const timePart = fullDate.split(',')[1] || fullDate;
+            return (timePart || '').trim();
+        }
+
+        function openIdb() {
+            return new Promise((resolve) => {
+                if (!window.indexedDB) { resolve(null); return; }
+                const req = indexedDB.open('VestnikCMS_Storage_v4', 1);
+                req.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('state')) db.createObjectStore('state');
+                };
+                req.onsuccess = (e) => resolve(e.target.result);
+                req.onerror = () => resolve(null);
+            });
+        }
+
+        async function idbGet(key) {
+            const db = await openIdb();
+            if (!db) return null;
+            return new Promise((resolve) => {
+                const tx = db.transaction('state', 'readonly');
+                const req = tx.objectStore('state').get(key);
+                req.onsuccess = () => resolve(req.result || null);
+                req.onerror = () => resolve(null);
+            });
+        }
+
+        async function idbSet(key, val) {
+            const db = await openIdb();
+            if (!db) return;
+            return new Promise((resolve) => {
+                const tx = db.transaction('state', 'readwrite');
+                tx.objectStore('state').put(val, key);
+                tx.oncomplete = () => resolve(true);
+                tx.onerror = () => resolve(false);
+            });
+        }
+
         const DEFAULT_DB = {
             siteSettings: {
                 title: "ВЕСТНИК РОССИИ",
                 subtitle: "Федеральное информационное агентство",
-                currentDate: "Четверг, 15 октября 2026",
+                currentDate: getLiveHeaderDate(),
                 breakingNews: "ФСБ и Росфинмониторинг внесли командующего Сырными войсками Станислава Д. в тройной реестр иноагентов, экстремистов и террористов",
                 categories: ["Политика", "Безопасность", "Общество", "Происшествия", "Регионы", "Технологии", "Геотектоника"],
                 informers: [
@@ -495,11 +564,13 @@
             const requestedId = params.get('id');
 
             let remoteDB = null;
-            let localDB = null;
+            let localDB = await idbGet('vestnik_db_backup');
 
-            const localBackup = localStorage.getItem('vestnik_db_backup');
-            if (localBackup) {
-                try { localDB = JSON.parse(localBackup); } catch (e) {}
+            if (!localDB) {
+                const localBackup = localStorage.getItem('vestnik_db_backup');
+                if (localBackup) {
+                    try { localDB = JSON.parse(localBackup); } catch (e) {}
+                }
             }
 
             try {
@@ -512,9 +583,13 @@
                 }
             } catch (err) {}
 
-            if (remoteDB && localDB) {
-                const inRemote = requestedId && remoteDB.articles.some(a => a.id === requestedId);
-                const inLocal = requestedId && localDB.articles.some(a => a.id === requestedId);
+            const hasLocalEdits = localStorage.getItem('vestnik_has_local_edits') === 'true';
+
+            if (hasLocalEdits && localDB && Array.isArray(localDB.articles)) {
+                appDB = localDB;
+            } else if (remoteDB && localDB && Array.isArray(localDB.articles)) {
+                const inRemote = requestedId && remoteDB.articles.some(a => a && a.id === requestedId);
+                const inLocal = requestedId && localDB.articles.some(a => a && a.id === requestedId);
                 if (!inRemote && inLocal) {
                     appDB = localDB;
                 } else if (localDB.articles.length > remoteDB.articles.length) {
@@ -524,11 +599,11 @@
                 }
             } else if (remoteDB) {
                 appDB = remoteDB;
-            } else if (localDB) {
+            } else if (localDB && Array.isArray(localDB.articles)) {
                 appDB = localDB;
             }
 
-            const articles = appDB.articles || [];
+            const articles = (appDB.articles || []).filter(Boolean);
             currentArticle = articles.find(a => a.id === requestedId) || articles.find(a => a.isHero) || articles[0];
 
             renderTopAndHeader();
@@ -538,7 +613,7 @@
 
         function renderTopAndHeader() {
             const s = appDB.siteSettings || DEFAULT_DB.siteSettings;
-            document.getElementById('top-current-date').textContent = s.currentDate || "Четверг, 15 октября 2026";
+            document.getElementById('top-current-date').textContent = getLiveHeaderDate();
             document.getElementById('site-title-el').innerHTML = (s.title || "ВЕСТНИК РОССИИ").replace('РОССИИ', '<span class="text-brand-red">РОССИИ</span>');
             document.getElementById('site-subtitle-el').textContent = s.subtitle || "Федеральное информационное агентство";
             document.getElementById('breaking-news-text').innerHTML = s.breakingNews || "";
@@ -695,7 +770,7 @@
             catLink.textContent = currentArticle.category || "Общество";
             catLink.href = `index.html?category=${encodeURIComponent(currentArticle.category || 'Общество')}`;
 
-            document.getElementById('article-date').textContent = currentArticle.date || "";
+            document.getElementById('article-date').textContent = formatArticleDateForReader(currentArticle);
             document.getElementById('article-geo').innerHTML = `<i class="fa-solid fa-location-dot text-brand-red"></i> ${currentArticle.geo || 'РФ'}`;
             document.getElementById('article-title').textContent = currentArticle.title || "";
             document.getElementById('article-lead').textContent = currentArticle.lead || "";
@@ -737,7 +812,7 @@
             bodyContainer.innerHTML = currentArticle.body || `<p>${currentArticle.lead || ''}</p>`;
             normalizeArticleBodyStyles(bodyContainer);
 
-            const otherArticles = (appDB.articles || []).filter(a => a.id !== currentArticle.id).slice(0, 3);
+            const otherArticles = (appDB.articles || []).filter(a => a && a.id !== currentArticle.id).slice(0, 3);
             document.getElementById('related-articles-list').innerHTML = otherArticles.map(a => `
                 <a href="article.html?id=${encodeURIComponent(a.id)}" class="block text-slate-900 hover:text-brand-red transition leading-snug">
                     <i class="fa-solid fa-angle-right text-brand-red mr-1.5"></i> ${a.title}
@@ -805,6 +880,15 @@
             document.getElementById('react-' + type).textContent = saved[type];
         }
 
+        function formatCommentTime(c) {
+            if (!c) return 'Сегодня';
+            if (c.timestamp && !isNaN(c.timestamp)) {
+                const d = new Date(c.timestamp);
+                return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+            }
+            return c.time || 'Сегодня';
+        }
+
         function renderComments() {
             if (!currentArticle) return;
             const key = 'vestnik_comments_' + currentArticle.id;
@@ -825,7 +909,7 @@
                             ${c.author}
                             ${c.badge ? `<span class="text-brand-red font-mono ml-1">[${c.badge}]</span>` : ''}
                         </span>
-                        <span class="text-slate-400 font-mono text-[11px]">${c.time || 'Сегодня'}</span>
+                        <span class="text-slate-400 font-mono text-[11px]">${formatCommentTime(c)}</span>
                     </div>
                     <p class="text-xs sm:text-sm text-slate-700 leading-relaxed break-words">${c.text}</p>
                 </div>
@@ -845,7 +929,7 @@
 
             const now = new Date();
             const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-            existing.unshift({ author, badge, time: timeStr, text });
+            existing.unshift({ author, badge, time: timeStr, timestamp: now.getTime(), text });
 
             localStorage.setItem(key, JSON.stringify(existing));
             e.target.reset();
@@ -853,14 +937,14 @@
         }
 
         function renderSidebar() {
-            const articles = appDB.articles || [];
+            const articles = (appDB.articles || []).filter(Boolean);
             document.getElementById('sidebar-live-list').innerHTML = articles.map(art => {
                 const isCurrent = currentArticle && art.id === currentArticle.id;
-                const timePart = (art.date || "").split(',')[1] || art.date;
+                const localTimeStr = formatArticleSidebarTime(art);
                 return `
                     <div class="py-3 first:pt-0 last:pb-0">
                         <div class="flex items-center justify-between text-[11px] font-mono mb-1">
-                            <span class="text-brand-red font-bold">${(timePart || '').trim()}</span>
+                            <span class="text-brand-red font-bold" title="Время в вашем часовом поясе">${localTimeStr}</span>
                             <span class="text-slate-500 uppercase truncate max-w-[160px]">${art.geo || 'РФ'}</span>
                         </div>
                         <a href="article.html?id=${encodeURIComponent(art.id)}" class="block ${isCurrent ? 'text-brand-red font-bold' : 'text-slate-900 font-semibold hover:text-brand-red'} leading-snug transition">
@@ -981,14 +1065,18 @@
             btn.classList.toggle('bg-brand-red', inlineEditActive);
         }
 
-        function saveInlineToLocalAndGoAdmin() {
+        async function saveInlineToLocalAndGoAdmin() {
             if (currentArticle) {
                 currentArticle.title = document.getElementById('article-title').textContent.trim();
                 currentArticle.lead = document.getElementById('article-lead').textContent.trim();
                 currentArticle.body = document.getElementById('article-body').innerHTML.trim();
                 currentArticle.date = document.getElementById('article-date').textContent.trim();
                 currentArticle.caption = document.getElementById('article-caption').textContent.trim();
-                localStorage.setItem('vestnik_db_backup', JSON.stringify(appDB));
+                localStorage.setItem('vestnik_has_local_edits', 'true');
+                await idbSet('vestnik_db_backup', appDB);
+                try {
+                    localStorage.setItem('vestnik_db_backup', JSON.stringify(appDB));
+                } catch (e) {}
                 window.location.href = `admin.html?editId=${encodeURIComponent(currentArticle.id)}`;
             } else {
                 window.location.href = 'admin.html';
