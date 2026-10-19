@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS 4.2</title>
+    <title>ВЕСТНИК-CMS 4.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
                 <div class="min-w-0">
                     <div class="font-bold text-xs sm:text-base tracking-tight flex items-center gap-1.5 sm:gap-2">
                         <span class="truncate">ВЕСТНИК-CMS</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.2 PRO</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.3 PRO</span>
                     </div>
                     <div id="sync-status-line" class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">База db.json и Лор загружены</div>
                 </div>
@@ -108,7 +108,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                     <h1 class="font-headline font-bold text-lg sm:text-2xl text-slate-900">Управление материалами агентства</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">Все опубликованные и сгенерированные статьи в едином списке.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">При удалении статьи система автоматически очищает связанные с ней записи в Лоре, биографиях персонажей и информерах.</p>
                 </div>
                 <button onclick="startNewArticle()" class="w-full sm:w-auto justify-center bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer">
                     <i class="fa-solid fa-plus"></i>
@@ -164,6 +164,47 @@
                     </button>
                     <button onclick="saveArticleFromEditor(true)" class="px-4 py-2 text-xs sm:text-sm font-bold bg-brand-red hover:bg-brand-darkred text-white rounded-lg shadow-sm transition cursor-pointer">
                         <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> Сохранить и Push
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 text-white rounded-xl p-4 sm:p-5 border border-indigo-500/40 shadow-sm space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-sm font-bold"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                        <div>
+                            <h3 class="font-bold text-xs sm:text-sm">🤖 ИИ-Редактор открытой статьи (Дополнить / Переписать / Изменить формат)</h3>
+                            <p class="text-[11px] text-indigo-200">Опишите, что нужно добавить, исправить или как перестроить текущий материал, и ИИ обновит статью и Лор.</p>
+                        </div>
+                    </div>
+                    <label class="flex items-center gap-1.5 text-xs text-indigo-200 cursor-pointer">
+                        <input type="checkbox" id="ed-ai-sync-lore" checked class="w-3.5 h-3.5 accent-indigo-500">
+                        <span>Синхронизировать изменения с Лором</span>
+                    </label>
+                </div>
+
+                <div class="flex flex-wrap gap-1.5">
+                    <button type="button" onclick="setEditorAiQuickInstruction('Дополни статью 2-3 новыми абзацами с новыми абсурдными подробностями, реакцией ведомств и комментарием очевидца.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">➕ Дополнить новыми фактами</button>
+                    <button type="button" onclick="setEditorAiQuickInstruction('Перепиши статью в выбранном ниже виде верстки, сохранив ключевой сюжет, но полностью обновив подачу и спецблоки.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔄 Перестроить под выбранный вид верстки</button>
+                    <button type="button" onclick="setEditorAiQuickInstruction('Добавь внутрь статьи блок диалога «Вопрос — Ответ» (интервью с участником событий) и инфобокс с 3 главными цифрами.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🎙️ Встроить интервью и цифры</button>
+                    <button type="button" onclick="setEditorAiQuickInstruction('Усиль канцелярско-протокольный тон ТАСС/РБК и сделай бюрократические формулировки еще смешнее и острее.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔥 Усилить сатиру и официоз</button>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input
+                        type="text"
+                        id="ed-ai-instruction"
+                        placeholder="Что сделать со статьей? (Например: добавь в конец поворот про приезд комиссии из Москвы и таблицу-досье...)"
+                        class="flex-1 px-3.5 py-2 text-xs sm:text-sm bg-slate-900/90 text-white border border-indigo-400/40 rounded-lg focus:outline-none focus:border-indigo-400"
+                    >
+                    <button
+                        type="button"
+                        id="btn-ed-ai-rewrite"
+                        onclick="runAiRewriteInsideEditor()"
+                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-lg shrink-0 flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    >
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>Применить ИИ-правки</span>
                     </button>
                 </div>
             </div>
@@ -346,10 +387,10 @@
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + Фотослужба</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">9 Форматов + 10 Спецблоков</span>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Создание и ИИ-Редактирование</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Оптимизировано под лимиты <code>gemini-3.5-flash-lite</code> (500 запросов/день). Выбирайте жанр статьи (интервью, разбор, колонка, репортаж, проверка слухов) и разнообразные редакционные спецблоки.
+                            Создавайте новые материалы с нуля или выбирайте любую существующую новость для её дополнения, переписывания и обновления фактов в Лоре.
                         </p>
                     </div>
                 </div>
@@ -357,7 +398,14 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
                 <div class="lg:col-span-8 bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 space-y-4">
-                    <label class="block text-xs font-bold text-slate-700">Задание для ИИ-корреспондента (опишите идею, героя интерью или поворот сюжета):</label>
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                        <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">Режим работы ИИ-Ньюсрума:</label>
+                        <select id="ai-target-article-select" onchange="handleAiTargetArticleChange()" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg font-bold text-slate-900">
+                            <option value="NEW">🆕 Создать совершенно новую статью с нуля</option>
+                        </select>
+                    </div>
+
+                    <label id="ai-prompt-label" class="block text-xs font-bold text-slate-700">Задание для ИИ-корреспондента (опишите идею, героя интервью или инструкции по переработке):</label>
                     <textarea id="ai-prompt-input" rows="4" placeholder="Например: Возьми блиц-интервью у Андрея Б. на передовой о том, как творожный бронежилет защищает от термосов с шиповником, и добавь статистику расхода сметаны..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"></textarea>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -367,6 +415,7 @@
                                 <option value="ai_photo_free">📸 Бесплатный ИИ-генератор фото (FLUX — без лимитов)</option>
                                 <option value="ai_photo_hybrid">📸 Авто-гибрид (Google Nano Banana -> Бесплатный FLUX)</option>
                                 <option value="ai_photo_google">📸 Только Google API (Nano Banana / Imagen)</option>
+                                <option value="keep_existing">🖼️ Оставить текущее фото/режим (при правке статьи)</option>
                                 <option value="radar">📡 Плейсхолдер: Радар / Камера спецконтроля</option>
                                 <option value="none">📄 Без фото и без плейсхолдера (Только текст)</option>
                             </select>
@@ -441,11 +490,11 @@
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-2">
                         <button type="button" onclick="runGeminiGenerator(false)" class="w-full sm:w-auto justify-center px-4 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer">
                             <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            <span>Сгенерировать и открыть в редакторе</span>
+                            <span id="btn-ai-main-label">Сгенерировать и открыть в редакторе</span>
                         </button>
                         <button type="button" onclick="runGeminiGenerator(true)" class="w-full sm:w-auto justify-center px-4 py-3 bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm flex items-center gap-2 transition cursor-pointer">
                             <i class="fa-solid fa-bolt"></i>
-                            <span>Автопилот: Сгенерировать + Push в GitHub</span>
+                            <span>Автопилот: Выполнить + Push в GitHub</span>
                         </button>
                     </div>
 
@@ -662,6 +711,8 @@
     </main>
 
     <script>
+        const CANON_CHAR_IDS = ["stanislav-d", "andrey-b", "miroslav-k", "german-f"];
+
         const FALLBACK_LORE = {
             universeName: "Хроники Вестника России (2026–2027)",
             styleDirectives: "Писать строго в стиле ТАСС, РБК, Коммерсантъ: сухой канцелярско-протокольный тон при описании абсурдных событий.",
@@ -714,6 +765,42 @@
         let appLore = JSON.parse(JSON.stringify(FALLBACK_LORE));
         let editingOriginalId = null;
         window._lastAiGeneratedComments = null;
+        window._lastAiMeta = null;
+
+        function openIdb() {
+            return new Promise((resolve) => {
+                if (!window.indexedDB) { resolve(null); return; }
+                const req = indexedDB.open('VestnikCMS_Storage_v4', 1);
+                req.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('state')) db.createObjectStore('state');
+                };
+                req.onsuccess = (e) => resolve(e.target.result);
+                req.onerror = () => resolve(null);
+            });
+        }
+
+        async function idbSet(key, val) {
+            const db = await openIdb();
+            if (!db) return;
+            return new Promise((resolve) => {
+                const tx = db.transaction('state', 'readwrite');
+                tx.objectStore('state').put(val, key);
+                tx.oncomplete = () => resolve(true);
+                tx.onerror = () => resolve(false);
+            });
+        }
+
+        async function idbGet(key) {
+            const db = await openIdb();
+            if (!db) return null;
+            return new Promise((resolve) => {
+                const tx = db.transaction('state', 'readonly');
+                const req = tx.objectStore('state').get(key);
+                req.onsuccess = () => resolve(req.result || null);
+                req.onerror = () => resolve(null);
+            });
+        }
 
         async function initCMS() {
             const ghConf = JSON.parse(localStorage.getItem('vestnik_gh_config') || '{}');
@@ -736,16 +823,17 @@
             if (geminiConf.protocol) document.getElementById('gemini-protocol').value = geminiConf.protocol;
             localStorage.setItem('vestnik_gemini_config', JSON.stringify(geminiConf));
 
-            let localDB = null;
-            let remoteDB = null;
-            try {
-                const rawLocal = localStorage.getItem('vestnik_db_backup');
-                if (rawLocal) {
-                    const parsed = JSON.parse(rawLocal);
-                    if (parsed && Array.isArray(parsed.articles)) localDB = parsed;
-                }
-            } catch (e) {}
+            const hasLocalEdits = localStorage.getItem('vestnik_has_local_edits') === 'true';
 
+            let localDB = await idbGet('vestnik_db_backup');
+            if (!localDB) {
+                try {
+                    const rawLocal = localStorage.getItem('vestnik_db_backup');
+                    if (rawLocal) localDB = JSON.parse(rawLocal);
+                } catch (e) {}
+            }
+
+            let remoteDB = null;
             try {
                 const res = await fetch('./db.json?t=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
@@ -754,24 +842,25 @@
                 }
             } catch (e) {}
 
-            if (localDB && remoteDB) {
+            if (hasLocalEdits && localDB && Array.isArray(localDB.articles)) {
+                appDB = localDB;
+            } else if (localDB && remoteDB) {
                 appDB = localDB.articles.length >= remoteDB.articles.length ? localDB : remoteDB;
-            } else if (localDB) {
+            } else if (localDB && Array.isArray(localDB.articles)) {
                 appDB = localDB;
             } else if (remoteDB) {
                 appDB = remoteDB;
             }
 
-            let localLore = null;
-            try {
-                const rawLore = localStorage.getItem('vestnik_lore_backup');
-                if (rawLore) {
-                    const parsed = JSON.parse(rawLore);
-                    if (parsed && Array.isArray(parsed.characters)) localLore = parsed;
-                }
-            } catch (e) {}
+            let localLore = await idbGet('vestnik_lore_backup');
+            if (!localLore) {
+                try {
+                    const rawLore = localStorage.getItem('vestnik_lore_backup');
+                    if (rawLore) localLore = JSON.parse(rawLore);
+                } catch (e) {}
+            }
 
-            if (localLore) {
+            if (localLore && Array.isArray(localLore.characters)) {
                 appLore = localLore;
             } else {
                 try {
@@ -787,6 +876,7 @@
             if (searchInput) searchInput.value = '';
 
             populateCategoryFilters();
+            populateAiTargetArticlesDropdown();
             document.getElementById('admin-cat-filter').value = 'ALL';
             renderAdminArticlesList();
             populateSiteSettingsForm();
@@ -815,10 +905,23 @@
         }
 
         function persistLocalBackup() {
+            localStorage.setItem('vestnik_has_local_edits', 'true');
+            idbSet('vestnik_db_backup', appDB);
+            idbSet('vestnik_lore_backup', appLore);
             try {
                 localStorage.setItem('vestnik_db_backup', JSON.stringify(appDB));
                 localStorage.setItem('vestnik_lore_backup', JSON.stringify(appLore));
-            } catch (e) {}
+            } catch (e) {
+                try {
+                    const slimDB = JSON.parse(JSON.stringify(appDB));
+                    (slimDB.articles || []).forEach(a => {
+                        if (a.image && a.image.startsWith('data:image')) a.image = '';
+                    });
+                    localStorage.setItem('vestnik_db_backup', JSON.stringify(slimDB));
+                    localStorage.setItem('vestnik_lore_backup', JSON.stringify(appLore));
+                } catch (e2) {}
+            }
+            populateAiTargetArticlesDropdown();
             updateAiMemoryStats();
         }
 
@@ -847,12 +950,65 @@
             if (tabName === 'list') {
                 populateCategoryFilters();
                 renderAdminArticlesList();
+            } else if (tabName === 'ai') {
+                populateAiTargetArticlesDropdown();
             }
+        }
+
+        function populateAiTargetArticlesDropdown() {
+            const select = document.getElementById('ai-target-article-select');
+            if (!select) return;
+            const currentVal = select.value || 'NEW';
+            const optionsHtml = [`<option value="NEW">🆕 Создать совершенно новую статью с нуля</option>`];
+            (appDB.articles || []).forEach(art => {
+                if (art && art.id) {
+                    optionsHtml.push(`<option value="${escapeAttr(art.id)}">✏️ Редактировать / дополнить: ${escapeAttr((art.title || '').slice(0, 75))} [${escapeAttr(art.id)}]</option>`);
+                }
+            });
+            select.innerHTML = optionsHtml.join('');
+            if ([...(appDB.articles || [])].some(a => a && a.id === currentVal)) {
+                select.value = currentVal;
+            } else {
+                select.value = 'NEW';
+            }
+        }
+
+        function handleAiTargetArticleChange() {
+            const val = document.getElementById('ai-target-article-select').value;
+            const label = document.getElementById('ai-prompt-label');
+            const btnLabel = document.getElementById('btn-ai-main-label');
+            const input = document.getElementById('ai-prompt-input');
+            const visSelect = document.getElementById('ai-visual-mode');
+
+            if (val === 'NEW') {
+                label.textContent = "Задание для ИИ-корреспондента (опишите идею новой статьи):";
+                btnLabel.textContent = "Сгенерировать и открыть в редакторе";
+                input.placeholder = "Например: Возьми блиц-интервью у Андрея Б. на передовой о том, как творожный бронежилет защищает от термосов с шиповником...";
+            } else {
+                const art = (appDB.articles || []).find(a => a && a.id === val);
+                label.textContent = `Инструкция по ИИ-редактированию статьи «${(art?.title || val).slice(0, 60)}...»:`;
+                btnLabel.textContent = "Обновить статью через ИИ и открыть в редакторе";
+                input.placeholder = "Напишите, что дополнить, переписать или изменить в этой статье (например: добавь раздел с комментарием эксперта, обнови цифры и переделай под выбранный жанр)...";
+                if (art && art.layoutType) document.getElementById('ai-layout-type').value = art.layoutType;
+                if (art && art.category) document.getElementById('ai-target-category').value = art.category;
+                visSelect.value = 'keep_existing';
+            }
+        }
+
+        function openArticleInAiNewsroom(id) {
+            populateAiTargetArticlesDropdown();
+            const select = document.getElementById('ai-target-article-select');
+            if (select) {
+                select.value = id;
+                handleAiTargetArticleChange();
+            }
+            switchTab('ai');
+            document.getElementById('ai-prompt-input').focus();
         }
 
         function populateCategoryFilters() {
             const baseCats = (appDB.siteSettings && Array.isArray(appDB.siteSettings.categories)) ? appDB.siteSettings.categories : FALLBACK_DB.siteSettings.categories;
-            const articleCats = (appDB.articles || []).map(a => a.category).filter(Boolean);
+            const articleCats = (appDB.articles || []).map(a => a && a.category).filter(Boolean);
             const allCats = [...new Set([...baseCats, ...articleCats])];
 
             const select = document.getElementById('admin-cat-filter');
@@ -898,16 +1054,18 @@
             const q = (document.getElementById('admin-search-input')?.value || "").trim().toLowerCase();
             const cat = document.getElementById('admin-cat-filter')?.value || "ALL";
 
-            const filtered = articles.filter(art => {
-                if (!art) return false;
-                const matchCat = !cat || cat === "ALL" || art.category === cat;
-                const matchQ = !q ||
-                    String(art.title || '').toLowerCase().includes(q) ||
-                    String(art.id || '').toLowerCase().includes(q) ||
-                    String(art.geo || '').toLowerCase().includes(q) ||
-                    String(art.lead || '').toLowerCase().includes(q);
-                return matchCat && matchQ;
-            });
+            const filtered = articles
+                .map((art, originalIdx) => ({ art, originalIdx }))
+                .filter(({ art }) => {
+                    if (!art) return false;
+                    const matchCat = !cat || cat === "ALL" || art.category === cat;
+                    const matchQ = !q ||
+                        String(art.title || '').toLowerCase().includes(q) ||
+                        String(art.id || '').toLowerCase().includes(q) ||
+                        String(art.geo || '').toLowerCase().includes(q) ||
+                        String(art.lead || '').toLowerCase().includes(q);
+                    return matchCat && matchQ;
+                });
 
             if (filtered.length === 0) {
                 container.innerHTML = `
@@ -919,7 +1077,7 @@
                 return;
             }
 
-            container.innerHTML = filtered.map(art => {
+            container.innerHTML = filtered.map(({ art, originalIdx }) => {
                 const safeId = escapeAttr(art.id || '');
                 return `
                     <div class="p-4 sm:p-5 flex flex-col md:flex-row md:items-start justify-between gap-3.5 transition ${art.isHero ? 'bg-red-50/40' : 'hover:bg-slate-50'}">
@@ -927,7 +1085,7 @@
                             <div class="flex flex-wrap items-center gap-2">
                                 ${art.isHero
                                     ? `<span class="bg-brand-red text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded">★ Главная</span>`
-                                    : `<button onclick="makeArticleHero('${safeId}')" class="text-[11px] text-slate-500 bg-slate-100 hover:bg-red-100 hover:text-brand-red px-2 py-0.5 rounded font-semibold transition cursor-pointer">Сделать главной</button>`
+                                    : `<button onclick="makeArticleHeroByIndex(${originalIdx})" class="text-[11px] text-slate-500 bg-slate-100 hover:bg-red-100 hover:text-brand-red px-2 py-0.5 rounded font-semibold transition cursor-pointer">Сделать главной</button>`
                                 }
                                 <span class="bg-slate-100 text-brand-red font-bold text-[11px] uppercase px-2 py-0.5 rounded">${art.category || 'Сводка'}</span>
                                 ${getLayoutBadgeHtml(art.layoutType, art.visualMode, !!art.image)}
@@ -938,14 +1096,17 @@
                             <div class="font-bold text-sm sm:text-base text-slate-900 leading-snug">${art.title || 'Без заголовка'}</div>
                             <div class="text-xs text-slate-500 line-clamp-2 leading-relaxed">${art.lead || ''}</div>
                         </div>
-                        <div class="flex items-center gap-1.5 shrink-0 pt-1 md:pt-0">
-                            <button onclick="openArticleInEditor('${safeId}')" class="flex-1 md:flex-initial justify-center px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer">
+                        <div class="flex flex-wrap items-center gap-1.5 shrink-0 pt-1 md:pt-0">
+                            <button onclick="openArticleInEditorByIndex(${originalIdx})" class="flex-1 md:flex-initial justify-center px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer" title="Открыть в редакторе (доступна ручная и ИИ-правка)">
                                 <i class="fa-solid fa-pen"></i><span>Править</span>
                             </button>
-                            <a href="article.html?id=${encodeURIComponent(art.id || '')}" target="_blank" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1">
-                                <i class="fa-solid fa-eye"></i><span class="md:hidden lg:inline">Открыть</span>
+                            <button onclick="openArticleInAiNewsroom('${safeId}')" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer" title="Переписать или дополнить через ИИ-Ньюсрум">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i><span>ИИ</span>
+                            </button>
+                            <a href="article.html?id=${encodeURIComponent(art.id || '')}" target="_blank" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1">
+                                <i class="fa-solid fa-eye"></i>
                             </a>
-                            <button onclick="deleteArticle('${safeId}')" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-lg text-xs font-semibold cursor-pointer">
+                            <button onclick="deleteArticleByIndex(${originalIdx})" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-lg text-xs font-semibold cursor-pointer" title="Удалить статью и очистить её следы в Лоре">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
@@ -956,6 +1117,201 @@
 
         function escapeAttr(str) {
             return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function extractDistinctiveKeywords(art) {
+            const text = `${art.title || ''} ${art.lead || ''}`.toLowerCase();
+            const stopWords = new Set(['в', 'и', 'на', 'с', 'по', 'из', 'за', 'к', 'о', 'от', 'для', 'что', 'как', 'не', 'но', 'а', 'у', 'же', 'бы', 'то', 'все', 'его', 'ее', 'их', 'при', 'после', 'из-за', 'через', 'над', 'под', 'между', 'будет', 'были', 'был', 'была', 'это', 'этом', 'россии', 'рф', 'года', 'году', 'станислав', 'андрей', 'мирослав', 'герман', 'владикавказ', 'анапа', 'таганрог', 'петербург', 'башкортостан', 'мелеуз']);
+            const words = text.match(/[а-яёa-z0-9-]{5,}/gi) || [];
+            return [...new Set(words.filter(w => !stopWords.has(w)))];
+        }
+
+        function cleanupLoreAndDbForDeletedArticle(deletedArt, remainingArticles) {
+            let removedTimelineCount = 0;
+            let removedCharsCount = 0;
+            let revertedBioCount = 0;
+            let unlinkedArticlesCount = 0;
+
+            const delId = String(deletedArt.id || '').trim();
+            const remainingCorpus = remainingArticles.map(a => `${a.title || ''} ${a.lead || ''} ${stripHtmlForContext(a.body || '')} ${a.geo || ''}`).join(' ').toLowerCase();
+
+            if (delId) {
+                remainingArticles.forEach(art => {
+                    if (!art || !art.body || !art.body.includes(delId)) return;
+                    const tmp = document.createElement('div');
+                    tmp.innerHTML = art.body;
+                    tmp.querySelectorAll('a').forEach(link => {
+                        const href = link.getAttribute('href') || '';
+                        if (href.includes(delId)) {
+                            const wrapper = link.closest('div') || link.parentElement;
+                            if (wrapper && wrapper !== tmp) {
+                                wrapper.remove();
+                                unlinkedArticlesCount++;
+                            } else {
+                                link.remove();
+                            }
+                        }
+                    });
+                    art.body = tmp.innerHTML;
+                });
+            }
+
+            if (appDB.siteSettings && Array.isArray(appDB.siteSettings.informers)) {
+                appDB.siteSettings.informers = appDB.siteSettings.informers.filter(inf => {
+                    if (inf.articleId === delId) {
+                        const replacement = remainingArticles.find(a => (a.geo || '').toLowerCase().includes((inf.city || '').toLowerCase()));
+                        if (replacement) {
+                            inf.articleId = replacement.id;
+                            return true;
+                        }
+                        return false;
+                    }
+                    return true;
+                });
+            }
+
+            const meta = deletedArt.aiMeta || {};
+
+            if (meta.newTimelineEvent && Array.isArray(appLore.timeline)) {
+                const beforeLen = appLore.timeline.length;
+                appLore.timeline = appLore.timeline.filter(ev => ev !== meta.newTimelineEvent && !ev.includes(meta.newTimelineEvent));
+                removedTimelineCount += (beforeLen - appLore.timeline.length);
+            }
+
+            if (Array.isArray(meta.addedCharNames) && meta.addedCharNames.length > 0) {
+                const addedSet = new Set(meta.addedCharNames.map(n => n.toLowerCase()));
+                const beforeLen = (appLore.characters || []).length;
+                appLore.characters = (appLore.characters || []).filter(ch => {
+                    if (CANON_CHAR_IDS.includes(ch.id)) return true;
+                    return !addedSet.has((ch.name || '').toLowerCase());
+                });
+                removedCharsCount += (beforeLen - appLore.characters.length);
+            }
+
+            if (Array.isArray(meta.charSnapshots)) {
+                meta.charSnapshots.forEach(snap => {
+                    const ch = (appLore.characters || []).find(c => c.id === snap.id || (c.name || '').toLowerCase() === (snap.name || '').toLowerCase());
+                    if (ch) {
+                        if (snap.appendBiography && ch.biography && ch.biography.includes(snap.appendBiography)) {
+                            ch.biography = ch.biography.replace(snap.appendBiography, '').replace(/\s{2,}/g, ' ').trim();
+                            revertedBioCount++;
+                        }
+                        if (snap.prevLocation && ch.currentLocation === snap.newLocation) {
+                            ch.currentLocation = snap.prevLocation;
+                        }
+                        if (snap.prevStatus && ch.status === snap.newStatus) {
+                            ch.status = snap.prevStatus;
+                        }
+                    }
+                });
+            }
+
+            const uniqueKeywords = extractDistinctiveKeywords(deletedArt).filter(kw => !remainingCorpus.includes(kw));
+
+            if (Array.isArray(appLore.timeline) && uniqueKeywords.length > 0) {
+                const beforeLen = appLore.timeline.length;
+                appLore.timeline = appLore.timeline.filter((ev, idx) => {
+                    if (idx < 2) return true;
+                    const evLower = String(ev || '').toLowerCase();
+                    const matchesUnique = uniqueKeywords.filter(kw => evLower.includes(kw)).length;
+                    return matchesUnique < 2;
+                });
+                removedTimelineCount += (beforeLen - appLore.timeline.length);
+            }
+
+            if (Array.isArray(appLore.characters)) {
+                const beforeChars = appLore.characters.length;
+                appLore.characters = appLore.characters.filter(ch => {
+                    if (CANON_CHAR_IDS.includes(ch.id)) {
+                        if (uniqueKeywords.length > 0 && ch.biography) {
+                            const sentences = ch.biography.split(/(?<=[.!?])\s+/);
+                            const filteredSentences = sentences.filter(s => {
+                                const sLow = s.toLowerCase();
+                                const hits = uniqueKeywords.filter(kw => sLow.includes(kw)).length;
+                                if (hits >= 2) {
+                                    revertedBioCount++;
+                                    return false;
+                                }
+                                return true;
+                            });
+                            ch.biography = filteredSentences.join(' ').trim();
+                        }
+                        return true;
+                    }
+                    const charNameLow = String(ch.name || '').toLowerCase().trim();
+                    if (!charNameLow) return false;
+                    const mentionedInDeleted = `${deletedArt.title || ''} ${deletedArt.lead || ''} ${deletedArt.body || ''}`.toLowerCase().includes(charNameLow);
+                    const mentionedInRemaining = remainingCorpus.includes(charNameLow);
+                    if (mentionedInDeleted && !mentionedInRemaining) {
+                        return false;
+                    }
+                    return true;
+                });
+                removedCharsCount += (beforeChars - appLore.characters.length);
+            }
+
+            if (deletedArt.isHero && remainingArticles.length > 0) {
+                remainingArticles[0].isHero = true;
+                if (appDB.siteSettings && appDB.siteSettings.breakingNews && uniqueKeywords.some(kw => appDB.siteSettings.breakingNews.toLowerCase().includes(kw))) {
+                    appDB.siteSettings.breakingNews = remainingArticles[0].title;
+                }
+            }
+
+            try {
+                localStorage.removeItem('vestnik_comments_' + delId);
+                localStorage.removeItem('vestnik_react_' + delId);
+            } catch (e) {}
+
+            return { removedTimelineCount, removedCharsCount, revertedBioCount, unlinkedArticlesCount };
+        }
+
+        function deleteArticleByIndex(idx) {
+            const art = (appDB.articles || [])[idx];
+            if (!art) return;
+            if (!confirm(`Удалить материал «${art.title}»?\n\nВсе связанные с ним добавления в Лоре, биографиях персонажей и перекрестных ссылках будут автоматически вырезаны.`)) return;
+
+            const deletedArt = appDB.articles.splice(idx, 1)[0];
+            const stats = cleanupLoreAndDbForDeletedArticle(deletedArt, appDB.articles);
+
+            if (editingOriginalId === deletedArt.id) {
+                editingOriginalId = null;
+            }
+
+            persistLocalBackup();
+            populateCategoryFilters();
+            renderAdminArticlesList();
+            populateSiteSettingsForm();
+            renderLoreUI();
+
+            const details = [];
+            if (stats.removedTimelineCount > 0) details.push(`хронология: -${stats.removedTimelineCount}`);
+            if (stats.removedCharsCount > 0) details.push(`персонажи: -${stats.removedCharsCount}`);
+            if (stats.revertedBioCount > 0) details.push(`биографии очищены: ${stats.revertedBioCount}`);
+            if (stats.unlinkedArticlesCount > 0) details.push(`ссылки: -${stats.unlinkedArticlesCount}`);
+
+            showToast(`Статья удалена! ${details.length ? '(' + details.join(', ') + ')' : 'База и Лор обновлены.'}`);
+        }
+
+        function deleteArticle(id) {
+            const idx = (appDB.articles || []).findIndex(a => a && a.id === id);
+            if (idx !== -1) deleteArticleByIndex(idx);
+        }
+
+        function makeArticleHeroByIndex(idx) {
+            (appDB.articles || []).forEach((a, i) => { if (a) a.isHero = (i === idx); });
+            persistLocalBackup();
+            renderAdminArticlesList();
+            showToast("Назначена главная новость дня!");
+        }
+
+        function makeArticleHero(id) {
+            const idx = (appDB.articles || []).findIndex(a => a && a.id === id);
+            if (idx !== -1) makeArticleHeroByIndex(idx);
+        }
+
+        function openArticleInEditorByIndex(idx) {
+            const art = (appDB.articles || [])[idx];
+            if (art) openArticleInEditor(art.id, art);
         }
 
         function renderLoreUI() {
@@ -1145,6 +1501,170 @@
             }
         }
 
+        function setEditorAiQuickInstruction(text) {
+            const input = document.getElementById('ed-ai-instruction');
+            if (input) {
+                input.value = text;
+                input.focus();
+            }
+        }
+
+        function applyLoreUpdatesAndRecordMeta(loreUpdates, articleGeo, prevMeta = null) {
+            const meta = prevMeta || { newTimelineEvent: null, addedCharNames: [], charSnapshots: [] };
+            if (!loreUpdates) return meta;
+
+            if (loreUpdates.newTimelineEvent) {
+                if (meta.newTimelineEvent && Array.isArray(appLore.timeline)) {
+                    appLore.timeline = appLore.timeline.filter(e => e !== meta.newTimelineEvent);
+                }
+                appLore.timeline.push(loreUpdates.newTimelineEvent);
+                meta.newTimelineEvent = loreUpdates.newTimelineEvent;
+            }
+
+            if (Array.isArray(loreUpdates.characterUpdates)) {
+                loreUpdates.characterUpdates.forEach(upd => {
+                    if (!upd || !upd.name) return;
+                    const existingChar = (appLore.characters || []).find(c =>
+                        c.name.toLowerCase().includes(upd.name.toLowerCase()) ||
+                        upd.name.toLowerCase().includes(c.name.toLowerCase())
+                    );
+                    if (existingChar) {
+                        const snap = {
+                            id: existingChar.id,
+                            name: existingChar.name,
+                            prevLocation: existingChar.currentLocation,
+                            newLocation: upd.currentLocation || existingChar.currentLocation,
+                            prevStatus: existingChar.status,
+                            newStatus: upd.status || existingChar.status,
+                            appendBiography: upd.appendBiography || ''
+                        };
+                        if (upd.currentLocation) existingChar.currentLocation = upd.currentLocation;
+                        if (upd.status) existingChar.status = upd.status;
+                        if (upd.appendBiography && !existingChar.biography.includes(upd.appendBiography)) {
+                            existingChar.biography = (existingChar.biography + " " + upd.appendBiography).trim();
+                        }
+                        meta.charSnapshots.push(snap);
+                    } else {
+                        const newChar = {
+                            id: "char-" + Date.now().toString().slice(-4) + "-" + Math.floor(Math.random() * 90 + 10),
+                            name: upd.name,
+                            age: 25,
+                            origin: articleGeo || "РФ",
+                            currentLocation: upd.currentLocation || articleGeo || "РФ",
+                            role: "Фигурант сводки",
+                            status: upd.status || "Активен",
+                            biography: upd.appendBiography || ""
+                        };
+                        appLore.characters.push(newChar);
+                        meta.addedCharNames.push(newChar.name);
+                    }
+                });
+            }
+            renderLoreUI();
+            return meta;
+        }
+
+        async function runAiRewriteInsideEditor() {
+            const conf = saveGeminiConfig();
+            if (!conf.apiKey) {
+                switchTab('ai');
+                showToast("Сначала укажите ваш Gemini API Key!", true);
+                return;
+            }
+
+            const instruction = document.getElementById('ed-ai-instruction').value.trim();
+            if (!instruction) {
+                showToast("Напишите, что именно ИИ должен дополнить или изменить в статье!", true);
+                document.getElementById('ed-ai-instruction').focus();
+                return;
+            }
+
+            const curTitle = document.getElementById('ed-title').value.trim();
+            const curLead = document.getElementById('ed-lead').value.trim();
+            const curBody = document.getElementById('ed-body').value.trim();
+            const curGeo = document.getElementById('ed-geo').value.trim() || "РФ";
+            const curCat = document.getElementById('ed-category').value.trim() || "Общество";
+            const curLayout = document.getElementById('ed-layout').value || "standard";
+            const syncLore = document.getElementById('ed-ai-sync-lore').checked;
+
+            const btn = document.getElementById('btn-ed-ai-rewrite');
+            const origHTML = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading"></i> ИИ перерабатывает статью...`;
+
+            const layoutGuide = getLayoutPromptGuide(curLayout);
+            const blocksGuide = getSpecialBlocksPromptGuide('DYNAMIC_MIX');
+
+            const systemInstruction = `Ты — главный редактор сатирического агентства «ВЕСТНИК РОССИИ» (стиль ТАСС, РБК, Коммерсантъ).
+Перед тобой существующая статья. Твоя задача — отредактировать, дополнить или переписать её строго по указанию главного редактора, соблюдая канон из universe_lore.json.
+
+ЦЕЛЕВОЙ ЖАНР И ВИД ВЕРСТКИ (${curLayout}):
+${layoutGuide}
+
+ДОСТУПНЫЕ СПЕЦБЛОКИ ДЛЯ ОБОГАЩЕНИЯ ТЕКСТА:
+${blocksGuide}
+
+ПРАВИЛА БЕЗОПАСНОГО HTML В ПОЛЕ "body":
+1. Во всех HTML-тегах внутри "body" используй ТОЛЬКО одинарные кавычки (') для атрибутов class и id!
+2. Для текста используй кавычки-ёлочки «...».
+3. НИКОГДА не создавай пустых тегов <div></div> и не ставь темный текст на темный фон.
+
+Верни СТРОГО валидный JSON:
+{
+  "article": {
+    "title": "Обновленный или сохраненный заголовок",
+    "lead": "Обновленный лид-абзац",
+    "category": "${curCat}",
+    "geo": "${curGeo}",
+    "badgeType": "ЗАГОЛОВОК РАДАРА",
+    "badgeTelemetry": "ТЕЛЕМЕТРИЯ",
+    "caption": "Подпись под фото",
+    "tags": ["Тег1", "Тег2"],
+    "body": "<p>Полный обновленный HTML-текст статьи со всеми абзацами и спецблоками...</p>",
+    "comments": [{"author": "Имя", "badge": "Город", "time": "Только что", "text": "Комментарий"}]
+  },
+  "loreUpdates": {
+    "newTimelineEvent": "Краткая запись о новых фактах статьи для хронологии (или пустая строка)",
+    "characterUpdates": [{"name": "Имя", "currentLocation": "Локация", "status": "Статус", "appendBiography": "Новый факт биографии"}]
+  }
+}`;
+
+            const userPayload = `БАЗА ЛОРА:\n${JSON.stringify(appLore)}\n\nТЕКУЩАЯ СТАТЬЯ ДЛЯ РЕДАКТИРОВАНИЯ:\nЗаголовок: ${curTitle}\nЛид: ${curLead}\nГео: ${curGeo}\nТекущий HTML-текст:\n${curBody}\n\nУКАЗАНИЕ ПО РЕДАКТИРОВАНИЮ И ДОПОЛНЕНИЮ:\n${instruction}`;
+
+            try {
+                const rawText = await callGeminiAPI(conf, systemInstruction, userPayload);
+                const parsed = parseModelJsonSafely(rawText);
+                const updArt = parsed.article;
+                if (!updArt || !updArt.body) throw new Error("ИИ не вернул обновленный текст статьи");
+
+                if (updArt.title) document.getElementById('ed-title').value = updArt.title;
+                if (updArt.lead) document.getElementById('ed-lead').value = updArt.lead;
+                if (updArt.category) document.getElementById('ed-category').value = updArt.category;
+                if (updArt.geo) document.getElementById('ed-geo').value = updArt.geo;
+                if (updArt.badgeType) document.getElementById('ed-badgetype').value = updArt.badgeType;
+                if (updArt.badgeTelemetry) document.getElementById('ed-badgetelemetry').value = updArt.badgeTelemetry;
+                if (updArt.caption) document.getElementById('ed-caption').value = updArt.caption;
+                if (Array.isArray(updArt.tags) && updArt.tags.length > 0) {
+                    document.getElementById('ed-tags').value = updArt.tags.join(', ');
+                }
+                document.getElementById('ed-body').value = updArt.body;
+                if (Array.isArray(updArt.comments) && updArt.comments.length > 0) {
+                    window._lastAiGeneratedComments = updArt.comments;
+                }
+
+                if (syncLore && parsed.loreUpdates) {
+                    const existingArt = (appDB.articles || []).find(a => a && a.id === (editingOriginalId || document.getElementById('ed-id').value));
+                    window._lastAiMeta = applyLoreUpdatesAndRecordMeta(parsed.loreUpdates, updArt.geo || curGeo, existingArt?.aiMeta || null);
+                }
+
+                updateLivePreview();
+                showToast("ИИ-правки применены! Нажмите «Сохранить в базу», чтобы зафиксировать результат.");
+            } catch (err) {
+                showToast("Ошибка ИИ-редактирования: " + err.message, true);
+            } finally {
+                btn.innerHTML = origHTML;
+            }
+        }
+
         function extractTextFromGeminiResponse(result) {
             if (!result) return null;
             if (typeof result.output_text === 'string' && result.output_text.trim()) return result.output_text;
@@ -1287,6 +1807,12 @@
             throw lastErr || new Error("Все модели Gemini временно недоступны.");
         }
 
+        function stripHtmlForContext(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html || '';
+            return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+        }
+
         function getLayoutPromptGuide(layoutType) {
             const guides = {
                 standard: "КЛАССИЧЕСКИЙ РЕПОРТАЖ: сбалансированная новостная статья с вводной частью, подзаголовками H2, комментариями ведомств и деталями с места.",
@@ -1347,6 +1873,9 @@
             const userPrompt = document.getElementById('ai-prompt-input').value.trim();
             if (!userPrompt) { showToast("Напишите задание для статьи!", true); return; }
 
+            const targetMode = document.getElementById('ai-target-article-select').value || 'NEW';
+            const existingTargetArt = targetMode !== 'NEW' ? (appDB.articles || []).find(a => a && a.id === targetMode) : null;
+
             const visualModeChoice = document.getElementById('ai-visual-mode').value;
             const layoutTypeChoice = document.getElementById('ai-layout-type').value;
             const useLore = document.getElementById('ai-use-lore').checked;
@@ -1359,7 +1888,7 @@
 
             const statusBox = document.getElementById('ai-status-box');
             statusBox.classList.remove('hidden');
-            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Генерация [${layoutTypeChoice.toUpperCase()} / ${specialBlocks}] через <strong>${conf.model}</strong>...</div>`;
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>${existingTargetArt ? 'ИИ-редактирование статьи [' + existingTargetArt.id + ']' : 'Генерация новой статьи'} [${layoutTypeChoice.toUpperCase()} / ${specialBlocks}] через <strong>${conf.model}</strong>...</div>`;
 
             const digest = useArticles
                 ? (appDB.articles || []).slice(0, 12).map((a, i) => `#${i + 1} [ID:${a.id} | ${a.geo}] ${a.title} — ${a.lead}`).join('\n')
@@ -1368,8 +1897,12 @@
             const layoutGuide = getLayoutPromptGuide(layoutTypeChoice);
             const blocksGuide = getSpecialBlocksPromptGuide(specialBlocks);
 
+            const editContextSection = existingTargetArt
+                ? `\nВАЖНО: ТЫ РЕДАКТИРУЕШЬ И ДОПОЛНЯЕШЬ СУЩЕСТВУЮЩУЮ СТАТЬЮ (ID: "${existingTargetArt.id}").\nИсходный заголовок: ${existingTargetArt.title}\nИсходный лид: ${existingTargetArt.lead}\nИсходный HTML-текст:\n${existingTargetArt.body}\nПереработай или дополни этот материал в соответствии с заданием пользователя, сохранив его ID "${existingTargetArt.id}".`
+                : '';
+
             const systemInstruction = `Ты — главный редактор сатирического федерального агентства «ВЕСТНИК РОССИИ» (стиль ТАСС, РБК, Коммерсантъ).
-Строго соблюдай канон из universe_lore.json и статей db.json.
+Строго соблюдай канон из universe_lore.json и статей db.json.${editContextSection}
 
 ЖАНР И СТРУКТУРА ЭТОЙ СТАТЬИ (${layoutTypeChoice}):
 ${layoutGuide}
@@ -1386,10 +1919,10 @@ ${blocksGuide}
 Верни СТРОГО валидный JSON:
 {
   "article": {
-    "id": "unikalnyj-latin-slug",
+    "id": "${existingTargetArt ? existingTargetArt.id : 'unikalnyj-latin-slug'}",
     "title": "Заголовок",
     "lead": "Лид-абзац",
-    "category": "${targetCat === 'AUTO' ? 'Безопасность' : targetCat}",
+    "category": "${targetCat === 'AUTO' ? (existingTargetArt?.category || 'Безопасность') : targetCat}",
     "geo": "Город",
     "badgeType": "ЗАГОЛОВОК РАДАРА",
     "badgeTelemetry": "ТЕЛЕМЕТРИЯ",
@@ -1418,18 +1951,24 @@ ${blocksGuide}
                 const genArt = parsed.article;
                 if (!genArt || !genArt.title) throw new Error("Модель не вернула объект статьи");
 
-                let newArticleId = (genArt.id || "").trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
-                if (!newArticleId || (appDB.articles || []).some(a => a.id === newArticleId)) {
+                let newArticleId = existingTargetArt
+                    ? existingTargetArt.id
+                    : (genArt.id || "").trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+
+                if (!existingTargetArt && (!newArticleId || (appDB.articles || []).some(a => a && a.id === newArticleId))) {
                     newArticleId = (newArticleId || "ai-news") + "-" + Date.now().toString().slice(-4);
                 }
                 genArt.id = newArticleId;
 
-                statusBox.innerHTML += `<div class="text-emerald-400">✅ Статья создана: «${genArt.title}»</div>`;
+                statusBox.innerHTML += `<div class="text-emerald-400">✅ ${existingTargetArt ? 'Статья обновлена' : 'Статья создана'}: «${genArt.title}»</div>`;
 
-                let generatedBase64Image = "";
-                let finalVisualMode = "auto";
+                let generatedBase64Image = existingTargetArt ? (existingTargetArt.image || "") : "";
+                let finalVisualMode = existingTargetArt ? (existingTargetArt.visualMode || "auto") : "auto";
 
-                if (visualModeChoice.startsWith('ai_photo')) {
+                if (visualModeChoice === 'keep_existing' && existingTargetArt) {
+                    generatedBase64Image = existingTargetArt.image || "";
+                    finalVisualMode = existingTargetArt.visualMode || "auto";
+                } else if (visualModeChoice.startsWith('ai_photo')) {
                     statusBox.innerHTML += `<div class="text-indigo-300"><i class="fa-solid fa-camera ai-loading mr-1.5"></i>Генерация иллюстрации к новости...</div>`;
                     generatedBase64Image = await generateArticleImageWithGemini(conf, genArt.imagePromptEn, genArt.title, genArt.geo, visualModeChoice) || "";
                     if (generatedBase64Image) {
@@ -1440,8 +1979,10 @@ ${blocksGuide}
                         finalVisualMode = "radar";
                     }
                 } else if (visualModeChoice === 'radar') {
+                    generatedBase64Image = "";
                     finalVisualMode = "radar";
                 } else if (visualModeChoice === 'none') {
+                    generatedBase64Image = "";
                     finalVisualMode = "none";
                 }
 
@@ -1471,8 +2012,8 @@ ${blocksGuide}
                         appDB.siteSettings.poll = dbUpd.updatedPoll;
                         localStorage.removeItem('vestnik_poll_votes');
                     }
-                    if (dbUpd.appendUpdateToOldArticle?.targetArticleId && dbUpd.appendUpdateToOldArticle?.updateText) {
-                        const oldArt = (appDB.articles || []).find(a => a.id === dbUpd.appendUpdateToOldArticle.targetArticleId);
+                    if (!existingTargetArt && dbUpd.appendUpdateToOldArticle?.targetArticleId && dbUpd.appendUpdateToOldArticle?.updateText) {
+                        const oldArt = (appDB.articles || []).find(a => a && a.id === dbUpd.appendUpdateToOldArticle.targetArticleId);
                         if (oldArt && oldArt.body && !oldArt.body.includes(newArticleId)) {
                             oldArt.body += `\n<div class="my-6 p-4 bg-red-50 border-l-4 border-brand-red rounded-r-xl font-sans text-xs sm:text-sm text-slate-800"><strong class="text-brand-red uppercase tracking-wider block mb-1">⚡ ОБНОВЛЕНИЕ СЮЖЕТА:</strong><span>${dbUpd.appendUpdateToOldArticle.updateText} — </span><a href="article.html?id=${encodeURIComponent(newArticleId)}" class="font-bold text-brand-red underline">Читать продолжение →</a></div>`;
                         }
@@ -1481,29 +2022,14 @@ ${blocksGuide}
 
                 populateSiteSettingsForm();
 
+                window._lastAiMeta = existingTargetArt?.aiMeta || null;
                 if (autoUpdateLore && parsed.loreUpdates) {
-                    if (parsed.loreUpdates.newTimelineEvent) appLore.timeline.push(parsed.loreUpdates.newTimelineEvent);
-                    if (Array.isArray(parsed.loreUpdates.characterUpdates)) {
-                        parsed.loreUpdates.characterUpdates.forEach(upd => {
-                            const existingChar = appLore.characters.find(c =>
-                                c.name.toLowerCase().includes((upd.name || '').toLowerCase()) ||
-                                (upd.name || '').toLowerCase().includes(c.name.toLowerCase())
-                            );
-                            if (existingChar) {
-                                if (upd.currentLocation) existingChar.currentLocation = upd.currentLocation;
-                                if (upd.status) existingChar.status = upd.status;
-                                if (upd.appendBiography && !existingChar.biography.includes(upd.appendBiography)) {
-                                    existingChar.biography = (existingChar.biography + " " + upd.appendBiography).trim();
-                                }
-                            } else if (upd.name) {
-                                appLore.characters.push({ id: "char-" + Date.now().toString().slice(-4), name: upd.name, age: 25, origin: genArt.geo || "РФ", currentLocation: upd.currentLocation || genArt.geo || "РФ", role: "Фигурант сводки", status: upd.status || "Активен", biography: upd.appendBiography || "" });
-                            }
-                        });
-                    }
-                    renderLoreUI();
+                    window._lastAiMeta = applyLoreUpdatesAndRecordMeta(parsed.loreUpdates, genArt.geo || "РФ", window._lastAiMeta);
                 }
 
-                window._lastAiGeneratedComments = Array.isArray(genArt.comments) ? genArt.comments : [];
+                window._lastAiGeneratedComments = Array.isArray(genArt.comments) ? genArt.comments : (existingTargetArt?.comments || []);
+
+                editingOriginalId = existingTargetArt ? existingTargetArt.id : null;
 
                 document.getElementById('ed-id').value = newArticleId;
                 document.getElementById('ed-ishero').checked = makeHero;
@@ -1512,7 +2038,11 @@ ${blocksGuide}
                 document.getElementById('ed-geo').value = genArt.geo || "РФ";
                 document.getElementById('ed-layout').value = layoutTypeChoice || "standard";
                 document.getElementById('ed-visual-mode').value = finalVisualMode;
-                setNowDate();
+                if (existingTargetArt && existingTargetArt.date) {
+                    document.getElementById('ed-date').value = existingTargetArt.date;
+                } else {
+                    setNowDate();
+                }
                 document.getElementById('ed-lead').value = genArt.lead || "";
                 document.getElementById('ed-image').value = generatedBase64Image;
                 document.getElementById('ed-badgetype').value = genArt.badgeType || "ОПЕРАТИВНЫЙ МОНИТОРИНГ";
@@ -1522,7 +2052,6 @@ ${blocksGuide}
                 document.getElementById('ed-tags').value = (genArt.tags || []).join(', ');
                 updateLivePreview();
 
-                editingOriginalId = null;
                 resetListFilters();
 
                 await saveArticleFromEditor(autoPublishAndPush, !autoPublishAndPush);
@@ -1543,13 +2072,13 @@ ${blocksGuide}
             btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading"></i> Синхронизация...`;
             try {
                 const digest = (appDB.articles || []).map(a => `[${a.date} | ${a.geo}] ${a.title}\n${a.lead}`).join('\n\n');
-                const rawText = await callGeminiAPI(conf, "Верни ТОЛЬКО валидный JSON структуры universe_lore.json.", `Обнови лор по статьям.\nЛОР:\n${JSON.stringify(appLore)}\nСТАТЬИ:\n${digest}`);
+                const rawText = await callGeminiAPI(conf, "Верни ТОЛЬКО валидный JSON структуры universe_lore.json. Оставь только те события и тех персонажей, которые реально присутствуют в переданных статьях (плюс базовых героев: Станислав Д., Андрей Б., Мирослав К., Герман Ф.).", `Актуализируй лор строго по текущему списку статей.\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\nАКТУАЛЬНЫЕ СТАТЬИ В БАЗЕ:\n${digest}`);
                 const updatedLore = parseModelJsonSafely(rawText);
                 if (updatedLore && Array.isArray(updatedLore.characters)) {
                     appLore = updatedLore;
                     persistLocalBackup();
                     renderLoreUI();
-                    showToast("Лор синхронизирован!");
+                    showToast("Лор полностью синхронизирован с текущими статьями!");
                 }
             } catch (e) {
                 showToast("Ошибка: " + e.message, true);
@@ -1558,24 +2087,10 @@ ${blocksGuide}
             }
         }
 
-        function makeArticleHero(id) {
-            (appDB.articles || []).forEach(a => { a.isHero = (a.id === id); });
-            persistLocalBackup();
-            renderAdminArticlesList();
-            showToast("Назначена главная новость дня!");
-        }
-
-        function deleteArticle(id) {
-            if (!confirm("Удалить этот материал из базы?")) return;
-            appDB.articles = (appDB.articles || []).filter(a => a.id !== id);
-            persistLocalBackup();
-            renderAdminArticlesList();
-            showToast("Материал удален");
-        }
-
         function startNewArticle() {
             editingOriginalId = null;
             window._lastAiGeneratedComments = null;
+            window._lastAiMeta = null;
             document.getElementById('editor-mode-badge').textContent = "РЕЖИМ: СОЗДАНИЕ НОВОЙ ПУБЛИКАЦИИ";
             document.getElementById('editor-heading-title').textContent = "Новый материал агентства";
             document.getElementById('ed-id').value = "news-" + Date.now().toString().slice(-5);
@@ -1593,15 +2108,17 @@ ${blocksGuide}
             document.getElementById('ed-caption').value = "Фото: Фотослужба «Вестник России»";
             document.getElementById('ed-body').value = "<p>\n    Введите основной текст новости...\n</p>";
             document.getElementById('ed-tags').value = "Россия, Общество";
+            document.getElementById('ed-ai-instruction').value = "";
             updateLivePreview();
             switchTab('editor');
         }
 
-        function openArticleInEditor(id) {
-            const art = (appDB.articles || []).find(a => a.id === id);
+        function openArticleInEditor(id, directArt = null) {
+            const art = directArt || (appDB.articles || []).find(a => a && a.id === id);
             if (!art) return;
             editingOriginalId = art.id;
             window._lastAiGeneratedComments = art.comments || null;
+            window._lastAiMeta = art.aiMeta || null;
             document.getElementById('editor-mode-badge').textContent = `РЕЖИМ: РЕДАКТИРОВАНИЕ [${art.id}]`;
             document.getElementById('editor-heading-title').textContent = art.title;
             document.getElementById('ed-id').value = art.id || "";
@@ -1622,6 +2139,7 @@ ${blocksGuide}
             document.getElementById('ed-r-fire').value = (art.reactions && art.reactions.fire) || 3500;
             document.getElementById('ed-r-cheese').value = (art.reactions && art.reactions.cheese) || 2100;
             document.getElementById('ed-r-shock').value = (art.reactions && art.reactions.shock) || 1800;
+            document.getElementById('ed-ai-instruction').value = "";
             updateLivePreview();
             switchTab('editor');
         }
@@ -1713,12 +2231,13 @@ ${blocksGuide}
             if (!title) { showToast("Введите заголовок статьи!", true); return; }
 
             const isHero = document.getElementById('ed-ishero').checked;
-            if (isHero) (appDB.articles || []).forEach(a => { a.isHero = false; });
+            if (isHero) (appDB.articles || []).forEach(a => { if (a) a.isHero = false; });
 
             const targetId = editingOriginalId || id;
-            const idx = (appDB.articles || []).findIndex(a => a.id === targetId);
+            const idx = (appDB.articles || []).findIndex(a => a && a.id === targetId);
             const existingComments = (idx !== -1 && appDB.articles[idx].comments) ? appDB.articles[idx].comments : [];
             const finalComments = (window._lastAiGeneratedComments && window._lastAiGeneratedComments.length > 0) ? window._lastAiGeneratedComments : existingComments;
+            const finalAiMeta = window._lastAiMeta || (idx !== -1 ? appDB.articles[idx].aiMeta : null) || null;
 
             const visualMode = document.getElementById('ed-visual-mode').value || "auto";
             const layoutType = document.getElementById('ed-layout').value || "standard";
@@ -1749,6 +2268,8 @@ ${blocksGuide}
                 body: document.getElementById('ed-body').value
             };
 
+            if (finalAiMeta) newArticleObj.aiMeta = finalAiMeta;
+
             if (!appDB.siteSettings.categories.includes(newArticleObj.category)) {
                 appDB.siteSettings.categories.push(newArticleObj.category);
             }
@@ -1758,6 +2279,7 @@ ${blocksGuide}
 
             editingOriginalId = id;
             window._lastAiGeneratedComments = null;
+            window._lastAiMeta = null;
             persistLocalBackup();
             populateCategoryFilters();
             renderAdminArticlesList();
@@ -1844,8 +2366,9 @@ ${blocksGuide}
         }
 
         async function reloadFromServerFiles() {
-            if (!confirm("Перезагрузить db.json и universe_lore.json напрямую из файлов репозитория?")) return;
+            if (!confirm("Перезагрузить db.json и universe_lore.json напрямую из файлов репозитория (отменив несохраненные в GitHub локальные изменения)?")) return;
             try {
+                localStorage.removeItem('vestnik_has_local_edits');
                 const res = await fetch('./db.json?t=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
                     const remote = await res.json();
