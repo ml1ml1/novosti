@@ -109,7 +109,7 @@
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
                 <div class="min-w-0">
-                    <h3 class="font-headline font-bold text-base sm:text-lg text-white">Ошибка ответа модели ИИ</h3>
+                    <h3 class="font-headline font-bold text-base sm:text-lg text-white">Сбой ответа модели ИИ</h3>
                     <p id="modal-failed-model-name" class="text-xs font-mono text-amber-400 mt-0.5 truncate"></p>
                 </div>
             </div>
@@ -215,16 +215,16 @@
                 <div class="p-3 bg-slate-900/90 border border-indigo-500/30 rounded-lg space-y-1.5">
                     <div class="flex items-center justify-between text-xs">
                         <span class="font-bold text-indigo-200">🔥 Градус абсурда при переработке:</span>
-                        <span id="ed-absurd-label" class="font-mono font-bold text-amber-300">0 • Стандартный режим (Как раньше)</span>
+                        <span id="ed-absurd-label" class="font-mono font-bold text-emerald-300">0 • Стандартный режим (Как раньше)</span>
                     </div>
                     <input type="range" id="ed-ai-absurd-level" min="-2" max="3" step="1" value="0" oninput="updateAbsurdUi('ed')" class="w-full accent-brand-red cursor-pointer">
                     <div class="flex justify-between text-[10px] font-mono text-slate-400">
-                        <span>-2 (Сухой)</span>
-                        <span>-1 (Курьёз)</span>
-                        <span class="text-white font-bold">0 (Стандарт)</span>
-                        <span>+1 (Шиза)</span>
-                        <span>+2 (Угар)</span>
-                        <span class="text-rose-400 font-bold">+3 (РАЗЪЁБ)</span>
+                        <span class="cursor-pointer" onclick="setAbsurdValue('ed', -2)">-2 (Сухой)</span>
+                        <span class="cursor-pointer" onclick="setAbsurdValue('ed', -1)">-1 (Курьёз)</span>
+                        <span class="text-white font-bold cursor-pointer" onclick="setAbsurdValue('ed', 0)">0 (Стандарт)</span>
+                        <span class="cursor-pointer" onclick="setAbsurdValue('ed', 1)">+1 (Шиза)</span>
+                        <span class="cursor-pointer" onclick="setAbsurdValue('ed', 2)">+2 (Угар)</span>
+                        <span class="text-rose-400 font-bold cursor-pointer" onclick="setAbsurdValue('ed', 3)">+3 (РАЗЪЁБ)</span>
                     </div>
                 </div>
 
@@ -835,19 +835,19 @@
             "1": {
                 badge: "+1 • Бюрократическая шиза (Комиссии и НИИ)",
                 color: "text-amber-300",
-                temp: 0.92,
+                temp: 0.90,
                 desc: "Повышенный градус: нелепые ведомственные формулировки, вымышленные индексы, приборы замера и яркие отсылки к прошлым подвигам героев."
             },
             "2": {
                 badge: "+2 • Мощный угар (Высокий накал страстей)",
                 color: "text-orange-400",
-                temp: 0.97,
+                temp: 0.94,
                 desc: "Густая, смешная сатира с неожиданными сюжетными поворотами, фирменными фразами персонажей из лора и живыми комментариями."
             },
             "3": {
                 badge: "+3 • МАКСИМАЛЬНЫЙ РАЗЪЁБ (Эпический сюр)",
                 color: "text-rose-400",
-                temp: 1.0,
+                temp: 0.97,
                 desc: "Максимальная концентрация комедии: разрывные формулировки в каждом абзаце, столкновение характеров и легендарных мемов лора с каменным лицом диктора."
             }
         };
@@ -1712,7 +1712,7 @@
                 let promptGen = `Documentary press photo in Russia (${geo || 'Moscow'}): ${title}`;
                 if (conf.apiKey) {
                     try {
-                        promptGen = await callGeminiAPI(conf, "Return ONLY a single-sentence English visual description for a realistic press photo (no text in image).", `Заголовок: ${title}\nЛид: ${lead}\nГород: ${geo}`, 0.7);
+                        promptGen = await callGeminiAPI(conf, "Return ONLY a single-sentence English visual description for a realistic press photo (no text in image).", `Заголовок: ${title}\nЛид: ${lead}\nГород: ${geo}`, 0.7, false);
                     } catch (e) {}
                 }
                 const imgData = await generateArticleImageWithGemini(conf, promptGen, title, geo, 'ai_photo_hybrid');
@@ -1839,9 +1839,9 @@ ${layoutGuide}
 ТРЕБОВАНИЯ К СПЕЦБЛОКАМ ВНУТРИ СТАТЬИ:
 ${blocksGuide}
 
-ПРАВИЛА БЕЗОПАСНОГО HTML В ПОЛЕ "body":
+ПРАВИЛА БЕЗОПАСНОГО JSON И HTML:
 1. Во всех HTML-тегах внутри "body" используй ТОЛЬКО одинарные кавычки (') для атрибутов class и id!
-2. Для текста используй кавычки-ёлочки «...».
+2. Внутри любого русского текста (в заголовках, лиде, body, комментариях, опросах) используй ТОЛЬКО русские кавычки-ёлочки «...»! Никогда не используй прямые двойные кавычки " внутри текста!
 3. НИКОГДА не создавай пустых тегов <div></div> и не ставь темный текст на темный фон.
 
 Верни СТРОГО валидный JSON:
@@ -1867,7 +1867,7 @@ ${blocksGuide}
             const userPayload = `БАЗА ЛОРА:\n${JSON.stringify(appLore)}\n\nТЕКУЩАЯ СТАТЬЯ ДЛЯ РЕДАКТИРОВАНИЯ:\nЗаголовок: ${curTitle}\nЛид: ${curLead}\nГео: ${curGeo}\nТекущий HTML-текст:\n${curBody}\n\nУКАЗАНИЕ ПО РЕДАКТИРОВАНИЮ И ДОПОЛНЕНИЮ:\n${instruction}`;
 
             try {
-                const rawText = await callGeminiAPI(conf, systemInstruction, userPayload, absurdMeta.temp);
+                const rawText = await callGeminiAPI(conf, systemInstruction, userPayload, absurdMeta.temp, true);
                 const parsed = parseModelJsonSafely(rawText);
                 const updArt = parsed.article;
                 if (!updArt || !updArt.body) throw new Error("ИИ не вернул обновленный текст статьи");
@@ -1924,47 +1924,161 @@ ${blocksGuide}
             return null;
         }
 
+        function isLikelyClosingJsonQuote(str, quoteIdx, isKey, containerType) {
+            let j = quoteIdx + 1;
+            while (j < str.length && /\s/.test(str[j])) j++;
+            if (j >= str.length) return true;
+
+            const nextCh = str[j];
+            if (isKey) {
+                return nextCh === ':';
+            }
+
+            if (nextCh === '}' || nextCh === ']') {
+                let k = j + 1;
+                while (k < str.length && /\s/.test(str[k])) k++;
+                if (k >= str.length) return true;
+                const afterClose = str[k];
+                return afterClose === ',' || afterClose === '}' || afterClose === ']';
+            }
+
+            if (nextCh === ',') {
+                const afterComma = str.slice(j + 1);
+                if (containerType === 'OBJECT') {
+                    return /^\s*(?:"[a-zA-Z0-9_-]+"\s*:|\})/.test(afterComma);
+                } else {
+                    return /^\s*(?:"|\{|\[|-?\d|true\b|false\b|null\b|\])/.test(afterComma);
+                }
+            }
+
+            return false;
+        }
+
         function repairBrokenJsonString(str) {
             let fixed = str.replace(/<([a-zA-Z0-9]+)\s+([^>]*?)>/g, (m, tag, attrs) => `<${tag} ${attrs.replace(/=\s*"([^"]*)"/g, "='$1'")}>`);
-            fixed = fixed.replace(/,(\s*[}\]])/g, '$1');
-            let inString = false, escaped = false, result = '';
+            fixed = fixed.replace(/[\u201C\u201D\u201E\u201F]/g, '«');
+
+            let inString = false;
+            let escaped = false;
+            let isKey = false;
+            const contextStack = [];
+            let result = '';
+
             for (let i = 0; i < fixed.length; i++) {
                 const ch = fixed[i];
-                if (escaped) { result += ch; escaped = false; continue; }
-                if (ch === '\\') { result += ch; escaped = true; continue; }
-                if (ch === '"') { inString = !inString; result += ch; continue; }
-                if (inString) {
-                    if (ch === '\n') { result += '\\n'; continue; }
-                    if (ch === '\r') continue;
-                    if (ch === '\t') { result += '\\t'; continue; }
+
+                if (escaped) {
+                    result += ch;
+                    escaped = false;
+                    continue;
                 }
-                result += ch;
+
+                if (ch === '\\') {
+                    result += ch;
+                    if (inString) escaped = true;
+                    continue;
+                }
+
+                if (!inString) {
+                    if (ch === '{') {
+                        contextStack.push('OBJECT');
+                        isKey = true;
+                        result += ch;
+                    } else if (ch === '}') {
+                        contextStack.pop();
+                        isKey = false;
+                        result += ch;
+                    } else if (ch === '[') {
+                        contextStack.push('ARRAY');
+                        isKey = false;
+                        result += ch;
+                    } else if (ch === ']') {
+                        contextStack.pop();
+                        isKey = false;
+                        result += ch;
+                    } else if (ch === ':') {
+                        isKey = false;
+                        result += ch;
+                    } else if (ch === ',') {
+                        const top = contextStack[contextStack.length - 1];
+                        isKey = (top === 'OBJECT');
+                        result += ch;
+                    } else if (ch === '"') {
+                        inString = true;
+                        result += ch;
+                    } else {
+                        result += ch;
+                    }
+                } else {
+                    if (ch === '"') {
+                        const top = contextStack[contextStack.length - 1] || 'OBJECT';
+                        if (isLikelyClosingJsonQuote(fixed, i, isKey, top)) {
+                            inString = false;
+                            result += '"';
+                        } else {
+                            result += '\\"';
+                        }
+                    } else if (ch === '\n') {
+                        result += '\\n';
+                    } else if (ch === '\r') {
+                        continue;
+                    } else if (ch === '\t') {
+                        result += '\\t';
+                    } else {
+                        result += ch;
+                    }
+                }
             }
+
             if (inString) result += '"';
-            const stack = [];
-            inString = false; escaped = false;
+            result = result.replace(/,(\s*[}\]])/g, '$1');
+
+            const closeStack = [];
+            inString = false;
+            escaped = false;
             for (let i = 0; i < result.length; i++) {
                 const ch = result[i];
                 if (escaped) { escaped = false; continue; }
                 if (ch === '\\') { escaped = true; continue; }
                 if (ch === '"') { inString = !inString; continue; }
                 if (!inString) {
-                    if (ch === '{') stack.push('}');
-                    else if (ch === '[') stack.push(']');
-                    else if ((ch === '}' || ch === ']') && stack.length > 0 && stack[stack.length - 1] === ch) stack.pop();
+                    if (ch === '{') closeStack.push('}');
+                    else if (ch === '[') closeStack.push(']');
+                    else if ((ch === '}' || ch === ']') && closeStack.length > 0 && closeStack[closeStack.length - 1] === ch) {
+                        closeStack.pop();
+                    }
                 }
             }
-            while (stack.length > 0) result += stack.pop();
+            while (closeStack.length > 0) result += closeStack.pop();
             return result;
         }
 
         function parseModelJsonSafely(rawText) {
-            let cleaned = String(rawText || '').replace(/^\x60\x60\x60json\s*/i, '').replace(/^\x60\x60\x60\s*/i, '').replace(/\s*\x60\x60\x60$/i, '').trim();
-            const first = cleaned.indexOf('{');
+            let cleaned = String(rawText || '')
+                .replace(/^\x60\x60\x60(?:json)?\s*/i, '')
+                .replace(/\s*\x60\x60\x60$/i, '')
+                .trim();
+
+            const jsonStartMatch = cleaned.match(/\{\s*"(?:article|universeName|characters|title)"/);
+            const first = jsonStartMatch ? jsonStartMatch.index : cleaned.indexOf('{');
             const last = cleaned.lastIndexOf('}');
-            if (first !== -1 && last !== -1 && last > first) cleaned = cleaned.slice(first, last + 1);
-            else if (first !== -1) cleaned = cleaned.slice(first);
-            try { return JSON.parse(cleaned); } catch (e) { return JSON.parse(repairBrokenJsonString(cleaned)); }
+
+            if (first === -1) {
+                throw new Error("Ответ модели не содержит JSON-объекта");
+            }
+
+            if (last !== -1 && last > first) {
+                cleaned = cleaned.slice(first, last + 1);
+            } else {
+                cleaned = cleaned.slice(first);
+            }
+
+            try {
+                return JSON.parse(cleaned);
+            } catch (e1) {
+                const repaired = repairBrokenJsonString(cleaned);
+                return JSON.parse(repaired);
+            }
         }
 
         function askUserOnModelError(failedModel, errMsg, nextModel) {
@@ -1984,7 +2098,7 @@ ${blocksGuide}
                     document.getElementById('modal-btn-next-text').textContent = `Перейти на ${nextModel}`;
                 } else {
                     nextBtn.classList.add('hidden');
-                    document.getElementById('modal-next-model-hint').textContent = `Это была самая младшая модель в списке. Попробуйте повторить запрос чуть позже.`;
+                    document.getElementById('modal-next-model-hint').textContent = `Это была самая младшая модель в списке. Попробуйте повторить запрос.`;
                 }
 
                 const cleanup = (choice) => {
@@ -2003,7 +2117,7 @@ ${blocksGuide}
             });
         }
 
-        async function callGeminiAPI(conf, systemInstruction, userInput, customTemp = 0.85) {
+        async function callGeminiAPI(conf, systemInstruction, userInput, customTemp = 0.85, expectJson = true) {
             const statusBox = document.getElementById('ai-status-box');
             const startModel = (conf.model || 'gemini-3.8-flash').replace(/^models\//, '');
 
@@ -2016,9 +2130,12 @@ ${blocksGuide}
                 const cleanModel = modelName.replace(/^models\//, '');
                 const tryGenerateContent = async () => {
                     const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cleanModel)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
+                    const genConfig = { temperature: customTemp };
+                    if (expectJson) genConfig.responseMimeType = "application/json";
+
                     const payload = {
                         contents: [{ role: "user", parts: [{ text: userInput }] }],
-                        generationConfig: { temperature: customTemp, responseMimeType: "application/json" }
+                        generationConfig: genConfig
                     };
                     if (systemInstruction?.trim()) payload.systemInstruction = { parts: [{ text: systemInstruction }] };
                     const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -2049,14 +2166,24 @@ ${blocksGuide}
                     return text;
                 };
 
-                if (conf.protocol === 'generateContent') return await tryGenerateContent();
-                if (conf.protocol === 'interactions') return await tryInteractions();
-                try {
-                    return await tryGenerateContent();
-                } catch (e1) {
-                    if (e1.status === 405 || e1.status === 404) return await tryInteractions();
-                    throw e1;
+                let rawOut;
+                if (conf.protocol === 'generateContent') {
+                    rawOut = await tryGenerateContent();
+                } else if (conf.protocol === 'interactions') {
+                    rawOut = await tryInteractions();
+                } else {
+                    try {
+                        rawOut = await tryGenerateContent();
+                    } catch (e1) {
+                        if (e1.status === 405 || e1.status === 404) rawOut = await tryInteractions();
+                        else throw e1;
+                    }
                 }
+
+                if (expectJson) {
+                    parseModelJsonSafely(rawOut);
+                }
+                return rawOut;
             };
 
             let idx = 0;
@@ -2189,9 +2316,9 @@ ${layoutGuide}
 ТРЕБОВАНИЯ К СПЕЦБЛОКАМ ВНУТРИ ПОЛЯ "body":
 ${blocksGuide}
 
-ПРАВИЛА БЕЗОПАСНОГО HTML И ЦВЕТОВ В ПОЛЕ "body":
+ПРАВИЛА БЕЗОПАСНОГО JSON И HTML:
 1. Во всех HTML-тегах внутри "body" используй ТОЛЬКО одинарные кавычки (') для атрибутов class и id!
-2. Для текста используй русские кавычки-ёлочки «...».
+2. Внутри любого русского текста (в заголовке, лиде, body, комментариях, опросе, лоре) используй ТОЛЬКО русские кавычки-ёлочки «...»! Никогда не ставь прямые двойные кавычки " внутри текстовых строк!
 3. НИКОГДА не создавай пустых тегов <div></div> без текста внутри и никогда не ставь темный текст (text-slate-900) на темный фон (bg-slate-900).
 4. В поле "imagePromptEn" напиши детальный промпт на английском языке для генерации реалистичной репортажной фотографии по сюжету статьи (без текста на картинке).
 
@@ -2228,7 +2355,7 @@ ${blocksGuide}
 }`;
 
             try {
-                const rawText = await callGeminiAPI(conf, systemInstruction, `ЛОР:\n${useLore ? JSON.stringify(appLore) : ''}\n\nСТАТЬИ:\n${digest}\n\nЗАДАНИЕ:\n${userPrompt}`, absurdMeta.temp);
+                const rawText = await callGeminiAPI(conf, systemInstruction, `ЛОР:\n${useLore ? JSON.stringify(appLore) : ''}\n\nСТАТЬИ:\n${digest}\n\nЗАДАНИЕ:\n${userPrompt}`, absurdMeta.temp, true);
                 const parsed = parseModelJsonSafely(rawText);
                 const genArt = parsed.article;
                 if (!genArt || !genArt.title) throw new Error("Модель не вернула объект статьи");
@@ -2343,7 +2470,7 @@ ${blocksGuide}
             btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading"></i> Синхронизация...`;
             try {
                 const digest = (appDB.articles || []).map(a => `[${a.date} | ${a.geo}] ${a.title}\n${a.lead}`).join('\n\n');
-                const rawText = await callGeminiAPI(conf, "Верни ТОЛЬКО валидный JSON структуры universe_lore.json. Оставь только те события и тех персонажей, которые реально присутствуют в переданных статьях (плюс базовых героев: Станислав Д., Андрей Б., Мирослав К., Герман Ф.).", `Актуализируй лор строго по текущему списку статей.\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\nАКТУАЛЬНЫЕ СТАТЬИ В БАЗЕ:\n${digest}`, 0.7);
+                const rawText = await callGeminiAPI(conf, "Верни ТОЛЬКО валидный JSON структуры universe_lore.json. Внутри строковых значений используй только кавычки-ёлочки «...». Оставь только те события и тех персонажей, которые реально присутствуют в переданных статьях (плюс базовых героев: Станислав Д., Андрей Б., Мирослав К., Герман Ф.).", `Актуализируй лор строго по текущему списку статей.\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\nАКТУАЛЬНЫЕ СТАТЬИ В БАЗЕ:\n${digest}`, 0.7, true);
                 const updatedLore = parseModelJsonSafely(rawText);
                 if (updatedLore && Array.isArray(updatedLore.characters)) {
                     appLore = updatedLore;
@@ -2470,7 +2597,7 @@ ${blocksGuide}
                 decree: `\n<div class='my-6 p-5 bg-amber-50/70 border-2 border-dashed border-amber-400 rounded-xl font-mono text-xs sm:text-sm text-slate-900'>\n    <div class='font-bold uppercase text-amber-900 border-b border-amber-300 pb-2 mb-2'>📜 ВЫПИСКА ИЗ ПОСТАНОВЛЕНИЯ № 412-П</div>\n    <p>1. Ввести чрезвычайный норматив на всей территории муниципального образования...</p>\n    <div class='text-right text-[11px] text-amber-800 mt-2'>ПЕЧАТЬ КАНЦЕЛЯРИИ • ВЕРНО</div>\n</div>\n`,
                 expert: `\n<div class='my-6 p-5 bg-slate-50 border border-slate-200 rounded-xl font-sans'>\n    <div class='text-xs font-bold uppercase text-teal-800 mb-1'>🎓 Мнение эксперта • Имя Фамилия (Должность):</div>\n    <p class='text-sm text-slate-800 italic'>«Аналитический комментарий специалиста по ситуации...»</p>\n</div>\n`,
                 factbox: `\n<div class='my-5 p-4 bg-amber-50/80 border-l-4 border-amber-500 rounded-r-xl font-sans text-xs sm:text-sm text-slate-800'>\n    <strong class='block text-amber-900 uppercase mb-1'>📌 Справка редакции «Вестника»:</strong>\n    Исторический или технический контекст происходящего события.\n</div>\n`,
-                dossier: `\n<div id='dossier-block' class='my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm'>\n    <div class='bg-slate-900 text-white px-5 py-3 flex items-center justify-between'>\n        <span class='font-bold text-xs uppercase tracking-wider'>Оперативная сводка / Досье</span>\n        <span class='text-[11px] font-mono text-amber-400'>МОНИТОРИНГ-2026</span>\n    </div>\n    <div class='p-4 text-xs sm:text-sm text-slate-700'>Данные статистического наблюдения...</div>\n</div>\n`,
+                dossier: `\n<div id='dossier-block' class='my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm'>\n    <div class='bg-slate-900 text-white px-5 py-3 flex items-center justify-between'>\n        <span class='font-bold text-xs uppercase tracking-wider'>Оперативная сводка / Досье</span>\n        <span class='text-[11px] font-mono text-amber-400'>МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">Данные статистического наблюдения...</div>\n</div>\n`,
                 max: `\n<div id='max-flashmob' class='my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm'>\n    <div class='text-xs font-bold text-sky-400 mb-2'>МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class='text-xs sm:text-sm text-slate-200 leading-relaxed'>Текст координационной сводки в мессенджере МАКС...</p>\n</div>\n`,
                 timeline: `\n<div class='my-6 font-sans bg-slate-50 p-5 rounded-xl border-l-4 border-slate-900 space-y-3 text-xs sm:text-sm'>\n    <div class='font-bold uppercase tracking-wider text-slate-500'>⏱️ Поминутная хроника событий</div>\n    <div><strong class='font-mono text-brand-red'>08:30</strong> — Первое сообщение оперативного дежурного;</div>\n    <div><strong class='font-mono text-brand-red'>10:15</strong> — Введение специального регламента.</div>\n</div>\n`
             };
