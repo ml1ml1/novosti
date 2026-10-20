@@ -439,6 +439,54 @@
         let molniyaClicks = 0;
         let molniyaTimer = null;
 
+        function normalizePollData(pollObj) {
+            const fallback = JSON.parse(JSON.stringify(DEFAULT_DB.siteSettings.poll));
+            if (!pollObj || typeof pollObj !== 'object') return fallback;
+
+            const q = typeof pollObj.question === 'string' && pollObj.question.trim() && pollObj.question.trim() !== 'undefined'
+                ? pollObj.question.trim()
+                : fallback.question;
+
+            const defaultLabels = [
+                "Полностью поддерживаю решительные меры ведомств",
+                "Требуется создание специальной межведомственной комиссии",
+                "Необходимо усилить мониторинг через мессенджер МАКС"
+            ];
+
+            let rawOpts = Array.isArray(pollObj.options) && pollObj.options.length > 0 ? pollObj.options : fallback.options;
+
+            const normalizedOpts = rawOpts.map((opt, i) => {
+                if (typeof opt === 'string') {
+                    const cleanStr = opt.trim();
+                    const isValid = cleanStr && cleanStr.toLowerCase() !== 'undefined' && cleanStr.toLowerCase() !== 'null';
+                    return {
+                        text: isValid ? cleanStr : (defaultLabels[i] || `Позиция №${i + 1}`),
+                        votes: 480 + i * 190
+                    };
+                }
+                if (opt && typeof opt === 'object') {
+                    const candidate = opt.text ?? opt.label ?? opt.title ?? opt.option ?? opt.answer ?? opt.name ?? opt.value ??
+                        Object.values(opt).find(v => typeof v === 'string' && v.trim() && v.trim().toLowerCase() !== 'undefined');
+                    const cleanText = candidate ? String(candidate).trim() : '';
+                    const isValid = cleanText && cleanText.toLowerCase() !== 'undefined' && cleanText.toLowerCase() !== 'null';
+
+                    const rawVotes = opt.votes ?? opt.count ?? opt.score ?? Object.values(opt).find(v => typeof v === 'number');
+                    const parsedVotes = parseInt(rawVotes, 10);
+
+                    return {
+                        text: isValid ? cleanText : (defaultLabels[i] || `Позиция №${i + 1}`),
+                        votes: (!isNaN(parsedVotes) && parsedVotes > 0) ? parsedVotes : (480 + i * 190)
+                    };
+                }
+                return {
+                    text: defaultLabels[i] || `Позиция №${i + 1}`,
+                    votes: 480 + i * 190
+                };
+            });
+
+            return { question: q, options: normalizedOpts };
+        }
+
         async function initIndexPage() {
             let remoteDB = null;
             let localDB = await idbGet('vestnik_db_backup');
@@ -470,6 +518,10 @@
                 appDB = remoteDB;
             } else if (localDB && Array.isArray(localDB.articles)) {
                 appDB = localDB;
+            }
+
+            if (appDB.siteSettings) {
+                appDB.siteSettings.poll = normalizePollData(appDB.siteSettings.poll);
             }
 
             const params = new URLSearchParams(window.location.search);
@@ -760,17 +812,39 @@
             renderPoll();
         }
 
+        function getActivePollOptions() {
+            const rawPoll = (appDB.siteSettings && appDB.siteSettings.poll) || DEFAULT_DB.siteSettings.poll;
+            const poll = normalizePollData(rawPoll);
+
+            try {
+                const savedRaw = JSON.parse(localStorage.getItem('vestnik_poll_votes') || 'null');
+                if (savedRaw && typeof savedRaw === 'object' && !Array.isArray(savedRaw)) {
+                    const isSameQuestion = savedRaw.question === poll.question;
+                    const validSavedOpts = Array.isArray(savedRaw.options) &&
+                        savedRaw.options.length === poll.options.length &&
+                        savedRaw.options.every(o => o && typeof o.text === 'string' && o.text.trim() && o.text.trim().toLowerCase() !== 'undefined');
+                    if (isSameQuestion && validSavedOpts) {
+                        return { question: poll.question, options: savedRaw.options };
+                    }
+                }
+                localStorage.removeItem('vestnik_poll_votes');
+            } catch (e) {
+                localStorage.removeItem('vestnik_poll_votes');
+            }
+
+            return poll;
+        }
+
         function renderPoll() {
-            const poll = (appDB.siteSettings && appDB.siteSettings.poll) || DEFAULT_DB.siteSettings.poll;
+            const poll = getActivePollOptions();
             document.getElementById('poll-question-el').textContent = poll.question;
 
-            const savedVotes = JSON.parse(localStorage.getItem('vestnik_poll_votes') || 'null');
-            const options = savedVotes && savedVotes.length === poll.options.length ? savedVotes : poll.options;
+            const options = poll.options;
             const total = options.reduce((sum, opt) => sum + (parseInt(opt.votes, 10) || 0), 0);
             document.getElementById('poll-total-votes').textContent = `Голосов: ${total}`;
 
             document.getElementById('poll-options-container').innerHTML = options.map((opt, idx) => {
-                const pct = total > 0 ? Math.round((opt.votes / total) * 100) : 0;
+                const pct = total > 0 ? Math.round(((parseInt(opt.votes, 10) || 0) / total) * 100) : 0;
                 return `
                     <button onclick="voteInPoll(${idx})" class="w-full text-left p-2.5 sm:p-3 rounded-lg border border-slate-200 hover:border-brand-red transition relative overflow-hidden cursor-pointer">
                         <div class="absolute inset-y-0 left-0 bg-red-100/80 transition-all duration-500" style="width: ${pct}%"></div>
@@ -784,11 +858,15 @@
         }
 
         function voteInPoll(index) {
-            const poll = (appDB.siteSettings && appDB.siteSettings.poll) || DEFAULT_DB.siteSettings.poll;
-            const savedVotes = JSON.parse(localStorage.getItem('vestnik_poll_votes') || 'null');
-            const options = savedVotes && savedVotes.length === poll.options.length ? savedVotes : JSON.parse(JSON.stringify(poll.options));
-            options[index].votes = (parseInt(options[index].votes, 10) || 0) + 1;
-            localStorage.setItem('vestnik_poll_votes', JSON.stringify(options));
+            const poll = getActivePollOptions();
+            const options = JSON.parse(JSON.stringify(poll.options));
+            if (options[index]) {
+                options[index].votes = (parseInt(options[index].votes, 10) || 0) + 1;
+                localStorage.setItem('vestnik_poll_votes', JSON.stringify({
+                    question: poll.question,
+                    options
+                }));
+            }
             renderPoll();
         }
 
