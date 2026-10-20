@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS 4.7</title>
+    <title>ВЕСТНИК-CMS 4.8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
                 <div class="min-w-0">
                     <div class="font-bold text-xs sm:text-base tracking-tight flex items-center gap-1.5 sm:gap-2">
                         <span class="truncate">ВЕСТНИК-CMS</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.7 iOS-FIX</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.8 PHOTO-FIX</span>
                     </div>
                     <div id="sync-status-line" class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">База db.json и Лор загружены</div>
                 </div>
@@ -102,6 +102,7 @@
         <span id="toast-message" class="leading-snug">Изменения сохранены</span>
     </div>
 
+    <!-- Модальное окно при ошибке текстовой модели ИИ -->
     <div id="model-error-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 text-white border border-slate-700 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4">
             <div class="flex items-start gap-3">
@@ -130,6 +131,38 @@
                 </button>
                 <button id="modal-btn-cancel" type="button" class="w-full py-2 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl transition cursor-pointer">
                     Отменить генерацию
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно при отказе всех фото-моделей Google API -->
+    <div id="image-fallback-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 text-white border border-slate-700 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4">
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-lg shrink-0">
+                    <i class="fa-solid fa-camera-rotate"></i>
+                </div>
+                <div class="min-w-0">
+                    <h3 class="font-headline font-bold text-base sm:text-lg text-white leading-snug">Google API не смог создать фото</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Проверены все 5 фото-моделей Google</p>
+                </div>
+            </div>
+            <div id="img-modal-log" class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] font-mono text-slate-300 max-h-36 overflow-y-auto space-y-1"></div>
+            <p class="text-xs text-slate-200 leading-relaxed">
+                Хотите сгенерировать фотографию к этой новости через бесплатный генератор <strong>FLUX</strong>?
+            </p>
+            <div class="flex flex-col gap-2 pt-1">
+                <button id="img-modal-btn-flux" type="button" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Сгенерировать фото через FLUX</span>
+                </button>
+                <button id="img-modal-btn-retry" type="button" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Повторить попытку через Google API</span>
+                </button>
+                <button id="img-modal-btn-radar" type="button" class="w-full py-2 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl transition cursor-pointer">
+                    Оставить без фото (Включить экран Радара)
                 </button>
             </div>
         </div>
@@ -341,8 +374,11 @@
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-700"><i class="fa-solid fa-image text-brand-red mr-1"></i> Иллюстрация и режим плейсхолдера</span>
                             <div class="flex flex-wrap items-center gap-1.5">
-                                <button type="button" id="btn-ed-gen-photo" onclick="generatePhotoInsideEditor()" class="flex-1 sm:flex-initial px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded cursor-pointer transition">
-                                    <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Сгенерировать фото (ИИ)
+                                <button type="button" id="btn-ed-gen-photo" onclick="generatePhotoInsideEditor('google_then_ask')" class="flex-1 sm:flex-initial px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded cursor-pointer transition">
+                                    <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Фото (Google API -> FLUX)
+                                </button>
+                                <button type="button" id="btn-ed-gen-flux" onclick="generatePhotoInsideEditor('flux_only')" class="flex-1 sm:flex-initial px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded cursor-pointer transition">
+                                    <i class="fa-solid fa-bolt mr-1"></i> Сразу FLUX
                                 </button>
                                 <label class="flex-1 sm:flex-initial text-center px-2.5 py-1.5 bg-brand-red hover:bg-brand-darkred text-white text-xs font-bold rounded cursor-pointer transition">
                                     <i class="fa-solid fa-upload mr-1"></i> Файл
@@ -351,6 +387,8 @@
                                 <button type="button" onclick="clearEditorImage()" class="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded cursor-pointer">Сброс</button>
                             </div>
                         </div>
+
+                        <div id="ed-photo-status-line" class="hidden text-[11px] font-mono text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-200"></div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
@@ -453,11 +491,11 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + Защита iOS Safari / VPN</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">SSE Поток + Диагностика сети</span>
+                            <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + 5 Моделей Фото</h2>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Проверка 5 моделей Google -> FLUX</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Включена потоковая передача данных (Streaming SSE) и защита экрана от сна, чтобы Safari и VPN на iPhone не разрывали соединение (`Load failed`) при обращении к старшим моделям.
+                            При выборе генерации фото через Google API система по очереди проверяет все 5 моделей (`gemini-nano-banana-2.1`, `gemini-3.1-flash-image`, `gemini-3.1-flash-lite-image`, `gemini-2.5-flash-image`, `gemini-3-pro-image`) и, если они недоступны, предлагает сделать снимок через FLUX.
                         </p>
                     </div>
                 </div>
@@ -505,9 +543,9 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">1. Генерация фото / Плейсхолдер:</label>
                             <select id="ai-visual-mode" class="w-full px-3 py-2 text-xs sm:text-sm bg-indigo-50/70 border border-indigo-300 text-indigo-950 rounded-lg font-bold">
-                                <option value="ai_photo_free">📸 Бесплатный ИИ-генератор фото (FLUX — без лимитов)</option>
-                                <option value="ai_photo_hybrid">📸 Авто-гибрид (Google Nano Banana -> Бесплатный FLUX)</option>
-                                <option value="ai_photo_google">📸 Только Google API (Nano Banana / Imagen)</option>
+                                <option value="ai_photo_google">📸 Проверить 5 моделей Google API (с предложением FLUX при отказе)</option>
+                                <option value="ai_photo_hybrid">📸 Авто-гибрид (5 моделей Google -> сразу FLUX без вопросов)</option>
+                                <option value="ai_photo_free">📸 Сразу бесплатный генератор FLUX (без Google API)</option>
                                 <option value="radar">📡 Плейсхолдер: Радар / Камера спецконтроля</option>
                                 <option value="none">📄 Без фото и без плейсхолдера (Только текст)</option>
                             </select>
@@ -604,7 +642,7 @@
                             <input type="password" id="gemini-api-key" autocomplete="new-password" placeholder="AIzaSy..." onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono border border-slate-300 rounded-lg">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Стартовая модель (от самой умной к младшим):</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Стартовая текстовая модель:</label>
                             <input type="text" id="gemini-model" list="gemini-models-datalist" value="gemini-3.8-flash" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
                             <datalist id="gemini-models-datalist">
                                 <option value="gemini-3.8-flash">1. Gemini 3.8 Flash (Самая умная и креативная)</option>
@@ -616,14 +654,14 @@
                             </datalist>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Модель Google для фото (при платном тарифе):</label>
-                            <input type="text" id="gemini-image-model" list="gemini-img-models-datalist" value="gemini-2.5-flash-preview-image" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Приоритетная фото-модель Google (проверяются все 5):</label>
+                            <input type="text" id="gemini-image-model" list="gemini-img-models-datalist" value="gemini-nano-banana-2.1" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
                             <datalist id="gemini-img-models-datalist">
-                                <option value="gemini-2.5-flash-preview-image">Nano Banana (Gemini 2.5 Flash Preview Image)</option>
-                                <option value="gemini-3.1-flash-image">Nano Banana 2 (Gemini 3.1 Flash Image)</option>
-                                <option value="gemini-3.1-flash-lite-image">Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)</option>
-                                <option value="gemini-3-pro-image">Nano Banana Pro (Gemini 3 Pro Image)</option>
-                                <option value="imagen-3.0-generate-002">Imagen 3 (imagen-3.0-generate-002)</option>
+                                <option value="gemini-nano-banana-2.1">1. gemini-nano-banana-2.1</option>
+                                <option value="gemini-3.1-flash-image">2. gemini-3.1-flash-image</option>
+                                <option value="gemini-3.1-flash-lite-image">3. gemini-3.1-flash-lite-image</option>
+                                <option value="gemini-2.5-flash-image">4. gemini-2.5-flash-image</option>
+                                <option value="gemini-3-pro-image">5. gemini-3-pro-image</option>
                             </datalist>
                         </div>
                         <div>
@@ -815,6 +853,14 @@
             'gemini-3-flash',
             'gemini-3.5-flash-lite',
             'gemini-3.1-flash-lite'
+        ];
+
+        const GOOGLE_IMAGE_MODELS = [
+            'gemini-nano-banana-2.1',
+            'gemini-3.1-flash-image',
+            'gemini-3.1-flash-lite-image',
+            'gemini-2.5-flash-image',
+            'gemini-3-pro-image'
         ];
 
         const ABSURD_LEVELS_META = {
@@ -1111,7 +1157,12 @@
 
             const geminiConf = JSON.parse(localStorage.getItem('vestnik_gemini_config') || '{}');
             if (geminiConf.apiKey) document.getElementById('gemini-api-key').value = geminiConf.apiKey;
-            if (geminiConf.imageModel) document.getElementById('gemini-image-model').value = geminiConf.imageModel;
+            if (geminiConf.imageModel && GOOGLE_IMAGE_MODELS.includes(geminiConf.imageModel)) {
+                document.getElementById('gemini-image-model').value = geminiConf.imageModel;
+            } else {
+                document.getElementById('gemini-image-model').value = 'gemini-nano-banana-2.1';
+                geminiConf.imageModel = 'gemini-nano-banana-2.1';
+            }
 
             const deprecated = ['gemini-2.5-flash', 'models/gemini-2.5-flash', 'gemini-2.5-pro', 'models/gemini-2.5-pro', 'gemini-2.0-flash'];
             if (geminiConf.model && !deprecated.includes(geminiConf.model)) {
@@ -1633,7 +1684,7 @@
         function saveGeminiConfig() {
             let modelName = (document.getElementById('gemini-model').value || 'gemini-3.8-flash').trim().replace(/^models\//, '');
             document.getElementById('gemini-model').value = modelName;
-            let imageModel = (document.getElementById('gemini-image-model').value || 'gemini-2.5-flash-preview-image').trim().replace(/^models\//, '');
+            let imageModel = (document.getElementById('gemini-image-model').value || 'gemini-nano-banana-2.1').trim().replace(/^models\//, '');
             document.getElementById('gemini-image-model').value = imageModel;
             const protocol = document.getElementById('gemini-protocol').value || 'auto';
             const conf = { apiKey: document.getElementById('gemini-api-key').value.trim(), model: modelName, imageModel, protocol };
@@ -1641,115 +1692,283 @@
             return conf;
         }
 
+        // Сжатие картинки с гарантированным таймаутом (не зависает в Safari iOS)
         function compressBase64Image(dataUrl, maxWidth = 860, quality = 0.74) {
             return new Promise((resolve) => {
+                if (!dataUrl) { resolve(null); return; }
+                let settled = false;
+                const finish = (val) => {
+                    if (!settled) {
+                        settled = true;
+                        clearTimeout(timer);
+                        resolve(val);
+                    }
+                };
+                const timer = setTimeout(() => finish(dataUrl.startsWith('data:image') ? dataUrl : null), 14000);
                 const img = new Image();
                 img.crossOrigin = "anonymous";
                 img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const scale = img.width > maxWidth ? maxWidth / img.width : 1;
-                    canvas.width = Math.round(img.width * scale);
-                    canvas.height = Math.round(img.height * scale);
-                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-                    try { resolve(canvas.toDataURL('image/jpeg', quality)); } catch (e) { resolve(dataUrl); }
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+                        canvas.width = Math.max(1, Math.round(img.width * scale));
+                        canvas.height = Math.max(1, Math.round(img.height * scale));
+                        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                        finish(canvas.toDataURL('image/jpeg', quality));
+                    } catch (e) {
+                        finish(dataUrl.startsWith('data:image') ? dataUrl : null);
+                    }
                 };
-                img.onerror = () => resolve(null);
+                img.onerror = () => finish(null);
                 img.src = dataUrl;
             });
         }
 
-        async function generateViaFreeFlux(promptText) {
-            const cleanPrompt = encodeURIComponent(`realistic editorial news press photograph, photojournalism, 35mm documentary lens, natural lighting, no text, no watermark: ${promptText}`.slice(0, 340));
+        async function generateViaFreeFlux(promptText, onProgress = null) {
+            const cleanPrompt = encodeURIComponent(`realistic editorial news press photograph, photojournalism, 35mm documentary lens, natural lighting, no text, no watermark: ${promptText}`.slice(0, 320));
             const seed = Math.floor(Math.random() * 999999);
-            const fluxUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?width=860&height=480&nologo=true&seed=${seed}&model=flux`;
-            try {
-                const res = await fetch(fluxUrl);
-                if (res.ok) {
-                    const blob = await res.blob();
-                    const b64 = await new Promise((r) => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => r(reader.result);
-                        reader.readAsDataURL(blob);
-                    });
-                    const compressed = await compressBase64Image(b64, 860, 0.74);
-                    if (compressed) return compressed;
-                }
-            } catch (e) {}
-            return await compressBase64Image(fluxUrl, 860, 0.74);
-        }
+            const urlsToTry = [
+                `https://image.pollinations.ai/prompt/${cleanPrompt}?width=860&height=480&nologo=true&seed=${seed}&model=flux`,
+                `https://image.pollinations.ai/prompt/${cleanPrompt}?width=860&height=480&nologo=true&seed=${seed + 1}`
+            ];
 
-        async function generateViaGoogleImageApi(conf, promptText) {
-            const finalPrompt = `Realistic editorial news agency press photograph (TASS / Reuters documentary style), 35mm lens, natural lighting, no text: ${promptText}`;
-            const models = [conf.imageModel, 'gemini-2.5-flash-preview-image', 'gemini-3.1-flash-image', 'gemini-3.1-flash-lite-image', 'gemini-3-pro-image', 'imagen-3.0-generate-002'].filter((v, i, a) => v && a.indexOf(v) === i);
-            for (const mName of models) {
+            for (let i = 0; i < urlsToTry.length; i++) {
+                const fluxUrl = urlsToTry[i];
+                if (onProgress) onProgress(`Генерация через FLUX (попытка ${i + 1})...`);
+                const ctrl = new AbortController();
+                const timer = setTimeout(() => ctrl.abort(), 22000);
                 try {
-                    if (mName.startsWith('imagen')) {
-                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(mName)}:predict?key=${encodeURIComponent(conf.apiKey)}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ instances: [{ prompt: finalPrompt }], parameters: { sampleCount: 1, aspectRatio: "16:9", outputOptions: { mimeType: "image/jpeg" } } })
+                    const res = await fetch(fluxUrl, { signal: ctrl.signal, cache: 'no-store' });
+                    clearTimeout(timer);
+                    if (res.ok) {
+                        const blob = await res.blob();
+                        const b64 = await new Promise((r) => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => r(reader.result);
+                            reader.onerror = () => r(null);
+                            reader.readAsDataURL(blob);
                         });
-                        if (res.ok) {
-                            const data = await res.json();
-                            const b64 = data.predictions?.[0]?.bytesBase64Encoded || data.predictions?.[0]?.image?.bytesBase64Encoded;
-                            if (b64) return await compressBase64Image(`data:image/jpeg;base64,${b64}`);
-                        }
-                    } else {
-                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(mName)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: finalPrompt }] }], generationConfig: { responseModalities: ["TEXT", "IMAGE"] } })
-                        });
-                        if (res.ok) {
-                            const data = await res.json();
-                            for (const p of (data.candidates?.[0]?.content?.parts || [])) {
-                                if (p.inlineData?.data) return await compressBase64Image(`data:${p.inlineData.mimeType || 'image/jpeg'};base64,${p.inlineData.data}`);
-                            }
+                        if (b64) {
+                            const compressed = await compressBase64Image(b64, 860, 0.74);
+                            if (compressed) return compressed;
                         }
                     }
-                } catch (e) {}
+                } catch (e) {
+                    clearTimeout(timer);
+                }
+
+                const directCompressed = await compressBase64Image(fluxUrl, 860, 0.74);
+                if (directCompressed) return directCompressed;
             }
             return null;
         }
 
-        async function generateArticleImageWithGemini(conf, imagePromptEn, fallbackTitle, fallbackGeo, mode = 'ai_photo_free') {
-            const promptText = (imagePromptEn && imagePromptEn.trim()) ? imagePromptEn.trim() : `Documentary press photograph in Russia (${fallbackGeo || 'Moscow'}), official reportage: ${fallbackTitle}`;
-            if (mode === 'ai_photo_free') return await generateViaFreeFlux(promptText);
-            if (mode === 'ai_photo_google') return await generateViaGoogleImageApi(conf, promptText);
-            const gImg = await generateViaGoogleImageApi(conf, promptText);
-            return gImg || await generateViaFreeFlux(promptText);
+        // Проверка всех 5 моделей Google для генерации фото по очереди
+        async function generateViaGoogleImageApi(conf, promptText, onProgress = null) {
+            const finalPrompt = `Realistic editorial news agency press photograph (TASS / Reuters documentary style), 35mm lens, natural lighting, no text: ${promptText}`;
+            const orderedModels = [
+                conf.imageModel,
+                ...GOOGLE_IMAGE_MODELS
+            ].filter((v, i, a) => v && a.indexOf(v) === i);
+
+            const attemptLogs = [];
+
+            for (let idx = 0; idx < orderedModels.length; idx++) {
+                const mName = orderedModels[idx].replace(/^models\//, '');
+                const stepText = `[${idx + 1}/${orderedModels.length}] Проверка ${mName}...`;
+                if (onProgress) onProgress(stepText);
+
+                if (!conf.apiKey) {
+                    attemptLogs.push(`❌ ${mName}: Не указан Gemini API Key`);
+                    continue;
+                }
+
+                const ctrl = new AbortController();
+                const timer = setTimeout(() => ctrl.abort(), 20000);
+
+                try {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(mName)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ role: "user", parts: [{ text: finalPrompt }] }],
+                            generationConfig: { responseModalities: ["TEXT", "IMAGE"] }
+                        }),
+                        signal: ctrl.signal,
+                        cache: 'no-store'
+                    });
+                    clearTimeout(timer);
+
+                    if (res.ok) {
+                        const data = await res.json();
+                        for (const p of (data.candidates?.[0]?.content?.parts || [])) {
+                            if (p.inlineData?.data) {
+                                const compressed = await compressBase64Image(`data:${p.inlineData.mimeType || 'image/jpeg'};base64,${p.inlineData.data}`);
+                                if (compressed) {
+                                    return { image: compressed, usedModel: mName, logs: attemptLogs };
+                                }
+                            }
+                        }
+                        attemptLogs.push(`⚠️ ${mName}: Ответ без картинки`);
+                    } else {
+                        const errJson = await res.json().catch(() => ({}));
+                        const shortErr = (errJson?.error?.message || `HTTP ${res.status}`).slice(0, 90);
+                        attemptLogs.push(`❌ ${mName}: ${shortErr}`);
+                    }
+                } catch (e) {
+                    clearTimeout(timer);
+                    const isTimeout = e.name === 'AbortError' || String(e.message || '').toLowerCase().includes('abort');
+                    attemptLogs.push(`❌ ${mName}: ${isTimeout ? 'Таймаут ожидания (20 сек)' : (e.message || 'Сбой сети')}`);
+                }
+            }
+
+            return { image: null, usedModel: null, logs: attemptLogs };
         }
 
-        async function generatePhotoInsideEditor() {
+        function askUserFluxFallbackModal(logsArray) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('image-fallback-modal');
+                const logBox = document.getElementById('img-modal-log');
+                logBox.innerHTML = (logsArray && logsArray.length > 0)
+                    ? logsArray.map(l => `<div>${escapeAttr(l)}</div>`).join('')
+                    : `<div>Все 5 фото-моделей Google API вернули отказ или превысили лимит.</div>`;
+
+                const btnFlux = document.getElementById('img-modal-btn-flux');
+                const btnRetry = document.getElementById('img-modal-btn-retry');
+                const btnRadar = document.getElementById('img-modal-btn-radar');
+
+                const cleanup = (decision) => {
+                    btnFlux.onclick = null;
+                    btnRetry.onclick = null;
+                    btnRadar.onclick = null;
+                    modal.classList.add('hidden');
+                    resolve(decision);
+                };
+
+                btnFlux.onclick = () => cleanup('flux');
+                btnRetry.onclick = () => cleanup('retry');
+                btnRadar.onclick = () => cleanup('radar');
+
+                modal.classList.remove('hidden');
+            });
+        }
+
+        async function generateArticleImageWithGemini(conf, imagePromptEn, fallbackTitle, fallbackGeo, mode = 'ai_photo_google', onProgress = null) {
+            const promptText = (imagePromptEn && imagePromptEn.trim())
+                ? imagePromptEn.trim()
+                : `Documentary press photograph in Russia (${fallbackGeo || 'Moscow'}), official reportage: ${fallbackTitle}`;
+
+            if (mode === 'ai_photo_free') {
+                return await generateViaFreeFlux(promptText, onProgress);
+            }
+
+            while (true) {
+                const googleResult = await generateViaGoogleImageApi(conf, promptText, onProgress);
+                if (googleResult.image) {
+                    if (onProgress) onProgress(`✅ Фото создано моделью ${googleResult.usedModel}!`);
+                    return googleResult.image;
+                }
+
+                if (mode === 'ai_photo_hybrid') {
+                    if (onProgress) onProgress(`⚡ Переключение на генератор FLUX...`);
+                    return await generateViaFreeFlux(promptText, onProgress);
+                }
+
+                const choice = await askUserFluxFallbackModal(googleResult.logs);
+                if (choice === 'retry') {
+                    continue;
+                } else if (choice === 'flux') {
+                    if (onProgress) onProgress(`🎨 Генерация фото через FLUX...`);
+                    return await generateViaFreeFlux(promptText, onProgress);
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        function buildQuickEnglishPromptFromRussian(title, geo) {
+            const map = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'kh','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'};
+            const translitGeo = (geo || 'Russia').toLowerCase().split('').map(c => map[c] !== undefined ? map[c] : c).join('');
+            return `Documentary press photo in Russia (${translitGeo}), official news reportage, government officials and citizens, 35mm lens`;
+        }
+
+        // Исправленная функция генерации фото внутри редактора (без зависаний)
+        async function generatePhotoInsideEditor(strategy = 'google_then_ask') {
             const conf = saveGeminiConfig();
             const title = document.getElementById('ed-title').value.trim();
             const lead = document.getElementById('ed-lead').value.trim();
             const geo = document.getElementById('ed-geo').value.trim();
             if (!title) { showToast("Сначала введите заголовок статьи!", true); return; }
 
-            const btn = document.getElementById('btn-ed-gen-photo');
-            const origHTML = btn.innerHTML;
-            btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading mr-1"></i> Генерация...`;
+            const btnGoogle = document.getElementById('btn-ed-gen-photo');
+            const btnFlux = document.getElementById('btn-ed-gen-flux');
+            const statusLine = document.getElementById('ed-photo-status-line');
+
+            const origGoogleHTML = btnGoogle.innerHTML;
+            const origFluxHTML = btnFlux.innerHTML;
+
+            btnGoogle.disabled = true;
+            btnFlux.disabled = true;
+            statusLine.classList.remove('hidden');
+
+            const updateEdStatus = (msg) => {
+                statusLine.innerHTML = `<i class="fa-solid fa-spinner ai-loading mr-1.5"></i>${msg}`;
+            };
+
             try {
-                let promptGen = `Documentary press photo in Russia (${geo || 'Moscow'}): ${title}`;
+                await requestScreenWakeLock();
+                let promptGen = buildQuickEnglishPromptFromRussian(title, geo);
+
                 if (conf.apiKey) {
+                    updateEdStatus("Составление визуального описания сцены...");
+                    const ctrl = new AbortController();
+                    const timer = setTimeout(() => ctrl.abort(), 7500);
                     try {
-                        promptGen = await callGeminiAPI(conf, "Return ONLY a single-sentence English visual description for a realistic press photo (no text in image).", `Заголовок: ${title}\nЛид: ${lead}\nГород: ${geo}`, 0.7, false);
-                    } catch (e) {}
+                        const fastUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
+                        const res = await fetch(fastUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ role: "user", parts: [{ text: `Translate this Russian news headline into a 1-sentence English visual description for a realistic press photo (no text in image): ${title}. ${lead}` }] }],
+                                generationConfig: { temperature: 0.5 }
+                            }),
+                            signal: ctrl.signal
+                        });
+                        clearTimeout(timer);
+                        if (res.ok) {
+                            const txt = extractTextFromGeminiResponse(await res.json());
+                            if (txt && txt.trim()) promptGen = txt.trim();
+                        }
+                    } catch (e) {
+                        clearTimeout(timer);
+                    }
                 }
-                const imgData = await generateArticleImageWithGemini(conf, promptGen, title, geo, 'ai_photo_hybrid');
+
+                const modeToRun = strategy === 'flux_only' ? 'ai_photo_free' : 'ai_photo_google';
+                const imgData = await generateArticleImageWithGemini(conf, promptGen, title, geo, modeToRun, updateEdStatus);
+
                 if (imgData) {
                     document.getElementById('ed-image').value = imgData;
                     document.getElementById('ed-visual-mode').value = 'auto';
                     updateLivePreview();
-                    showToast("ИИ-фотография сгенерирована!");
+                    statusLine.innerHTML = `<span class="text-emerald-700 font-bold">✅ Фотография успешно сгенерирована и прикреплена!</span>`;
+                    showToast("ИИ-фотография успешно сгенерирована!");
                 } else {
-                    showToast("Не удалось получить фото, включен Радар", true);
+                    document.getElementById('ed-visual-mode').value = 'radar';
+                    updateLivePreview();
+                    statusLine.innerHTML = `<span class="text-amber-700 font-bold">📡 Установлен режим экрана Радара.</span>`;
+                    showToast("Включен режим экрана Радара");
                 }
             } catch (err) {
+                statusLine.innerHTML = `<span class="text-rose-600 font-bold">❌ Ошибка: ${escapeAttr(err.message)}</span>`;
                 showToast("Ошибка фото: " + err.message, true);
             } finally {
-                btn.innerHTML = origHTML;
+                await releaseScreenWakeLock();
+                btnGoogle.disabled = false;
+                btnFlux.disabled = false;
+                btnGoogle.innerHTML = origGoogleHTML;
+                btnFlux.innerHTML = origFluxHTML;
             }
         }
 
@@ -2626,13 +2845,27 @@ ${blocksGuide}
                 let finalVisualMode = "auto";
 
                 if (visualModeChoice.startsWith('ai_photo')) {
-                    statusBox.innerHTML += `<div class="text-indigo-300"><i class="fa-solid fa-camera ai-loading mr-1.5"></i>Генерация иллюстрации к новости...</div>`;
-                    generatedBase64Image = await generateArticleImageWithGemini(conf, genArt.imagePromptEn, genArt.title, genArt.geo, visualModeChoice) || "";
+                    const imgLogLine = document.createElement('div');
+                    imgLogLine.className = "text-indigo-300";
+                    imgLogLine.innerHTML = `<i class="fa-solid fa-camera ai-loading mr-1.5"></i>Запуск генерации иллюстрации...`;
+                    statusBox.appendChild(imgLogLine);
+
+                    generatedBase64Image = await generateArticleImageWithGemini(
+                        conf,
+                        genArt.imagePromptEn,
+                        genArt.title,
+                        genArt.geo,
+                        visualModeChoice,
+                        (progMsg) => { imgLogLine.innerHTML = `<i class="fa-solid fa-camera ai-loading mr-1.5"></i>${progMsg}`; }
+                    ) || "";
+
                     if (generatedBase64Image) {
-                        statusBox.innerHTML += `<div class="text-emerald-400">📸 Фотография успешно сгенерирована!</div>`;
+                        imgLogLine.className = "text-emerald-400 font-bold";
+                        imgLogLine.innerHTML = `📸 Фотография успешно сгенерирована!`;
                         finalVisualMode = "auto";
                     } else {
-                        statusBox.innerHTML += `<div class="text-amber-300">⚠️ Фото недоступно, включен Радар.</div>`;
+                        imgLogLine.className = "text-amber-300";
+                        imgLogLine.innerHTML = `📡 Выбран режим экрана Радара.`;
                         finalVisualMode = "radar";
                     }
                 } else if (visualModeChoice === 'radar') {
@@ -2748,6 +2981,7 @@ ${blocksGuide}
             window._lastAiGeneratedComments = null;
             window._lastAiMeta = null;
             document.getElementById('editor-ai-assistant-box').classList.add('hidden');
+            document.getElementById('ed-photo-status-line').classList.add('hidden');
             document.getElementById('editor-mode-badge').textContent = "РЕЖИМ: СОЗДАНИЕ НОВОЙ ПУБЛИКАЦИИ";
             document.getElementById('editor-heading-title').textContent = "Новый материал агентства";
             document.getElementById('ed-id').value = "news-" + Date.now().toString().slice(-5);
@@ -2779,6 +3013,7 @@ ${blocksGuide}
             window._currentEditingTimestamp = art.timestamp || (art.createdAt ? new Date(art.createdAt).getTime() : parseRussianDateToTimestamp(art.date));
 
             document.getElementById('editor-ai-assistant-box').classList.remove('hidden');
+            document.getElementById('ed-photo-status-line').classList.add('hidden');
             document.getElementById('editor-mode-badge').textContent = `РЕЖИМ: РЕДАКТИРОВАНИЕ СУЩЕСТВУЮЩЕЙ СТАТЬИ [${art.id}]`;
             document.getElementById('editor-heading-title').textContent = art.title;
             document.getElementById('ed-id').value = art.id || "";
