@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS 4.5</title>
+    <title>ВЕСТНИК-CMS 4.6</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
                 <div class="min-w-0">
                     <div class="font-bold text-xs sm:text-base tracking-tight flex items-center gap-1.5 sm:gap-2">
                         <span class="truncate">ВЕСТНИК-CMS</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.5 PRO</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.6 PRO</span>
                     </div>
                     <div id="sync-status-line" class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">База db.json и Лор загружены</div>
                 </div>
@@ -100,6 +100,35 @@
     <div id="toast-box" class="hidden fixed bottom-4 inset-x-3 sm:inset-x-auto sm:right-5 max-w-md bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700 z-50 flex items-center gap-3 text-xs sm:text-sm">
         <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg shrink-0"></i>
         <span id="toast-message" class="leading-snug">Изменения сохранены</span>
+    </div>
+
+    <div id="model-error-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 text-white border border-slate-700 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4">
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 text-lg shrink-0">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="min-w-0">
+                    <h3 class="font-headline font-bold text-base sm:text-lg text-white">Ошибка ответа модели ИИ</h3>
+                    <p id="modal-failed-model-name" class="text-xs font-mono text-amber-400 mt-0.5 truncate"></p>
+                </div>
+            </div>
+            <div id="modal-error-text" class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-300 max-h-32 overflow-y-auto break-words"></div>
+            <p id="modal-next-model-hint" class="text-xs text-slate-300 leading-relaxed"></p>
+            <div class="flex flex-col gap-2 pt-1">
+                <button id="modal-btn-retry" type="button" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span id="modal-btn-retry-text">Попробовать снова на этой модели</span>
+                </button>
+                <button id="modal-btn-next" type="button" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-bold rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                    <span id="modal-btn-next-text">Перейти на следующую модель</span>
+                </button>
+                <button id="modal-btn-cancel" type="button" class="w-full py-2 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl transition cursor-pointer">
+                    Отменить генерацию
+                </button>
+            </div>
+        </div>
     </div>
 
     <main class="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8 flex-1 w-full">
@@ -168,14 +197,13 @@
                 </div>
             </div>
 
-            <!-- Панель ИИ-редактирования статьи (появляется ТОЛЬКО при редактировании существующей новости) -->
             <div id="editor-ai-assistant-box" class="hidden bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 text-white rounded-xl p-4 sm:p-5 border border-indigo-500/40 shadow-sm space-y-3">
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <div class="flex items-center gap-2.5">
                         <span class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-sm font-bold shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
                         <div>
-                            <h3 class="font-bold text-xs sm:text-sm">🤖 ИИ-Редактор существующей статьи (Дополнить / Переписать / Изменить спецблоки)</h3>
-                            <p class="text-[11px] text-indigo-200">Напишите указание для ИИ, выберите спецблоки и нажмите кнопку переработки материала.</p>
+                            <h3 class="font-bold text-xs sm:text-sm">🤖 ИИ-Редактор существующей статьи (Дополнить / Переписать / Изменить градус абсурда)</h3>
+                            <p class="text-[11px] text-indigo-200">Напишите указание для ИИ, выберите спецблоки и уровень абсурда.</p>
                         </div>
                     </div>
                     <label class="flex items-center gap-1.5 text-xs text-indigo-200 cursor-pointer">
@@ -184,11 +212,27 @@
                     </label>
                 </div>
 
+                <div class="p-3 bg-slate-900/90 border border-indigo-500/30 rounded-lg space-y-1.5">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-bold text-indigo-200">🔥 Градус абсурда при переработке:</span>
+                        <span id="ed-absurd-label" class="font-mono font-bold text-amber-300">0 • Стандартный режим (Как раньше)</span>
+                    </div>
+                    <input type="range" id="ed-ai-absurd-level" min="-2" max="3" step="1" value="0" oninput="updateAbsurdUi('ed')" class="w-full accent-brand-red cursor-pointer">
+                    <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                        <span>-2 (Сухой)</span>
+                        <span>-1 (Курьёз)</span>
+                        <span class="text-white font-bold">0 (Стандарт)</span>
+                        <span>+1 (Шиза)</span>
+                        <span>+2 (Угар)</span>
+                        <span class="text-rose-400 font-bold">+3 (РАЗЪЁБ)</span>
+                    </div>
+                </div>
+
                 <div class="flex flex-wrap gap-1.5">
                     <button type="button" onclick="setEditorAiQuickInstruction('Дополни статью 2-3 новыми абзацами с абсурдными подробностями, реакцией ведомств и комментарием очевидца.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">➕ Дополнить фактами</button>
                     <button type="button" onclick="setEditorAiQuickInstruction('Перепиши статью под выбранный ниже вид верстки и спецблоки, сохранив сюжет и героев.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔄 Перестроить под жанр</button>
                     <button type="button" onclick="setEditorAiQuickInstruction('Добавь внутрь статьи эксклюзивный блок «Вопрос — Ответ» (интервью) и инфобокс с 3 главными цифрами.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🎙️ Встроить интервью и цифры</button>
-                    <button type="button" onclick="setEditorAiQuickInstruction('Усиль официальный канцелярско-протокольный тон ТАСС/РБК и сделай сатиру острее.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔥 Усилить сатиру</button>
+                    <button type="button" onclick="setEditorAiQuickInstruction('Усиль официальный канцелярско-протокольный тон ТАСС/РБК и органично вплети фирменные особенности героев из лора.')" class="text-[11px] bg-slate-800/90 hover:bg-indigo-600 text-slate-200 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">🔥 Усилить сатиру и лор</button>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
@@ -397,7 +441,6 @@
             </div>
         </section>
 
-        <!-- Вкладка 3: ИИ-Ньюсрум строго для СОЗДАНИЯ новых статей -->
         <section id="tab-ai" class="hidden space-y-4 sm:space-y-6">
             <div class="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 text-white rounded-2xl p-4 sm:p-6 shadow-md border border-indigo-500/30 flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-start gap-3 sm:gap-4">
@@ -406,11 +449,11 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + Фотослужба</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Генерация новых материалов</span>
+                            <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + Шкала Абсурда</h2>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Приоритет старших моделей + Контроль сатиры</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Оптимизировано под лимиты <code>gemini-3.5-flash-lite</code> (500 запросов/день). Создавайте новые статьи с привязкой ко времени читателя. Для правки существующей статьи используйте кнопку «Править / ИИ» во вкладке 1.
+                            Приоритет отдан самым умным старшим моделям (с диалогом выбора при ошибке). Регулируйте градус абсурда от бытовых курьёзов и стандартного режима (0) до максимального разъёба (+3).
                         </p>
                     </div>
                 </div>
@@ -418,8 +461,41 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
                 <div class="lg:col-span-8 bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 space-y-4">
-                    <label class="block text-xs font-bold text-slate-700">Задание для ИИ-корреспондента (опишите идею новой статьи или поворот сюжета):</label>
-                    <textarea id="ai-prompt-input" rows="4" placeholder="Например: Станислав Д. отправил Андрея Б. в творожном бронежилете на переговоры..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"></textarea>
+                    <label class="block text-xs font-bold text-slate-700">Задание для ИИ-корреспондента (любая тема: от бытового праздника вейпов в Госдуме до масштабных операций):</label>
+                    <textarea id="ai-prompt-input" rows="4" placeholder="Например: Госдума ввела официальный День вейпов и обязала бюджетников сдавать нормативы по кольцам пара, а Станислав Д. и Герман Ф. нашли способ..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-indigo-600 leading-relaxed"></textarea>
+
+                    <div class="p-4 bg-slate-900 text-white rounded-xl border border-slate-800 space-y-2.5 shadow-inner">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <label for="ai-absurd-level" class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                                <i class="fa-solid fa-gauge-high text-brand-red"></i>
+                                <span>Шкала градуса абсурда и сатиры:</span>
+                            </label>
+                            <span id="ai-absurd-label" class="text-xs font-mono font-bold bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-lg text-emerald-300">
+                                0 • Стандартный режим (Как раньше)
+                            </span>
+                        </div>
+                        <input
+                            type="range"
+                            id="ai-absurd-level"
+                            min="-2"
+                            max="3"
+                            step="1"
+                            value="0"
+                            oninput="updateAbsurdUi('ai')"
+                            class="w-full h-2 bg-slate-700 rounded-lg cursor-pointer accent-brand-red"
+                        >
+                        <div class="grid grid-cols-6 text-[10px] font-mono text-slate-400 pt-0.5">
+                            <span class="text-left cursor-pointer hover:text-white" onclick="setAbsurdValue('ai', -2)">-2 Сухой</span>
+                            <span class="text-center cursor-pointer hover:text-white" onclick="setAbsurdValue('ai', -1)">-1 Курьёз</span>
+                            <span class="text-center font-bold text-white cursor-pointer" onclick="setAbsurdValue('ai', 0)">0 Стандарт</span>
+                            <span class="text-center cursor-pointer hover:text-amber-300" onclick="setAbsurdValue('ai', 1)">+1 Шиза</span>
+                            <span class="text-center cursor-pointer hover:text-orange-400" onclick="setAbsurdValue('ai', 2)">+2 Угар</span>
+                            <span class="text-right font-bold text-rose-400 cursor-pointer" onclick="setAbsurdValue('ai', 3)">+3 РАЗЪЁБ</span>
+                        </div>
+                        <p id="ai-absurd-desc" class="text-[11px] text-slate-300 leading-snug pt-1 border-t border-slate-800">
+                            Базовый режим «Вестника», настроенный по умолчанию: классический баланс протокольного официоза ТАСС/РБК и абсурдной сути.
+                        </p>
+                    </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                         <div>
@@ -479,7 +555,7 @@
                     <div class="p-3.5 bg-indigo-50/60 border border-indigo-200/80 rounded-xl space-y-2 text-xs">
                         <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
                             <input type="checkbox" id="ai-use-lore" checked class="w-4 h-4 accent-indigo-600 shrink-0">
-                            <span>Учитывать базу персонажей (<code>universe_lore.json</code>)</span>
+                            <span>Учитывать базу персонажей и органично вплетать их фишки и прошлые события (<code>universe_lore.json</code>)</span>
                         </label>
                         <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
                             <input type="checkbox" id="ai-use-articles" checked class="w-4 h-4 accent-indigo-600 shrink-0">
@@ -524,15 +600,15 @@
                             <input type="password" id="gemini-api-key" autocomplete="new-password" placeholder="AIzaSy..." onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono border border-slate-300 rounded-lg">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Текстовая модель (по вашим лимитам):</label>
-                            <input type="text" id="gemini-model" list="gemini-models-datalist" value="gemini-3.5-flash-lite" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Стартовая модель (от самой умной к младшим):</label>
+                            <input type="text" id="gemini-model" list="gemini-models-datalist" value="gemini-3.8-flash" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
                             <datalist id="gemini-models-datalist">
-                                <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite (15 RPM / 500 RPD)</option>
-                                <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite (15 RPM / 500 RPD)</option>
-                                <option value="gemini-3-flash">Gemini 3 Flash (5 RPM / 20 RPD)</option>
-                                <option value="gemini-3.6-flash">Gemini 3.6 Flash (5 RPM / 20 RPD)</option>
-                                <option value="gemini-3.7-flash">Gemini 3.7 Flash (5 RPM / 20 RPD)</option>
-                                <option value="gemini-3.8-flash">Gemini 3.8 Flash (5 RPM / 20 RPD)</option>
+                                <option value="gemini-3.8-flash">1. Gemini 3.8 Flash (Самая умная и креативная)</option>
+                                <option value="gemini-3.7-flash">2. Gemini 3.7 Flash (Старшая модель)</option>
+                                <option value="gemini-3.6-flash">3. Gemini 3.6 Flash (Старшая модель)</option>
+                                <option value="gemini-3-flash">4. Gemini 3 Flash (Базовая умная)</option>
+                                <option value="gemini-3.5-flash-lite">5. Gemini 3.5 Flash Lite (Облегченная • 500 RPD)</option>
+                                <option value="gemini-3.1-flash-lite">6. Gemini 3.1 Flash Lite (Младшая • 500 RPD)</option>
                             </datalist>
                         </div>
                         <div>
@@ -728,6 +804,54 @@
     <script>
         const CANON_CHAR_IDS = ["stanislav-d", "andrey-b", "miroslav-k", "german-f"];
 
+        const MODEL_HIERARCHY = [
+            'gemini-3.8-flash',
+            'gemini-3.7-flash',
+            'gemini-3.6-flash',
+            'gemini-3-flash',
+            'gemini-3.5-flash-lite',
+            'gemini-3.1-flash-lite'
+        ];
+
+        const ABSURD_LEVELS_META = {
+            "-2": {
+                badge: "-2 • Сухой протокол (Почти реальность)",
+                color: "text-sky-300",
+                temp: 0.65,
+                desc: "Минимальный градус безумия: строгая реалистичная заметка с едва уловимой чиновничьей иронией, без фантасмагории."
+            },
+            "-1": {
+                badge: "-1 • Бытовой курьёз (Праздники, мелкие ГОСТы)",
+                color: "text-teal-300",
+                temp: 0.78,
+                desc: "Обычные житейские или думские новости с забавной сутью (например, День вейпов, регламент очереди за шаурмой) без войн и глобальных кризисов."
+            },
+            "0": {
+                badge: "0 • Стандартный режим (Как раньше)",
+                color: "text-emerald-300",
+                temp: 0.85,
+                desc: "Базовый режим «Вестника», настроенный по умолчанию: классический баланс протокольного официоза ТАСС/РБК и абсурдной сути."
+            },
+            "1": {
+                badge: "+1 • Бюрократическая шиза (Комиссии и НИИ)",
+                color: "text-amber-300",
+                temp: 0.92,
+                desc: "Повышенный градус: нелепые ведомственные формулировки, вымышленные индексы, приборы замера и яркие отсылки к прошлым подвигам героев."
+            },
+            "2": {
+                badge: "+2 • Мощный угар (Высокий накал страстей)",
+                color: "text-orange-400",
+                temp: 0.97,
+                desc: "Густая, смешная сатира с неожиданными сюжетными поворотами, фирменными фразами персонажей из лора и живыми комментариями."
+            },
+            "3": {
+                badge: "+3 • МАКСИМАЛЬНЫЙ РАЗЪЁБ (Эпический сюр)",
+                color: "text-rose-400",
+                temp: 1.0,
+                desc: "Максимальная концентрация комедии: разрывные формулировки в каждом абзаце, столкновение характеров и легендарных мемов лора с каменным лицом диктора."
+            }
+        };
+
         const FALLBACK_LORE = {
             universeName: "Хроники Вестника России (2026–2027)",
             styleDirectives: "Писать строго в стиле ТАСС, РБК, Коммерсантъ: сухой канцелярско-протокольный тон при описании абсурдных событий.",
@@ -782,6 +906,61 @@
         window._lastAiGeneratedComments = null;
         window._lastAiMeta = null;
         window._currentEditingTimestamp = null;
+
+        function updateAbsurdUi(prefix) {
+            const slider = document.getElementById(prefix === 'ed' ? 'ed-ai-absurd-level' : 'ai-absurd-level');
+            const val = String(slider ? slider.value : "0");
+            const meta = ABSURD_LEVELS_META[val] || ABSURD_LEVELS_META["0"];
+            if (prefix === 'ed') {
+                const lbl = document.getElementById('ed-absurd-label');
+                if (lbl) {
+                    lbl.textContent = meta.badge;
+                    lbl.className = `font-mono font-bold ${meta.color}`;
+                }
+            } else {
+                const lbl = document.getElementById('ai-absurd-label');
+                const desc = document.getElementById('ai-absurd-desc');
+                if (lbl) {
+                    lbl.textContent = meta.badge;
+                    lbl.className = `text-xs font-mono font-bold bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-lg ${meta.color}`;
+                }
+                if (desc) desc.textContent = meta.desc;
+            }
+        }
+
+        function setAbsurdValue(prefix, num) {
+            const slider = document.getElementById(prefix === 'ed' ? 'ed-ai-absurd-level' : 'ai-absurd-level');
+            if (slider) {
+                slider.value = num;
+                updateAbsurdUi(prefix);
+            }
+        }
+
+        function getAbsurdityPromptGuide(levelNum) {
+            const lvl = parseInt(levelNum, 10) || 0;
+            if (lvl === 0) {
+                return `ГРАДУС АБСУРДА (0 — СТАНДАРТНЫЙ РЕЖИМ):
+Пиши в классическом базовом стиле «Вестника России», как ты писал раньше по умолчанию. Сохраняй баланс между строгим канцелярским тоном ТАСС/РБК и ироничным содержанием. Если тема бытовая — описывай её как обычную новость, если масштабная — как федеральную сводку. Уместно упоминай прошлые факты биографии задействованных персонажей из universe_lore.json.`;
+            }
+            if (lvl === -2) {
+                return `ГРАДУС АБСУРДА (-2 — СУХОЙ ПРОТОКОЛ / ПОЧТИ РЕАЛЬНОСТЬ):
+Пиши максимально сдержанно, сухо и правдоподобно, как настоящую рутинную сводку информагентства. Никакой фантасмагории, никаких военных действий или глобальных катастроф. Юмор должен быть тонким и едва заметным, скрытым исключительно в скучных бюрократических формулировках.`;
+            }
+            if (lvl === -1) {
+                return `ГРАДУС АБСУРДА (-1 — БЫТОВОЙ КУРЬЁЗ И ОБЫЧНЫЕ НОВОСТИ):
+НЕ раздувай событие до вселенского или военного кризиса! Это обычная, повседневная новость из жизни ведомств, Госдумы, ЖКХ или регионов, но с абсурдным поводом (например, введение нелепого праздника, странного ГОСТа или бытового правила). Описывай её спокойно, деловито и буднично. Если в сюжете есть герои из лора, вплети их старые особенности легко и к месту.`;
+            }
+            if (lvl === 1) {
+                return `ГРАДУС АБСУРДА (+1 — ПОВЫШЕННЫЙ / БЮРОКРАТИЧЕСКАЯ ШИЗА):
+Сделай статью заметно смешнее и изобретательнее стандартного режима! Насыть текст сочными канцелярскими перлами, вымышленными нормативами, индексами, приборами контроля и комиссиями. Масштаб сохраняй адекватным теме задания (бытовую тему превращай в шедевр чиновничьего маразма, а не обязательно в войну). Обязательно органично напомни читателю коронные фишки, старые провалы или достижения упомянутых персонажей из universe_lore.json.`;
+            }
+            if (lvl === 2) {
+                return `ГРАДУС АБСУРДА (+2 — МОЩНЫЙ УГАР):
+Пиши ярко, плотно и очень смешно! Каждый абзац должен радовать неожиданным поворотом, абсурдной статистикой или невозмутимой цитатой чиновника. Активно используй бэкграунд и любимые мемы персонажей из universe_lore.json (их старые счеты, рекорды, габариты, индексы и привязанности), чтобы читатель узнавал фирменный почерк героев даже без прямого напоминания в промпте. Комментарии читателей сделай максимально живыми и уморительными.`;
+            }
+            return `ГРАДУС АБСУРДА (+3 — МАКСИМАЛЬНЫЙ РАЗЪЁБ):
+Выдай эталонный, разрывной уровень сатирической комедии в духе лучших выпусков! При абсолютно каменном, ледяном официозе диктора ТАСС/РБК внутри текста должен происходить чистый гениальный сюрреализм (при этом уважай тему задания: если тема про праздник вейпов в Госдуме — устрой вокруг вейпов тотальный аппаратно-научный разъёб с участием героев лора; если тема про конфликт — дай эпический масштаб). Вплетай коронные фразы, прошлые события и детали биографий героев из universe_lore.json так остроумно, чтобы каждая строчка вызывала смех!`;
+        }
 
         function getFormattedHeaderDateNow() {
             const now = new Date();
@@ -870,12 +1049,13 @@
             });
         }
 
-        // Авто-нормализатор структуры опроса (защита от undefined в вариантах)
         function normalizePollData(pollObj) {
             const fallback = JSON.parse(JSON.stringify(FALLBACK_DB.siteSettings.poll));
             if (!pollObj || typeof pollObj !== 'object') return fallback;
 
-            const q = typeof pollObj.question === 'string' && pollObj.question.trim() ? pollObj.question.trim() : fallback.question;
+            const q = typeof pollObj.question === 'string' && pollObj.question.trim() && pollObj.question.trim() !== 'undefined'
+                ? pollObj.question.trim()
+                : fallback.question;
             let rawOpts = pollObj.options;
 
             if (!Array.isArray(rawOpts) || rawOpts.length === 0) {
@@ -887,7 +1067,7 @@
                     return { text: opt.trim() || `Вариант ${i + 1}`, votes: 100 + i * 50 };
                 }
                 if (opt && typeof opt === 'object') {
-                    const txt = opt.text || opt.label || opt.title || opt.option || `Вариант ${i + 1}`;
+                    const txt = opt.text || opt.label || opt.title || opt.option || opt.answer || `Вариант ${i + 1}`;
                     const v = parseInt(opt.votes !== undefined ? opt.votes : opt.count, 10);
                     return {
                         text: String(txt).trim(),
@@ -915,8 +1095,8 @@
             if (geminiConf.model && !deprecated.includes(geminiConf.model)) {
                 document.getElementById('gemini-model').value = geminiConf.model.replace(/^models\//, '');
             } else {
-                document.getElementById('gemini-model').value = 'gemini-3.5-flash-lite';
-                geminiConf.model = 'gemini-3.5-flash-lite';
+                document.getElementById('gemini-model').value = 'gemini-3.8-flash';
+                geminiConf.model = 'gemini-3.8-flash';
             }
             if (geminiConf.protocol) document.getElementById('gemini-protocol').value = geminiConf.protocol;
             localStorage.setItem('vestnik_gemini_config', JSON.stringify(geminiConf));
@@ -984,6 +1164,8 @@
             populateSiteSettingsForm();
             renderLoreUI();
             updateAiMemoryStats();
+            updateAbsurdUi('ai');
+            updateAbsurdUi('ed');
 
             setTimeout(() => {
                 if (searchInput && searchInput.value !== '' && document.activeElement !== searchInput) {
@@ -1427,7 +1609,7 @@
         }
 
         function saveGeminiConfig() {
-            let modelName = (document.getElementById('gemini-model').value || 'gemini-3.5-flash-lite').trim().replace(/^models\//, '');
+            let modelName = (document.getElementById('gemini-model').value || 'gemini-3.8-flash').trim().replace(/^models\//, '');
             document.getElementById('gemini-model').value = modelName;
             let imageModel = (document.getElementById('gemini-image-model').value || 'gemini-2.5-flash-preview-image').trim().replace(/^models\//, '');
             document.getElementById('gemini-image-model').value = imageModel;
@@ -1530,7 +1712,7 @@
                 let promptGen = `Documentary press photo in Russia (${geo || 'Moscow'}): ${title}`;
                 if (conf.apiKey) {
                     try {
-                        promptGen = await callGeminiAPI(conf, "Return ONLY a single-sentence English visual description for a realistic press photo (no text in image).", `Заголовок: ${title}\nЛид: ${lead}\nГород: ${geo}`);
+                        promptGen = await callGeminiAPI(conf, "Return ONLY a single-sentence English visual description for a realistic press photo (no text in image).", `Заголовок: ${title}\nЛид: ${lead}\nГород: ${geo}`, 0.7);
                     } catch (e) {}
                 }
                 const imgData = await generateArticleImageWithGemini(conf, promptGen, title, geo, 'ai_photo_hybrid');
@@ -1635,6 +1817,8 @@
             const curLayout = document.getElementById('ed-layout').value || "standard";
             const specialBlocksChoice = document.getElementById('ed-ai-special-blocks')?.value || 'DYNAMIC_MIX';
             const syncLore = document.getElementById('ed-ai-sync-lore').checked;
+            const absurdLevel = String(document.getElementById('ed-ai-absurd-level')?.value || "0");
+            const absurdMeta = ABSURD_LEVELS_META[absurdLevel] || ABSURD_LEVELS_META["0"];
 
             const btn = document.getElementById('btn-ed-ai-rewrite');
             const origHTML = btn.innerHTML;
@@ -1642,9 +1826,12 @@
 
             const layoutGuide = getLayoutPromptGuide(curLayout);
             const blocksGuide = getSpecialBlocksPromptGuide(specialBlocksChoice);
+            const absurdGuide = getAbsurdityPromptGuide(absurdLevel);
 
             const systemInstruction = `Ты — главный редактор сатирического агентства «ВЕСТНИК РОССИИ» (стиль ТАСС, РБК, Коммерсантъ).
-Перед тобой существующая статья. Твоя задача — отредактировать, дополнить или переписать её строго по указанию главного редактора, соблюдая канон из universe_lore.json.
+Перед тобой существующая статья. Твоя задача — отредактировать, дополнить или переписать её строго по указанию главного редактора, опираясь на universe_lore.json.
+
+${absurdGuide}
 
 ЦЕЛЕВОЙ ЖАНР И ВИД ВЕРСТКИ (${curLayout}):
 ${layoutGuide}
@@ -1680,7 +1867,7 @@ ${blocksGuide}
             const userPayload = `БАЗА ЛОРА:\n${JSON.stringify(appLore)}\n\nТЕКУЩАЯ СТАТЬЯ ДЛЯ РЕДАКТИРОВАНИЯ:\nЗаголовок: ${curTitle}\nЛид: ${curLead}\nГео: ${curGeo}\nТекущий HTML-текст:\n${curBody}\n\nУКАЗАНИЕ ПО РЕДАКТИРОВАНИЮ И ДОПОЛНЕНИЮ:\n${instruction}`;
 
             try {
-                const rawText = await callGeminiAPI(conf, systemInstruction, userPayload);
+                const rawText = await callGeminiAPI(conf, systemInstruction, userPayload, absurdMeta.temp);
                 const parsed = parseModelJsonSafely(rawText);
                 const updArt = parsed.article;
                 if (!updArt || !updArt.body) throw new Error("ИИ не вернул обновленный текст статьи");
@@ -1780,18 +1967,50 @@ ${blocksGuide}
             try { return JSON.parse(cleaned); } catch (e) { return JSON.parse(repairBrokenJsonString(cleaned)); }
         }
 
-        async function callGeminiAPI(conf, systemInstruction, userInput) {
+        function askUserOnModelError(failedModel, errMsg, nextModel) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('model-error-modal');
+                document.getElementById('modal-failed-model-name').textContent = `Модель: ${failedModel}`;
+                document.getElementById('modal-error-text').textContent = errMsg || "Неизвестная ошибка API / Превышен лимит";
+                const retryBtn = document.getElementById('modal-btn-retry');
+                const nextBtn = document.getElementById('modal-btn-next');
+                const cancelBtn = document.getElementById('modal-btn-cancel');
+
+                document.getElementById('modal-btn-retry-text').textContent = `Попробовать снова (${failedModel})`;
+
+                if (nextModel) {
+                    nextBtn.classList.remove('hidden');
+                    document.getElementById('modal-next-model-hint').textContent = `Вы можете повторить запрос к текущей модели или переключиться на следующую по старшинству модель (${nextModel}).`;
+                    document.getElementById('modal-btn-next-text').textContent = `Перейти на ${nextModel}`;
+                } else {
+                    nextBtn.classList.add('hidden');
+                    document.getElementById('modal-next-model-hint').textContent = `Это была самая младшая модель в списке. Попробуйте повторить запрос чуть позже.`;
+                }
+
+                const cleanup = (choice) => {
+                    retryBtn.onclick = null;
+                    nextBtn.onclick = null;
+                    cancelBtn.onclick = null;
+                    modal.classList.add('hidden');
+                    resolve(choice);
+                };
+
+                retryBtn.onclick = () => cleanup('retry');
+                nextBtn.onclick = () => cleanup('next');
+                cancelBtn.onclick = () => cleanup('cancel');
+
+                modal.classList.remove('hidden');
+            });
+        }
+
+        async function callGeminiAPI(conf, systemInstruction, userInput, customTemp = 0.85) {
             const statusBox = document.getElementById('ai-status-box');
-            const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-            const modelsToTry = [
-                conf.model,
-                'gemini-3.5-flash-lite',
-                'gemini-3.1-flash-lite',
-                'gemini-3-flash',
-                'gemini-3.6-flash',
-                'gemini-3.7-flash',
-                'gemini-3.8-flash'
-            ].filter((v, i, a) => v && !v.includes('2.5-pro') && !v.includes('2.0') && a.indexOf(v) === i);
+            const startModel = (conf.model || 'gemini-3.8-flash').replace(/^models\//, '');
+
+            const startIdx = MODEL_HIERARCHY.indexOf(startModel);
+            const orderedQueue = startIdx !== -1
+                ? MODEL_HIERARCHY.slice(startIdx)
+                : [startModel, ...MODEL_HIERARCHY.filter(m => m !== startModel)];
 
             const executeSingle = async (modelName) => {
                 const cleanModel = modelName.replace(/^models\//, '');
@@ -1799,7 +2018,7 @@ ${blocksGuide}
                     const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cleanModel)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
                     const payload = {
                         contents: [{ role: "user", parts: [{ text: userInput }] }],
-                        generationConfig: { temperature: 0.85, responseMimeType: "application/json" }
+                        generationConfig: { temperature: customTemp, responseMimeType: "application/json" }
                     };
                     if (systemInstruction?.trim()) payload.systemInstruction = { parts: [{ text: systemInstruction }] };
                     const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -1840,20 +2059,39 @@ ${blocksGuide}
                 }
             };
 
-            let lastErr = null;
-            for (let i = 0; i < modelsToTry.length; i++) {
-                const m = modelsToTry[i];
+            let idx = 0;
+            while (idx < orderedQueue.length) {
+                const currentModel = orderedQueue[idx];
+                const nextModel = idx + 1 < orderedQueue.length ? orderedQueue[idx + 1] : null;
                 try {
-                    return await executeSingle(m);
-                } catch (err) {
-                    lastErr = err;
-                    if (i + 1 < modelsToTry.length && statusBox) {
-                        statusBox.innerHTML += `<div class="text-amber-400">🔄 Переключение с <strong>${m}</strong> на <strong>${modelsToTry[i + 1]}</strong>...</div>`;
+                    if (statusBox && idx > 0) {
+                        statusBox.innerHTML += `<div class="text-sky-300">🤖 Запрос к модели <strong>${currentModel}</strong>...</div>`;
                     }
-                    await sleep(900);
+                    return await executeSingle(currentModel);
+                } catch (err) {
+                    const userDecision = await askUserOnModelError(currentModel, err.message, nextModel);
+                    if (userDecision === 'retry') {
+                        if (statusBox) {
+                            statusBox.innerHTML += `<div class="text-indigo-300">🔁 Повторная попытка на модели <strong>${currentModel}</strong>...</div>`;
+                        }
+                        continue;
+                    } else if (userDecision === 'next' && nextModel) {
+                        if (statusBox) {
+                            statusBox.innerHTML += `<div class="text-amber-400">⬇️ Переход с <strong>${currentModel}</strong> на <strong>${nextModel}</strong>...</div>`;
+                        }
+                        idx++;
+                    } else {
+                        throw new Error("Генерация отменена пользователем.");
+                    }
                 }
             }
-            throw lastErr || new Error("Все модели Gemini временно недоступны.");
+            throw new Error("Все модели из очереди недоступны.");
+        }
+
+        function stripHtmlForContext(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html || '';
+            return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
         }
 
         function getLayoutPromptGuide(layoutType) {
@@ -1865,7 +2103,7 @@ ${blocksGuide}
                 reportage: "СПЕЦРЕПОРТАЖ С МЕСТА СОБЫТИЙ: пиши от лица специального корреспондента, находящегося прямо в эпицентре (описывай атмосферу, детали обстановки, диалоги прохожих и оперативников, запахи и звуки).",
                 investigation: "СПЕЦРАССЛЕДОВАНИЕ / ДОСЬЕ ОРГАНОВ: сделай упор на рассекреченные протоколы, инсайды источников в ведомствах, схемы поставок и таблицы сопоставления фактов.",
                 digest: "ПОМИНУТНАЯ ХРОНИКА СОБЫТИЙ: построй материал вокруг точного таймлайна развития кризиса по часам и минутам с анализом каждого этапа.",
-                opinion: "АВТОРСКАЯ КОЛОНКА / ЭКСПЕРТНАЯ АНАЛИТИКА: пиши в жанре глубокого государственно-философского эссе политического обозревателя, анализирующего абсурдное происшествие как важнейший геополитический сдвиг.",
+                opinion: "АВТОРСКАЯ КОЛОНКА / ЭКСПЕРТНАЯ АНАЛИТИКА: пиши в жанре глубокого государственно-философского эссе политического обозревателя, анализирующего происшествие с серьезным видом.",
                 factcheck: "ПРОВЕРКА СЛУХОВ / ОФИЦИАЛЬНОЕ ОПРОВЕРЖЕНИЕ: построй статью по схеме сопоставления: «Слух в мессенджерах» vs «Официальная реальность по данным ведомств», разбирая 3-4 мифа вокруг события."
             };
             return guides[layoutType] || guides.standard;
@@ -1925,10 +2163,12 @@ ${blocksGuide}
             const makeHero = document.getElementById('ai-make-hero').checked;
             const targetCat = document.getElementById('ai-target-category').value;
             const specialBlocks = document.getElementById('ai-special-blocks').value;
+            const absurdLevel = String(document.getElementById('ai-absurd-level')?.value || "0");
+            const absurdMeta = ABSURD_LEVELS_META[absurdLevel] || ABSURD_LEVELS_META["0"];
 
             const statusBox = document.getElementById('ai-status-box');
             statusBox.classList.remove('hidden');
-            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Генерация новой статьи [${layoutTypeChoice.toUpperCase()} / ${specialBlocks}] через <strong>${conf.model}</strong>...</div>`;
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Генерация [${layoutTypeChoice.toUpperCase()} | Абсурд: ${absurdLevel}] через <strong>${conf.model}</strong>...</div>`;
 
             const digest = useArticles
                 ? (appDB.articles || []).slice(0, 12).map((a, i) => `#${i + 1} [ID:${a.id} | ${a.geo}] ${a.title} — ${a.lead}`).join('\n')
@@ -1936,9 +2176,12 @@ ${blocksGuide}
 
             const layoutGuide = getLayoutPromptGuide(layoutTypeChoice);
             const blocksGuide = getSpecialBlocksPromptGuide(specialBlocks);
+            const absurdGuide = getAbsurdityPromptGuide(absurdLevel);
 
             const systemInstruction = `Ты — главный редактор сатирического федерального агентства «ВЕСТНИК РОССИИ» (стиль ТАСС, РБК, Коммерсантъ).
-Строго соблюдай канон из universe_lore.json и статей db.json.
+Соблюдай канон из universe_lore.json и статей db.json: когда в статье упоминаются знакомые персонажи или регионы, уместно и остроумно вплетай их прошлые события, особенности и коронные фишки из лора, чтобы вселенная ощущалась единой и живой.
+
+${absurdGuide}
 
 ЖАНР И СТРУКТУРА ЭТОЙ СТАТЬИ (${layoutTypeChoice}):
 ${layoutGuide}
@@ -1958,7 +2201,7 @@ ${blocksGuide}
     "id": "unikalnyj-latin-slug",
     "title": "Заголовок",
     "lead": "Лид-абзац",
-    "category": "${targetCat === 'AUTO' ? 'Безопасность' : targetCat}",
+    "category": "${targetCat === 'AUTO' ? 'Общество' : targetCat}",
     "geo": "Город",
     "badgeType": "ЗАГОЛОВОК РАДАРА",
     "badgeTelemetry": "ТЕЛЕМЕТРИЯ",
@@ -1966,7 +2209,10 @@ ${blocksGuide}
     "imagePromptEn": "Realistic documentary press photo of ...",
     "tags": ["Тег1", "Тег2"],
     "body": "<p>Развернутый HTML текст статьи со спецблоками...</p>",
-    "comments": [{"author": "Имя", "badge": "Город", "time": "Только что", "text": "Комментарий"}]
+    "comments": [
+      {"author": "Имя", "badge": "Город", "time": "Только что", "text": "Живой и остроумный комментарий читателя 1"},
+      {"author": "Имя 2", "badge": "Город", "time": "5 минут назад", "text": "Комментарий читателя 2"}
+    ]
   },
   "dbUpdates": {
     "updatedBreakingNews": "Строка МОЛНИИ",
@@ -1982,7 +2228,7 @@ ${blocksGuide}
 }`;
 
             try {
-                const rawText = await callGeminiAPI(conf, systemInstruction, `ЛОР:\n${useLore ? JSON.stringify(appLore) : ''}\n\nСТАТЬИ:\n${digest}\n\nЗАДАНИЕ:\n${userPrompt}`);
+                const rawText = await callGeminiAPI(conf, systemInstruction, `ЛОР:\n${useLore ? JSON.stringify(appLore) : ''}\n\nСТАТЬИ:\n${digest}\n\nЗАДАНИЕ:\n${userPrompt}`, absurdMeta.temp);
                 const parsed = parseModelJsonSafely(rawText);
                 const genArt = parsed.article;
                 if (!genArt || !genArt.title) throw new Error("Модель не вернула объект статьи");
@@ -2079,6 +2325,7 @@ ${blocksGuide}
                 resetListFilters();
 
                 await saveArticleFromEditor(autoPublishAndPush, !autoPublishAndPush);
+                document.getElementById('editor-ai-assistant-box').classList.remove('hidden');
                 statusBox.innerHTML += `<div class="text-emerald-300 font-bold">📰 Всего статей в базе: ${appDB.articles.length}</div>`;
 
                 if (!autoPublishAndPush) setTimeout(() => switchTab('editor'), 600);
@@ -2096,7 +2343,7 @@ ${blocksGuide}
             btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading"></i> Синхронизация...`;
             try {
                 const digest = (appDB.articles || []).map(a => `[${a.date} | ${a.geo}] ${a.title}\n${a.lead}`).join('\n\n');
-                const rawText = await callGeminiAPI(conf, "Верни ТОЛЬКО валидный JSON структуры universe_lore.json. Оставь только те события и тех персонажей, которые реально присутствуют в переданных статьях (плюс базовых героев: Станислав Д., Андрей Б., Мирослав К., Герман Ф.).", `Актуализируй лор строго по текущему списку статей.\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\nАКТУАЛЬНЫЕ СТАТЬИ В БАЗЕ:\n${digest}`);
+                const rawText = await callGeminiAPI(conf, "Верни ТОЛЬКО валидный JSON структуры universe_lore.json. Оставь только те события и тех персонажей, которые реально присутствуют в переданных статьях (плюс базовых героев: Станислав Д., Андрей Б., Мирослав К., Герман Ф.).", `Актуализируй лор строго по текущему списку статей.\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\nАКТУАЛЬНЫЕ СТАТЬИ В БАЗЕ:\n${digest}`, 0.7);
                 const updatedLore = parseModelJsonSafely(rawText);
                 if (updatedLore && Array.isArray(updatedLore.characters)) {
                     appLore = updatedLore;
