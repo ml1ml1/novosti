@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕСТНИК-CMS 4.6</title>
+    <title>ВЕСТНИК-CMS 4.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
                 <div class="min-w-0">
                     <div class="font-bold text-xs sm:text-base tracking-tight flex items-center gap-1.5 sm:gap-2">
                         <span class="truncate">ВЕСТНИК-CMS</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.6 PRO</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono bg-brand-red/20 border border-brand-red text-red-300 px-1.5 sm:px-2 py-0.5 rounded uppercase shrink-0">AI v4.7 iOS-FIX</span>
                     </div>
                     <div id="sync-status-line" class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate">База db.json и Лор загружены</div>
                 </div>
@@ -102,18 +102,22 @@
         <span id="toast-message" class="leading-snug">Изменения сохранены</span>
     </div>
 
-    <div id="model-error-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div id="model-error-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 text-white border border-slate-700 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4">
             <div class="flex items-start gap-3">
                 <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 text-lg shrink-0">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <i id="modal-error-icon" class="fa-solid fa-triangle-exclamation"></i>
                 </div>
                 <div class="min-w-0">
-                    <h3 class="font-headline font-bold text-base sm:text-lg text-white">Сбой ответа модели ИИ</h3>
+                    <h3 id="modal-error-title" class="font-headline font-bold text-base sm:text-lg text-white leading-snug">Сбой ответа модели ИИ</h3>
                     <p id="modal-failed-model-name" class="text-xs font-mono text-amber-400 mt-0.5 truncate"></p>
                 </div>
             </div>
-            <div id="modal-error-text" class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-300 max-h-32 overflow-y-auto break-words"></div>
+            <div id="modal-error-reason" class="p-3.5 rounded-xl bg-slate-950/90 border border-rose-500/30 text-xs text-slate-200 leading-relaxed"></div>
+            <details class="text-[11px] text-slate-400 font-mono">
+                <summary class="cursor-pointer hover:text-slate-200">Технический код ответа</summary>
+                <div id="modal-error-tech" class="mt-1.5 p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 max-h-24 overflow-y-auto break-words"></div>
+            </details>
             <p id="modal-next-model-hint" class="text-xs text-slate-300 leading-relaxed"></p>
             <div class="flex flex-col gap-2 pt-1">
                 <button id="modal-btn-retry" type="button" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
@@ -449,11 +453,11 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + Шкала Абсурда</h2>
-                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">Приоритет старших моделей + Контроль сатиры</span>
+                            <h2 class="font-headline font-extrabold text-lg sm:text-2xl">ИИ-Агент «Вестник-Ньюсрум» + Защита iOS Safari / VPN</h2>
+                            <span class="text-[10px] font-mono bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 px-2 py-0.5 rounded-full uppercase">SSE Поток + Диагностика сети</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                            Приоритет отдан самым умным старшим моделям (с диалогом выбора при ошибке). Регулируйте градус абсурда от бытовых курьёзов и стандартного режима (0) до максимального разъёба (+3).
+                            Включена потоковая передача данных (Streaming SSE) и защита экрана от сна, чтобы Safari и VPN на iPhone не разрывали соединение (`Load failed`) при обращении к старшим моделям.
                         </p>
                     </div>
                 </div>
@@ -623,9 +627,9 @@
                             </datalist>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Протокол:</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Протокол соединения (защита от Load failed):</label>
                             <select id="gemini-protocol" onchange="saveGeminiConfig()" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded-lg">
-                                <option value="auto">Авто (generateContent + Interactions)</option>
+                                <option value="auto">Потоковый SSE + Авто-резерв (Рекомендуется для iOS/VPN)</option>
                                 <option value="generateContent">Классический (:generateContent)</option>
                                 <option value="interactions">Interactions API (/v1beta/interactions)</option>
                             </select>
@@ -906,6 +910,24 @@
         window._lastAiGeneratedComments = null;
         window._lastAiMeta = null;
         window._currentEditingTimestamp = null;
+        let activeScreenWakeLock = null;
+
+        async function requestScreenWakeLock() {
+            try {
+                if ('wakeLock' in navigator && !activeScreenWakeLock) {
+                    activeScreenWakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (e) {}
+        }
+
+        async function releaseScreenWakeLock() {
+            try {
+                if (activeScreenWakeLock) {
+                    await activeScreenWakeLock.release();
+                    activeScreenWakeLock = null;
+                }
+            } catch (e) {}
+        }
 
         function updateAbsurdUi(prefix) {
             const slider = document.getElementById(prefix === 'ed' ? 'ed-ai-absurd-level' : 'ai-absurd-level');
@@ -1867,6 +1889,7 @@ ${blocksGuide}
             const userPayload = `БАЗА ЛОРА:\n${JSON.stringify(appLore)}\n\nТЕКУЩАЯ СТАТЬЯ ДЛЯ РЕДАКТИРОВАНИЯ:\nЗаголовок: ${curTitle}\nЛид: ${curLead}\nГео: ${curGeo}\nТекущий HTML-текст:\n${curBody}\n\nУКАЗАНИЕ ПО РЕДАКТИРОВАНИЮ И ДОПОЛНЕНИЮ:\n${instruction}`;
 
             try {
+                await requestScreenWakeLock();
                 const rawText = await callGeminiAPI(conf, systemInstruction, userPayload, absurdMeta.temp, true);
                 const parsed = parseModelJsonSafely(rawText);
                 const updArt = parsed.article;
@@ -1897,6 +1920,7 @@ ${blocksGuide}
             } catch (err) {
                 showToast("Ошибка ИИ-редактирования: " + err.message, true);
             } finally {
+                await releaseScreenWakeLock();
                 btn.innerHTML = origHTML;
             }
         }
@@ -2081,11 +2105,133 @@ ${blocksGuide}
             }
         }
 
-        function askUserOnModelError(failedModel, errMsg, nextModel) {
+        async function diagnoseGeminiError(err, modelName, apiKey) {
+            const rawMsg = String(err?.message || err || "Неизвестная ошибка");
+            const msgLow = rawMsg.toLowerCase();
+            const status = err?.status || 0;
+
+            if (status === 429 || msgLow.includes('quota') || msgLow.includes('resource_exhausted') || msgLow.includes('rate limit') || msgLow.includes('too many requests')) {
+                return {
+                    icon: 'fa-solid fa-hourglass-end',
+                    title: '⏳ Превышен лимит запросов к модели (Квота API)',
+                    reason: `Исчерпан бесплатный лимит для модели «${modelName}» (обычно до 5 запросов в минуту или 20 в день на старших моделях). Подождите 1 минуту и нажмите «Попробовать снова» либо переключитесь на более лёгкую модель.`,
+                    tech: `HTTP ${status || 429}: ${rawMsg}`
+                };
+            }
+
+            if (status === 500 || status === 502 || status === 503 || status === 504 || msgLow.includes('overloaded') || msgLow.includes('unavailable') || msgLow.includes('internal error') || msgLow.includes('high demand')) {
+                return {
+                    icon: 'fa-solid fa-server',
+                    title: '🔥 Сервер Google сейчас перегружен',
+                    reason: `Серверы Google не справляются с потоком запросов к модели «${modelName}». Ваше подключение в порядке — проблема на стороне Google. Подождите 10–15 секунд и повторите попытку или выберите следующую модель.`,
+                    tech: `HTTP ${status || 503}: ${rawMsg}`
+                };
+            }
+
+            if (status === 404 || msgLow.includes('not found') || msgLow.includes('is not supported for generatecontent')) {
+                return {
+                    icon: 'fa-solid fa-ban',
+                    title: '❓ Модель недоступна на сервере Google',
+                    reason: `Модель под именем «${modelName}» сейчас не активна в Google API или не поддерживается вашим ключом. Просто нажмите кнопку перехода на следующую модель в списке.`,
+                    tech: `HTTP ${status || 404}: ${rawMsg}`
+                };
+            }
+
+            if (msgLow.includes('location is not supported') || msgLow.includes('user location')) {
+                return {
+                    icon: 'fa-solid fa-earth-americas',
+                    title: '🌍 Проблема с VPN (Регион заблокирован Google)',
+                    reason: `Запрос дошёл до Google без рабочего VPN или через сервер в стране, где Gemini API заблокирован. Переключите локацию в вашем VPN (например, на США, Нидерланды или Германию) и попробуйте снова.`,
+                    tech: `HTTP ${status || 400}: ${rawMsg}`
+                };
+            }
+
+            if (status === 400 || status === 401 || status === 403 || msgLow.includes('api_key_invalid') || msgLow.includes('api key not valid')) {
+                return {
+                    icon: 'fa-solid fa-key',
+                    title: '🔑 Ошибка доступа или API-ключа',
+                    reason: `Сервер Google отклонил запрос (${status}). Проверьте правильность вашего Gemini API Key или смените сервер VPN.`,
+                    tech: `HTTP ${status}: ${rawMsg}`
+                };
+            }
+
+            if (msgLow.includes('json') || msgLow.includes('unrecognized token') || msgLow.includes('unexpected token')) {
+                return {
+                    icon: 'fa-solid fa-code',
+                    title: '🧩 Модель прислала поврежденный формат текста',
+                    reason: `Связь с сервером сработала, но модель «${modelName}» допустила опечатку в структуре JSON или оборвала фразу. Нажмите «Попробовать снова» или перейдите на следующую модель.`,
+                    tech: rawMsg
+                };
+            }
+
+            if (msgLow.includes('load failed') || msgLow.includes('failed to fetch') || msgLow.includes('networkerror') || msgLow.includes('aborted') || msgLow.includes('timeout')) {
+                if (!navigator.onLine) {
+                    return {
+                        icon: 'fa-solid fa-wifi',
+                        title: '📡 На устройстве пропал интернет',
+                        reason: `Ваше устройство сейчас не подключено к сети. Проверьте Wi-Fi / сотовые данные и VPN.`,
+                        tech: rawMsg
+                    };
+                }
+
+                try {
+                    const probeCtrl = new AbortController();
+                    const probeTimer = setTimeout(() => probeCtrl.abort(), 4500);
+                    const probeRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?pageSize=1&key=${encodeURIComponent(apiKey)}`, {
+                        method: 'GET',
+                        signal: probeCtrl.signal,
+                        cache: 'no-store'
+                    });
+                    clearTimeout(probeTimer);
+
+                    if (!probeRes.ok) {
+                        const probeErr = await probeRes.json().catch(() => ({}));
+                        const probeMsg = String(probeErr?.error?.message || '');
+                        if (probeMsg.toLowerCase().includes('location')) {
+                            return {
+                                icon: 'fa-solid fa-earth-americas',
+                                title: '🌍 Проблема с VPN (Регион не поддерживается)',
+                                reason: `Safari сбросил соединение (Load failed), так как ваш текущий VPN-сервер находится в регионе, где Google API заблокирован. Смените страну в VPN и повторите попытку.`,
+                                tech: `${rawMsg} | Probe: ${probeMsg}`
+                            };
+                        }
+                    }
+
+                    return {
+                        icon: 'fa-solid fa-clock-rotate-left',
+                        title: '⏱️ Таймаут ожидания в Safari / VPN или перегрузка модели',
+                        reason: `Связь с Google через VPN работает, но старшая модель «${modelName}» слишком долго генерировала ответ (или шлюз Google сбросил тяжелое соединение), из-за чего Safari на iOS оборвал ожидание (Load failed). Не сворачивайте Safari во время генерации. Нажмите «Попробовать снова» или перейдите на более быструю модель.`,
+                        tech: `${rawMsg} (Связь с API проверена: ОК)`
+                    };
+                } catch (probeFail) {
+                    return {
+                        icon: 'fa-solid fa-plug-circle-xmark',
+                        title: '📡 Проблема с вашим интернетом или VPN',
+                        reason: `Safari не может достучаться до серверов Google (Load failed). Скорее всего, завис или отключился VPN, либо вы свернули Safari / заблокировали экран iPhone во время генерации. Переподключите VPN и нажмите «Попробовать снова».`,
+                        tech: `${rawMsg} (Сервер Google недоступен с устройства)`
+                    };
+                }
+            }
+
+            return {
+                icon: 'fa-solid fa-triangle-exclamation',
+                title: '⚠️ Неожиданная ошибка при обращении к модели',
+                reason: `Модель «${modelName}» не смогла завершить генерацию. Попробуйте еще раз или переключитесь на следующую модель.`,
+                tech: rawMsg
+            };
+        }
+
+        async function askUserOnModelError(failedModel, errObj, nextModel, apiKey) {
+            const diag = await diagnoseGeminiError(errObj, failedModel, apiKey);
+
             return new Promise((resolve) => {
                 const modal = document.getElementById('model-error-modal');
+                document.getElementById('modal-error-icon').className = diag.icon;
+                document.getElementById('modal-error-title').textContent = diag.title;
                 document.getElementById('modal-failed-model-name').textContent = `Модель: ${failedModel}`;
-                document.getElementById('modal-error-text').textContent = errMsg || "Неизвестная ошибка API / Превышен лимит";
+                document.getElementById('modal-error-reason').textContent = diag.reason;
+                document.getElementById('modal-error-tech').textContent = diag.tech;
+
                 const retryBtn = document.getElementById('modal-btn-retry');
                 const nextBtn = document.getElementById('modal-btn-next');
                 const cancelBtn = document.getElementById('modal-btn-cancel');
@@ -2094,11 +2240,11 @@ ${blocksGuide}
 
                 if (nextModel) {
                     nextBtn.classList.remove('hidden');
-                    document.getElementById('modal-next-model-hint').textContent = `Вы можете повторить запрос к текущей модели или переключиться на следующую по старшинству модель (${nextModel}).`;
+                    document.getElementById('modal-next-model-hint').textContent = `Следующая по старшинству модель в очереди: ${nextModel}`;
                     document.getElementById('modal-btn-next-text').textContent = `Перейти на ${nextModel}`;
                 } else {
                     nextBtn.classList.add('hidden');
-                    document.getElementById('modal-next-model-hint').textContent = `Это была самая младшая модель в списке. Попробуйте повторить запрос.`;
+                    document.getElementById('modal-next-model-hint').textContent = `Это была самая младшая модель в списке. Проверьте VPN и повторите попытку.`;
                 }
 
                 const cleanup = (choice) => {
@@ -2128,26 +2274,128 @@ ${blocksGuide}
 
             const executeSingle = async (modelName) => {
                 const cleanModel = modelName.replace(/^models\//, '');
+                const genConfig = { temperature: customTemp };
+                if (expectJson) genConfig.responseMimeType = "application/json";
+
+                const basePayload = {
+                    contents: [{ role: "user", parts: [{ text: userInput }] }],
+                    generationConfig: genConfig
+                };
+                if (systemInstruction?.trim()) basePayload.systemInstruction = { parts: [{ text: systemInstruction }] };
+
+                const tryStreamSSE = async () => {
+                    const streamUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cleanModel)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(conf.apiKey)}`;
+                    const ctrl = new AbortController();
+                    let inactivityTimer = setTimeout(() => ctrl.abort(new Error("Timeout")), 45000);
+
+                    const resetTimer = () => {
+                        clearTimeout(inactivityTimer);
+                        inactivityTimer = setTimeout(() => ctrl.abort(new Error("Timeout")), 40000);
+                    };
+
+                    try {
+                        const res = await fetch(streamUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(basePayload),
+                            signal: ctrl.signal,
+                            cache: 'no-store'
+                        });
+
+                        if (!res.ok) {
+                            const errJson = await res.json().catch(() => ({}));
+                            const err = new Error((errJson.error && errJson.error.message) || `HTTP ${res.status}`);
+                            err.status = res.status;
+                            throw err;
+                        }
+
+                        if (!res.body || !res.body.getReader) {
+                            const fallbackJson = await res.json();
+                            const text = extractTextFromGeminiResponse(fallbackJson);
+                            if (!text) throw new Error("Пустой ответ от сервера");
+                            return text;
+                        }
+
+                        const reader = res.body.getReader();
+                        const decoder = new TextDecoder("utf-8");
+                        let buffer = "";
+                        let fullText = "";
+
+                        let progEl = document.getElementById('sse-live-progress');
+                        if (!progEl && statusBox && !statusBox.classList.contains('hidden')) {
+                            progEl = document.createElement('div');
+                            progEl.id = 'sse-live-progress';
+                            progEl.className = 'text-sky-300 text-[11px]';
+                            statusBox.appendChild(progEl);
+                        }
+
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            if (done) break;
+                            resetTimer();
+                            buffer += decoder.decode(value, { stream: true });
+                            const lines = buffer.split('\n');
+                            buffer = lines.pop() || "";
+
+                            for (const line of lines) {
+                                const trimmed = line.trim();
+                                if (trimmed.startsWith('data:')) {
+                                    const dataStr = trimmed.slice(5).trim();
+                                    if (!dataStr || dataStr === '[DONE]') continue;
+                                    try {
+                                        const chunkObj = JSON.parse(dataStr);
+                                        const piece = extractTextFromGeminiResponse(chunkObj);
+                                        if (piece) {
+                                            fullText += piece;
+                                            if (progEl) {
+                                                progEl.innerHTML = `<i class="fa-solid fa-satellite-dish mr-1"></i>Поток от <strong>${cleanModel}</strong>: получено ${fullText.length} симв...`;
+                                            }
+                                        }
+                                    } catch (e) {}
+                                }
+                            }
+                        }
+
+                        if (buffer.trim().startsWith('data:')) {
+                            const dataStr = buffer.trim().slice(5).trim();
+                            try {
+                                const chunkObj = JSON.parse(dataStr);
+                                const piece = extractTextFromGeminiResponse(chunkObj);
+                                if (piece) fullText += piece;
+                            } catch (e) {}
+                        }
+
+                        if (!fullText.trim()) throw new Error("Пустой поток ответа от модели");
+                        return fullText;
+                    } finally {
+                        clearTimeout(inactivityTimer);
+                    }
+                };
+
                 const tryGenerateContent = async () => {
                     const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cleanModel)}:generateContent?key=${encodeURIComponent(conf.apiKey)}`;
-                    const genConfig = { temperature: customTemp };
-                    if (expectJson) genConfig.responseMimeType = "application/json";
-
-                    const payload = {
-                        contents: [{ role: "user", parts: [{ text: userInput }] }],
-                        generationConfig: genConfig
-                    };
-                    if (systemInstruction?.trim()) payload.systemInstruction = { parts: [{ text: systemInstruction }] };
-                    const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                    if (!res.ok) {
-                        const errJson = await res.json().catch(() => ({}));
-                        const err = new Error((errJson.error && errJson.error.message) || `HTTP ${res.status}`);
-                        err.status = res.status;
-                        throw err;
+                    const ctrl = new AbortController();
+                    const timer = setTimeout(() => ctrl.abort(new Error("Timeout")), 55000);
+                    try {
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(basePayload),
+                            signal: ctrl.signal,
+                            cache: 'no-store'
+                        });
+                        if (!res.ok) {
+                            const errJson = await res.json().catch(() => ({}));
+                            const err = new Error((errJson.error && errJson.error.message) || `HTTP ${res.status}`);
+                            err.status = res.status;
+                            throw err;
+                        }
+                        const text = extractTextFromGeminiResponse(await res.json());
+                        if (!text) throw new Error("Пустой ответ от generateContent");
+                        return text;
+                    } finally {
+                        clearTimeout(timer);
                     }
-                    const text = extractTextFromGeminiResponse(await res.json());
-                    if (!text) throw new Error("Пустой ответ от generateContent");
-                    return text;
                 };
 
                 const tryInteractions = async () => {
@@ -2173,10 +2421,12 @@ ${blocksGuide}
                     rawOut = await tryInteractions();
                 } else {
                     try {
+                        rawOut = await tryStreamSSE();
+                    } catch (streamErr) {
+                        if (streamErr.status && [400, 401, 403, 404, 429, 500, 502, 503].includes(streamErr.status)) {
+                            throw streamErr;
+                        }
                         rawOut = await tryGenerateContent();
-                    } catch (e1) {
-                        if (e1.status === 405 || e1.status === 404) rawOut = await tryInteractions();
-                        else throw e1;
                     }
                 }
 
@@ -2196,7 +2446,10 @@ ${blocksGuide}
                     }
                     return await executeSingle(currentModel);
                 } catch (err) {
-                    const userDecision = await askUserOnModelError(currentModel, err.message, nextModel);
+                    const oldProg = document.getElementById('sse-live-progress');
+                    if (oldProg) oldProg.remove();
+
+                    const userDecision = await askUserOnModelError(currentModel, err, nextModel, conf.apiKey);
                     if (userDecision === 'retry') {
                         if (statusBox) {
                             statusBox.innerHTML += `<div class="text-indigo-300">🔁 Повторная попытка на модели <strong>${currentModel}</strong>...</div>`;
@@ -2295,7 +2548,7 @@ ${blocksGuide}
 
             const statusBox = document.getElementById('ai-status-box');
             statusBox.classList.remove('hidden');
-            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Генерация [${layoutTypeChoice.toUpperCase()} | Абсурд: ${absurdLevel}] через <strong>${conf.model}</strong>...</div>`;
+            statusBox.innerHTML = `<div class="text-indigo-400"><i class="fa-solid fa-spinner ai-loading mr-2"></i>Генерация [${layoutTypeChoice.toUpperCase()} | Абсурд: ${absurdLevel}] через <strong>${conf.model}</strong> (Не сворачивайте браузер)...</div>`;
 
             const digest = useArticles
                 ? (appDB.articles || []).slice(0, 12).map((a, i) => `#${i + 1} [ID:${a.id} | ${a.geo}] ${a.title} — ${a.lead}`).join('\n')
@@ -2355,6 +2608,7 @@ ${blocksGuide}
 }`;
 
             try {
+                await requestScreenWakeLock();
                 const rawText = await callGeminiAPI(conf, systemInstruction, `ЛОР:\n${useLore ? JSON.stringify(appLore) : ''}\n\nСТАТЬИ:\n${digest}\n\nЗАДАНИЕ:\n${userPrompt}`, absurdMeta.temp, true);
                 const parsed = parseModelJsonSafely(rawText);
                 const genArt = parsed.article;
@@ -2459,6 +2713,8 @@ ${blocksGuide}
             } catch (err) {
                 statusBox.innerHTML += `<div class="text-rose-400 font-bold">❌ Ошибка: ${err.message}</div>`;
                 showToast("Ошибка: " + err.message, true);
+            } finally {
+                await releaseScreenWakeLock();
             }
         }
 
@@ -2469,6 +2725,7 @@ ${blocksGuide}
             const orig = btn.innerHTML;
             btn.innerHTML = `<i class="fa-solid fa-spinner ai-loading"></i> Синхронизация...`;
             try {
+                await requestScreenWakeLock();
                 const digest = (appDB.articles || []).map(a => `[${a.date} | ${a.geo}] ${a.title}\n${a.lead}`).join('\n\n');
                 const rawText = await callGeminiAPI(conf, "Верни ТОЛЬКО валидный JSON структуры universe_lore.json. Внутри строковых значений используй только кавычки-ёлочки «...». Оставь только те события и тех персонажей, которые реально присутствуют в переданных статьях (плюс базовых героев: Станислав Д., Андрей Б., Мирослав К., Герман Ф.).", `Актуализируй лор строго по текущему списку статей.\nТЕКУЩИЙ ЛОР:\n${JSON.stringify(appLore)}\nАКТУАЛЬНЫЕ СТАТЬИ В БАЗЕ:\n${digest}`, 0.7, true);
                 const updatedLore = parseModelJsonSafely(rawText);
@@ -2481,6 +2738,7 @@ ${blocksGuide}
             } catch (e) {
                 showToast("Ошибка: " + e.message, true);
             } finally {
+                await releaseScreenWakeLock();
                 btn.innerHTML = orig;
             }
         }
@@ -2597,7 +2855,7 @@ ${blocksGuide}
                 decree: `\n<div class='my-6 p-5 bg-amber-50/70 border-2 border-dashed border-amber-400 rounded-xl font-mono text-xs sm:text-sm text-slate-900'>\n    <div class='font-bold uppercase text-amber-900 border-b border-amber-300 pb-2 mb-2'>📜 ВЫПИСКА ИЗ ПОСТАНОВЛЕНИЯ № 412-П</div>\n    <p>1. Ввести чрезвычайный норматив на всей территории муниципального образования...</p>\n    <div class='text-right text-[11px] text-amber-800 mt-2'>ПЕЧАТЬ КАНЦЕЛЯРИИ • ВЕРНО</div>\n</div>\n`,
                 expert: `\n<div class='my-6 p-5 bg-slate-50 border border-slate-200 rounded-xl font-sans'>\n    <div class='text-xs font-bold uppercase text-teal-800 mb-1'>🎓 Мнение эксперта • Имя Фамилия (Должность):</div>\n    <p class='text-sm text-slate-800 italic'>«Аналитический комментарий специалиста по ситуации...»</p>\n</div>\n`,
                 factbox: `\n<div class='my-5 p-4 bg-amber-50/80 border-l-4 border-amber-500 rounded-r-xl font-sans text-xs sm:text-sm text-slate-800'>\n    <strong class='block text-amber-900 uppercase mb-1'>📌 Справка редакции «Вестника»:</strong>\n    Исторический или технический контекст происходящего события.\n</div>\n`,
-                dossier: `\n<div id='dossier-block' class='my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm'>\n    <div class='bg-slate-900 text-white px-5 py-3 flex items-center justify-between'>\n        <span class='font-bold text-xs uppercase tracking-wider'>Оперативная сводка / Досье</span>\n        <span class='text-[11px] font-mono text-amber-400'>МОНИТОРИНГ-2026</span>\n    </div>\n    <div class="p-4 text-xs sm:text-sm text-slate-700">Данные статистического наблюдения...</div>\n</div>\n`,
+                dossier: `\n<div id='dossier-block' class='my-8 font-sans bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm'>\n    <div class='bg-slate-900 text-white px-5 py-3 flex items-center justify-between'>\n        <span class='font-bold text-xs uppercase tracking-wider'>Оперативная сводка / Досье</span>\n        <span class='text-[11px] font-mono text-amber-400'>МОНИТОРИНГ-2026</span>\n    </div>\n    <div class='p-4 text-xs sm:text-sm text-slate-700'>Данные статистического наблюдения...</div>\n</div>\n`,
                 max: `\n<div id='max-flashmob' class='my-6 font-sans bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 text-white p-5 rounded-xl border border-blue-500/30 shadow-sm'>\n    <div class='text-xs font-bold text-sky-400 mb-2'>МЕССЕНДЖЕР МАКС • ФЕДЕРАЛЬНЫЕ ТРЕНДЫ</div>\n    <p class='text-xs sm:text-sm text-slate-200 leading-relaxed'>Текст координационной сводки в мессенджере МАКС...</p>\n</div>\n`,
                 timeline: `\n<div class='my-6 font-sans bg-slate-50 p-5 rounded-xl border-l-4 border-slate-900 space-y-3 text-xs sm:text-sm'>\n    <div class='font-bold uppercase tracking-wider text-slate-500'>⏱️ Поминутная хроника событий</div>\n    <div><strong class='font-mono text-brand-red'>08:30</strong> — Первое сообщение оперативного дежурного;</div>\n    <div><strong class='font-mono text-brand-red'>10:15</strong> — Введение специального регламента.</div>\n</div>\n`
             };
